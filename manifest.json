@@ -1,12 +1,14 @@
 {
   "name": "Kharcha — Money Manager",
   "short_name": "Kharcha",
-  "description": "Offline expense & income tracker — recurring auto-cut, split bills, budgets, edit history aur analysis ke saath.",
+  "description": "Offline expense & income tracker with budgets, recurring bills, split-bill and multi-language support (Hindi / English / Hinglish).",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#F3F4FB",
   "theme_color": "#4834D4",
-  "orientation": "portrait-primary",
+  "lang": "hi",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
