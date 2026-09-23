@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kharcha — Money Manager</title>
+<title>Kharcha Pani — खर्चा-पानी प्रबंधक</title>
 <meta name="theme-color" content="#4834D4">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -343,6 +343,36 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .analysis-legend{margin-top:2px;}
 }
 
+/* ================= BRAND / QUICK ACTIONS / POLISH ================= */
+.brand-lockup{display:flex;align-items:center;gap:10px;min-width:0;}
+.brand-lockup .brand-subtitle{font-size:10px;font-weight:700;opacity:.78;margin-top:2px;letter-spacing:.01em;white-space:nowrap;}
+.side-brand-copy{display:flex;flex-direction:column;min-width:0;}
+.side-brand-copy .tag{font-size:9.5px;color:var(--muted);font-weight:700;margin-top:1px;}
+.dash-hero{position:relative;overflow:hidden;padding:17px;border-radius:20px;background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:2px;}
+.dash-hero::before{content:"";position:absolute;width:180px;height:180px;right:-70px;top:-100px;border-radius:50%;background:radial-gradient(circle,rgba(91,76,224,.18),transparent 68%);pointer-events:none;}
+.dash-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative;z-index:1;}
+.dash-hero-kicker{font-size:10px;color:var(--primary);font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
+.dash-hero-title{font-size:20px;font-weight:900;line-height:1.15;margin-top:4px;letter-spacing:-.02em;}
+.dash-hero-sub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45;max-width:520px;}
+.dash-actions{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1;}
+.dash-action{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 10px;border-radius:12px;border:1px solid var(--border);font-size:12px;font-weight:800;cursor:pointer;transition:transform .16s,box-shadow .16s,background .16s;}
+.dash-action:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+.dash-action.expense{background:var(--expense-soft);color:var(--expense);border-color:rgba(255,94,98,.18);}
+.dash-action.income{background:var(--income-soft);color:var(--income);border-color:rgba(0,184,148,.18);}
+.dash-action.secondary{background:var(--surface);color:var(--primary);}
+.month-insight{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11px;color:var(--ink-soft);font-weight:700;}
+.month-insight-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px rgba(91,76,224,.10);}
+.group-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px;}
+.group-mini-stat{padding:11px;border-radius:13px;background:var(--surface-2);border:1px solid var(--border);}
+.group-mini-stat .k{font-size:9.5px;color:var(--muted);font-weight:800;text-transform:uppercase;}
+.group-mini-stat .v{font-size:15px;font-weight:900;margin-top:3px;}
+.card.interactive{cursor:pointer;}
+@media (max-width:520px){
+  .dash-actions{flex-wrap:wrap;}
+  .dash-action{min-width:calc(50% - 4px);}
+  .group-overview{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -467,22 +497,22 @@ en: {
   pdf:{catReport:n=>`Category report: ${n}`,total:"Total:",entries:"entries",fullReport:m=>`Full report — ${m}`,income:"Income:",expense:"Expense:",balance:"Balance:",colDate:"Date",colType:"Type",colCat:"Category",colNote:"Note",colAmount:"Amount",generated:"Generated:"},
 },
 hi: {
-  nav:{home:"होम",entries:"एंट्री",category:"कैटेगरी",split:"बिल बांटें",recurring:"रिकरिंग",analysis:"विश्लेषण",add:"जोड़ें"},
-  topbar:{balance:"इस महीने का बैलेंस",income:"↗ आय",expense:"↘ खर्च"},
-  side:{foot:"सारा डेटा सिर्फ इसी डिवाइस पर, ऑफ़लाइन सेव होता है।",newEntry:"＋ नई एंट्री"},
-  dash:{breakdown:"खर्च का विवरण",viewAnalysis:"विश्लेषण →",recent:"हाल की एंट्री",viewAll:"सब देखें →",tips:"💡 सुझाव",autoRecurring:"🔁 ऑटो-कट रिकरिंग",emptyPie:"इस महीने अभी तक कोई खर्च नहीं है",emptyEntries:"कोई एंट्री नहीं है"},
-  txn:{searchPh:"🔍 नोट या कैटेगरी से खोजें...",filterAll:"सभी",filterIncome:"आय",filterExpense:"खर्च",entriesTitle:"एंट्रीज़",found:n=>`(${n} मिलीं)`,emptyFound:"कोई मिलती-जुलती एंट्री नहीं मिली"},
-  cat:{hint:"किसी भी कैटेगरी पर टैप करें — उसकी पूरी रिपोर्ट और PDF डाउनलोड यहीं मिलेगा। ✎ से बजट भी सेट कर सकते हैं।",expenseCats:"खर्च की कैटेगरी",incomeCats:"आय की कैटेगरी",newCat:"नई"},
-  rec:{title:"रिकरिंग / ऑटो-कट",newBtn:"+ नई",hint:"ये आइटम तय तारीख पर अपने आप ट्रांज़ैक्शन के रूप में जुड़ जाते हैं — जैसे किराया, सब्सक्रिप्शन, EMI। ऐप खोलते ही देय आइटम अपने आप जुड़ जाते हैं। रोज़ाना, त्रैमासिक, छमाही या अपना कस्टम अंतराल भी सेट कर सकते हैं।",empty:"कोई रिकरिंग आइटम नहीं है",next:d=>`अगली बार: ${d}`},
-  split:{title:"बिल बांटें",newGroup:"+ नया ग्रुप",hint:"रूममेट्स या ट्रिप के दोस्तों के साथ साझा खर्च ट्रैक करें — कौन किसको कितना देगा, तुरंत पता चल जाएगा।",emptyGroups:"कोई ग्रुप नहीं है। कमरे या ट्रिप के लिए अपना पहला ग्रुप बनाएं।",members:n=>`${n} लोग`,membersList:m=>`सदस्य: ${m}`,addExpense:"+ खर्च जोड़ें",balanceTitle:"बैलेंस",getsBack:"वापस मिलेगा ",owes:"देना है ",settleUp:"हिसाब चुकाएं",allClear:"सब हिसाब बराबर है 🎉",expensesTitle:"खर्चे",paidBy:n=>`${n} ने भुगतान किया`,splitAmong:n=>`${n} लोगों में बंटा`,emptyExpenses:"अभी कोई साझा खर्च नहीं है"},
-  analysis:{overview:m=>`विवरण — ${m}`,income:"आय",expense:"खर्च",savingRate:"बचत दर:",dailyAvg:"रोज़ाना औसत खर्च:",highest:"सबसे बड़ा खर्च:",catWise:"कैटेगरी अनुसार खर्च",noData:"डेटा नहीं है",weekday:"सप्ताह के दिन अनुसार खर्च",last6:"पिछले 6 महीने (खर्च)",tips:"💡 सुझाव",activityLog:"📝 एक्टिविटी लॉग",emptyActivity:"अभी कोई एक्टिविटी नहीं है",dataTitle:"डेटा",pdfBtn:"📄 इस महीने की PDF रिपोर्ट",backupBtn:"⬇️ बैकअप (JSON) डाउनलोड करें",restoreBtn:"⬆️ रीस्टोर",resetBtn:"रीसेट",localHint:"सारा डेटा सिर्फ इसी डिवाइस के ब्राउज़र में लोकली सेव होता है — कहीं भी अपलोड नहीं होता। बैकअप ज़रूर रखें।",spendingMix:"खर्च का पाई चार्ट",tapHint:"पूरी डिटेल के लिए चार्ट या कैटेगरी पर टैप करें",net:"नेट बैलेंस",expenseRatio:"खर्च अनुपात",deficit:"घाटा",surplus:"बचत",trendHint:"उस महीने की डिटेल खोलने के लिए महीने पर क्लिक करें"},
-  txnSheet:{titleEdit:"एंट्री एडिट करें",titleNew:"नई एंट्री जोड़ें",expense:"➖ खर्च",income:"➕ आय",amount:"राशि (₹)",category:"कैटेगरी",date:"तारीख",note:"नोट (वैकल्पिक)",notePh:"जैसे Zomato ऑर्डर",isRecurring:"🔁 यह रिकरिंग है (किराया, सब्सक्रिप्शन, वेतन...)",repeatFreq:"कितनी बार दोहराया जाएगा",customRepeat:"कस्टम रिपीट",customDays:"दिन",customWeeks:"हफ्ते",customMonths:"महीने",nextAutoDate:"अगली ऑटो तारीख",saveUpdate:"अपडेट करें",saveNew:"एंट्री सेव करें",delete:"एंट्री डिलीट करें",errAmount:"सही राशि डालें",errCat:"पहले एक कैटेगरी बनाएं"},
-  catSheet:{titleEdit:"कैटेगरी एडिट करें",titleNew:"नई कैटेगरी",name:"नाम",namePh:"जैसे राशन",icon:"आइकन",color:"रंग",budget:"मासिक बजट (₹) — वैकल्पिक",budgetPh:"जैसे 5000",saveEdit:"सेव करें",saveNew:"कैटेगरी बनाएं",delete:"कैटेगरी डिलीट करें",errName:"नाम डालें",confirmDelete:"इस कैटेगरी में एंट्रीज़ हैं। फिर भी डिलीट करें?"},
+  nav:{home:"होम",entries:"लेन-देन",category:"श्रेणियाँ",split:"बिल बाँटें",recurring:"आवर्ती",analysis:"विश्लेषण",add:"जोड़ें"},
+  topbar:{balance:"इस महीने का शेष",income:"↗ आय",expense:"↘ खर्च"},
+  side:{foot:"आपका डेटा इसी डिवाइस पर स्थानीय रूप से सुरक्षित रहता है।",newEntry:"＋ नया लेन-देन"},
+  dash:{breakdown:"खर्च का वितरण",viewAnalysis:"पूरा विश्लेषण →",recent:"हाल के लेन-देन",viewAll:"सभी देखें →",tips:"💡 सुझाव",autoRecurring:"🔁 आवर्ती भुगतान",emptyPie:"इस महीने अभी तक कोई खर्च नहीं है",emptyEntries:"अभी कोई लेन-देन नहीं है"},
+  txn:{searchPh:"🔍 नोट या श्रेणी से खोजें...",filterAll:"सभी",filterIncome:"आय",filterExpense:"खर्च",entriesTitle:"लेन-देन",found:n=>`(${n} मिले)`,emptyFound:"कोई मिलती-जुलती एंट्री नहीं मिली"},
+  cat:{hint:"किसी भी श्रेणी पर टैप करें — पूरी रिपोर्ट और PDF देखें। ✎ से बजट भी सेट कर सकते हैं।",expenseCats:"खर्च की श्रेणियाँ",incomeCats:"आय की श्रेणियाँ",newCat:"नई"},
+  rec:{title:"आवर्ती / ऑटो-कट",newBtn:"+ नया",hint:"किराया, सब्सक्रिप्शन, EMI या वेतन जैसे नियमित लेन-देन अपने तय समय पर अपने आप जुड़ते हैं। रोज़ाना से लेकर कस्टम अंतराल तक चुन सकते हैं।",empty:"कोई आवर्ती आइटम नहीं है",next:d=>`अगली बार: ${d}`},
+  split:{title:"बिल बाँटें",newGroup:"+ नया समूह",hint:"रूममेट्स, दोस्तों, परिवार या ट्रिप के साझा खर्चों का हिसाब आसानी से रखें। कौन किसे कितना देगा, तुरंत देखें।",emptyGroups:"अभी कोई समूह नहीं है। पहला समूह बनाकर साझा खर्च जोड़ें।",members:n=>`${n} सदस्य`,membersList:m=>`सदस्य: ${m}`,addExpense:"+ साझा खर्च जोड़ें",balanceTitle:"हिसाब",getsBack:"वापस मिलेगा ",owes:"देना है ",settleUp:"हिसाब चुकाएँ",allClear:"सारा हिसाब बराबर है 🎉",expensesTitle:"साझा खर्च",paidBy:n=>`${n} ने भुगतान किया`,splitAmong:n=>`${n} सदस्यों में बँटा`,emptyExpenses:"अभी कोई साझा खर्च नहीं है"},
+  analysis:{overview:m=>`मासिक सारांश — ${m}`,income:"आय",expense:"खर्च",savingRate:"बचत दर:",dailyAvg:"दैनिक औसत खर्च:",highest:"सबसे बड़ा खर्च",catWise:"श्रेणी अनुसार खर्च",noData:"डेटा उपलब्ध नहीं है",weekday:"वार अनुसार खर्च",last6:"पिछले 6 महीनों का खर्च",tips:"💡 सुझाव",activityLog:"📝 गतिविधि लॉग",emptyActivity:"अभी कोई गतिविधि नहीं है",dataTitle:"डेटा प्रबंधन",pdfBtn:"📄 इस महीने की PDF रिपोर्ट",backupBtn:"⬇️ बैकअप डाउनलोड करें",restoreBtn:"⬆️ बैकअप रीस्टोर करें",resetBtn:"डेटा रीसेट करें",localHint:"आपका वित्तीय डेटा इसी डिवाइस के ब्राउज़र में स्थानीय रूप से सेव रहता है।",spendingMix:"खर्च का पाई चार्ट",tapHint:"पूरी जानकारी के लिए चार्ट या श्रेणी पर टैप करें",net:"नेट शेष",expenseRatio:"खर्च अनुपात",deficit:"घाटा",surplus:"अधिशेष",trendHint:"किसी महीने पर टैप करके उसकी डिटेल देखें"},
+  txnSheet:{titleEdit:"लेन-देन संपादित करें",titleNew:"नया लेन-देन जोड़ें",expense:"➖ खर्च",income:"➕ आय",amount:"राशि (₹)",category:"श्रेणी",date:"तारीख",note:"नोट (वैकल्पिक)",notePh:"जैसे किराने का सामान",isRecurring:"🔁 इसे आवर्ती बनाएं (किराया, सब्सक्रिप्शन, वेतन...)",repeatFreq:"कितनी बार दोहराया जाएगा",customRepeat:"कस्टम अंतराल",customDays:"दिन",customWeeks:"हफ्ते",customMonths:"महीने",nextAutoDate:"अगली ऑटो तारीख",saveUpdate:"अपडेट करें",saveNew:"लेन-देन सेव करें",delete:"लेन-देन हटाएँ",errAmount:"सही राशि डालें",errCat:"पहले एक श्रेणी बनाएं"},
+  catSheet:{titleEdit:"श्रेणी संपादित करें",titleNew:"नई श्रेणी",name:"नाम",namePh:"जैसे राशन",icon:"आइकन",color:"रंग",budget:"मासिक बजट (₹) — वैकल्पिक",budgetPh:"जैसे 5000",saveEdit:"सेव करें",saveNew:"श्रेणी बनाएं",delete:"श्रेणी हटाएँ",errName:"नाम डालें",confirmDelete:"इस श्रेणी में लेन-देन हैं। फिर भी हटाएँ?"},
   catReport:{allTime:"कुल (अब तक):",entries:"एंट्रीज़",avg:"औसत:",thisMonthBudget:"इस महीने का बजट",noBudget:"इस कैटेगरी के लिए अभी कोई मासिक बजट सेट नहीं है — ✎ एडिट से सेट कर सकते हैं।",highestSingle:"सबसे बड़ी एक एंट्री:",trend:"पिछले 6 महीने का रुझान",allEntries:"सभी एंट्रीज़",noEntries:"कोई एंट्री नहीं है",dlPdf:"⬇️ PDF रिपोर्ट डाउनलोड करें",addInCat:"➕ इसी कैटेगरी में एंट्री जोड़ें"},
-  recSheet:{titleEdit:"रिकरिंग एडिट करें",titleNew:"नया रिकरिंग (ऑटो-कट)",nameNote:"नाम / नोट",namePh:"जैसे घर का किराया, Netflix",amount:"राशि (₹)",category:"कैटेगरी",frequency:"आवृत्ति",custom:"कस्टम...",nextDate:"अगली तारीख (कब से कटेगा)",saveEdit:"सेव करें",saveNew:"रिकरिंग बनाएं",delete:"डिलीट करें",errAmount:"सही राशि डालें",errCat:"पहले कैटेगरी बनाएं"},
-  groupSheet:{titleNew:"नया ग्रुप बनाएं",titleEdit:"ग्रुप एडिट करें",name:"ग्रुप का नाम",namePh:"जैसे Flat 302 या गोवा ट्रिप",members:"सदस्य (कॉमा से अलग करें)",membersPh:"आप, राज, प्रिया, अमन",save:"ग्रुप बनाएं",saveEdit:"ग्रुप अपडेट करें",delete:"ग्रुप डिलीट करें",err:"नाम और कम से कम 2 सदस्य डालें",errUsedMembers:"जिस सदस्य का नाम किसी पुराने खर्च में है, उसे हटाया नहीं जा सकता।"},
-  groupExpSheet:{titleNew:"साझा खर्च जोड़ें",titleEdit:"साझा खर्च एडिट करें",desc:"किस चीज़ का खर्च",descPh:"जैसे राशन, कैब किराया",amount:"राशि (₹)",paidBy:"किसने भुगतान किया",splitAmong:"किन-किन में बंटेगा",save:"खर्च जोड़ें",saveEdit:"खर्च अपडेट करें",delete:"खर्च डिलीट करें",errFields:"सही जानकारी भरें",errSplit:"कम से कम एक सदस्य चुनें"},
-  assistant:{title:"🤖 खर्चा असिस्टेंट",tabChat:"🧮 मदद और कैलकुलेटर",tabNotes:"📌 याद रखें",chatEmpty:'कुछ भी पूछें — ऐप के फीचर्स के बारे में, या "2500+1800-300" जैसी गणना 🙂',chatPh:"जैसे रिकरिंग कैसे सेट करूं? या 15% of 4500",notePh:"कुछ याद रखना है? जैसे EMI की तारीख बदल गई",noteEmpty:"यहां कुछ भी याद रखने के लिए जोड़ें"},
+  recSheet:{titleEdit:"आवर्ती संपादित करें",titleNew:"नया आवर्ती (ऑटो-कट)",nameNote:"नाम / नोट",namePh:"जैसे घर का किराया, Netflix",amount:"राशि (₹)",category:"श्रेणी",frequency:"आवृत्ति",custom:"कस्टम...",nextDate:"अगली तारीख (कब से कटेगा)",saveEdit:"सेव करें",saveNew:"आवर्ती बनाएं",delete:"हटाएँ",errAmount:"सही राशि डालें",errCat:"पहले एक श्रेणी बनाएं"},
+  groupSheet:{titleNew:"नया समूह बनाएं",titleEdit:"समूह संपादित करें",name:"समूह का नाम",namePh:"जैसे फ्लैट 302 या गोवा ट्रिप",members:"सदस्य (कॉमा से अलग करें)",membersPh:"आप, राज, प्रिया, अमन",save:"समूह बनाएं",saveEdit:"समूह अपडेट करें",delete:"समूह हटाएँ",err:"नाम और कम से कम 2 सदस्य डालें",errUsedMembers:"जिस सदस्य का नाम पुराने खर्च में है, उसे हटाया नहीं जा सकता।"},
+  groupExpSheet:{titleNew:"साझा खर्च जोड़ें",titleEdit:"साझा खर्च संपादित करें",desc:"किस चीज़ का खर्च",descPh:"जैसे राशन, कैब किराया",amount:"राशि (₹)",paidBy:"किसने भुगतान किया",splitAmong:"किन-किन में बाँटा जाए",save:"खर्च जोड़ें",saveEdit:"खर्च अपडेट करें",delete:"खर्च हटाएँ",errFields:"सही जानकारी भरें",errSplit:"कम से कम एक सदस्य चुनें"},
+  assistant:{title:"🤖 खर्चा-पानी सहायक",tabChat:"🧮 मदद और कैलकुलेटर",tabNotes:"📌 याद रखें",chatEmpty:'कुछ भी पूछें — ऐप के फीचर्स के बारे में, या "2500+1800-300" जैसी गणना 🙂',chatPh:"जैसे रिकरिंग कैसे सेट करूं? या 15% of 4500",notePh:"कुछ याद रखना है? जैसे EMI की तारीख बदल गई",noteEmpty:"यहां कुछ भी याद रखने के लिए जोड़ें"},
   settings:{title:"⚙️ सेटिंग्स",langLabel:"ऐप की भाषा चुनें",nameLabel:"आपका नाम",namePh:"जैसे रोहित",nameSheetTitle:"अपना नाम सेट करें",saveName:"सेव करें"},
   toast:{txnUpdated:"एंट्री अपडेट हो गई ✅",txnSaved:"एंट्री जुड़ गई ✅",txnSavedRec:"एंट्री सेव हो गई और रिकरिंग सेट हो गया ✅",txnDeleted:"एंट्री डिलीट हो गई",txnRestored:s=>s,catSaved:"कैटेगरी सेव हो गई ✅",catDeleted:"कैटेगरी डिलीट हो गई",recSaved:"रिकरिंग सेव हो गया ✅",recDeleted:"रिकरिंग डिलीट हो गया",groupCreated:"ग्रुप बन गया ✅",groupUpdated:"ग्रुप अपडेट हो गया ✅",groupDeleted:"ग्रुप डिलीट हो गया",groupExpAdded:"खर्च जुड़ गया ✅",groupExpUpdated:"साझा खर्च अपडेट हो गया ✅",groupExpDeleted:"साझा खर्च डिलीट हो गया",resetDone:"सारा डेटा रीसेट हो गया",backupDone:"बैकअप डाउनलोड हो गया",restoreDone:"बैकअप रीस्टोर हो गया ✅",restoreBad:"यह वैध बैकअप फ़ाइल नहीं है",undo:"अनडू",storageFull:"स्टोरेज भर गया या ब्लॉक हो गया — डेटा सेव नहीं हुआ",recurringAdded:n=>`${n} रिकरिंग एंट्री अपने आप जुड़ गई`,langChanged:"भाषा बदल दी गई ✅",pdfMissing:"PDF लाइब्रेरी लोड नहीं हो पाई, दोबारा कोशिश करें",nameSaved:"नाम सेव हो गया ✅"},
   confirm:{reset:"पक्का? सारा डेटा (कैटेगरी, एंट्रीज़, रिकरिंग, ग्रुप्स, लॉग्स) हमेशा के लिए मिट जाएगा।",restore:"बैकअप रीस्टोर करने से मौजूदा डेटा ओवरराइट हो जाएगा। जारी रखें?"},
@@ -535,7 +565,7 @@ function defaultData(){
     activityLog:[],
     botChat:[],
     reminders:[],
-    meta:{createdAt:Date.now(), lang:"en", name:"You"}
+    meta:{createdAt:Date.now(), lang:"hi", name:"You"}
   };
 }
 
@@ -552,7 +582,7 @@ function load(){
     if(!parsed.botChat) parsed.botChat = [];
     if(!parsed.reminders) parsed.reminders = [];
     if(!parsed.meta) parsed.meta = {createdAt:Date.now()};
-    if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = "en";
+    if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = "hi";
     if(typeof parsed.meta.name !== "string" || !parsed.meta.name.trim()) parsed.meta.name = "You";
     return parsed;
   }catch(e){ return defaultData(); }
@@ -894,7 +924,10 @@ function restoreFocus(info){
 function renderSidebar(){
   return `
   <div class="sidebar">
-    <div class="side-brand"><div class="logo">💸</div><div class="name">Kharcha</div></div>
+    <div class="side-brand">
+      <div class="logo">💸</div>
+      <div class="side-brand-copy"><div class="name">Kharcha Pani</div><div class="tag">पैसों का आसान हिसाब</div></div>
+    </div>
     ${NAV().map(n=>`
       <button class="side-nav-btn ${state.tab===n.id?'active':''}" data-tab="${n.id}">
         <span class="ic">${n.ic}</span><span>${n.label}</span>
@@ -916,7 +949,12 @@ function renderTopbar(){
   return `
   <div class="topbar">
     <div class="topbar-row">
-      <div class="brand"><span class="brand-mark"><span class="dot"></span>Kharcha</span></div>
+      <div class="brand-lockup">
+        <div>
+          <div class="brand-mark"><span class="dot"></span>Kharcha Pani</div>
+          <div class="brand-subtitle">पैसों का आसान हिसाब</div>
+        </div>
+      </div>
       <div class="topbar-right">
         <div class="month-switch">
           <button data-act="prevMonth">‹</button>
@@ -989,7 +1027,33 @@ function renderDashboard(){
     return stops.join(",");
   })() : null;
 
+  const monthExpense = totals(cur).expense;
+  const monthIncome = totals(cur).income;
+  const monthNet = monthIncome - monthExpense;
+  const insightText = monthIncome>0
+    ? (monthNet>=0 ? `इस महीने आपकी आय में से ${Math.round((monthNet/monthIncome)*100)}% राशि शेष है।` : `इस महीने खर्च आय से ${fmtINR(Math.abs(monthNet))} अधिक है।`)
+    : `आज से अपने रोज़मर्रा के लेन-देन दर्ज करना शुरू करें।`;
+
   return `
+  <div class="grid-left">
+    <div class="dash-hero">
+      <div class="dash-hero-top">
+        <div>
+          <div class="dash-hero-kicker">Kharcha Pani</div>
+          <div class="dash-hero-title">पैसों का हिसाब, एक नज़र में</div>
+          <div class="dash-hero-sub">${insightText}</div>
+        </div>
+        <div style="font-size:28px;line-height:1;">💰</div>
+      </div>
+      <div class="month-insight"><span class="month-insight-dot"></span>${monthLabel(state.month)} · आय ${fmtINR(monthIncome)} · खर्च ${fmtINR(monthExpense)}</div>
+      <div class="dash-actions">
+        <button class="dash-action expense" data-act="quickAddExpense">↘ खर्च जोड़ें</button>
+        <button class="dash-action income" data-act="quickAddIncome">↗ आय जोड़ें</button>
+        <button class="dash-action secondary" data-tab="analysis">📊 विश्लेषण</button>
+      </div>
+    </div>
+  </div>
+
   <div class="grid-left">
     <div class="section-title">${tr.dash.breakdown} <span class="link" data-tab="analysis">${tr.dash.viewAnalysis}</span></div>
     <div class="card">
@@ -1376,7 +1440,7 @@ function renderAnalysis(){
 
 function pdfDocHeader(doc, subtitle){
   doc.setFontSize(16); doc.setTextColor(91,76,224);
-  doc.text("Kharcha", 14, 18);
+  doc.text("Kharcha Pani", 14, 18);
   doc.setFontSize(11); doc.setTextColor(90,90,90);
   doc.text(subtitle, 14, 26);
   doc.text(T().pdf.generated + " " + new Date().toLocaleDateString(LANG_META[curLang()].locale), 14, 32);
@@ -1407,7 +1471,7 @@ function exportCategoryPDF(cat, txns, total){
     doc.text((t.type==='income'?'+':'-')+fmtINR(t.amount),165,y);
     y+=7;
   });
-  doc.save(`kharcha-${(cat.name||'category').replace(/\s+/g,'_').toLowerCase()}-report.pdf`);
+  doc.save(`kharcha-pani-${(cat.name||'category').replace(/\s+/g,'_').toLowerCase()}-report.pdf`);
 }
 function exportFullPDF(){
   if(!ensurePdfLib()) return;
@@ -1436,7 +1500,7 @@ function exportFullPDF(){
     doc.text((txr.type==='income'?'+':'-')+fmtINR(txr.amount),165,y);
     y+=7;
   });
-  doc.save(`kharcha-report-${monthKey(state.month)}.pdf`);
+  doc.save(`kharcha-pani-report-${monthKey(state.month)}.pdf`);
 }
 
 function openSheet(html){
@@ -2220,6 +2284,8 @@ function bindGlobalEvents(){
     state.month=new Date(key+"-01");
     render();
   });
+  const quickExpense = $('[data-act="quickAddExpense"]'); if(quickExpense) quickExpense.onclick = ()=> sheetAddTransaction(null, DB.categories.find(c=>c.type==="expense")?.id);
+  const quickIncome = $('[data-act="quickAddIncome"]'); if(quickIncome) quickIncome.onclick = ()=> sheetAddTransaction(null, DB.categories.find(c=>c.type==="income")?.id);
   const newExp = $('[data-act="newCategoryExpense"]'); if(newExp) newExp.onclick = ()=> sheetCategory("expense");
   const newInc = $('[data-act="newCategoryIncome"]'); if(newInc) newInc.onclick = ()=> sheetCategory("income");
 
