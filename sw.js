@@ -1,33 +1,75 @@
-const CACHE = "kharcha-v4";
-const ASSETS = ["./index.html", "./manifest.json", "./icon.svg"];
+const CACHE = "kharcha-v5";
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+const ASSETS = [
+  "./index.html",
+  "./manifest.json",
+  "./icon.svg"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(ASSETS))
+      .catch(() => {})
+  );
+
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE)
+          .map((key) => caches.delete(key))
+      )
     )
   );
+
   self.clients.claim();
 });
 
-self.addEventListener("fetch", (e) => {
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      const fetchPromise = fetch(e.request)
-        .then(res => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(e.request, clone));
+self.addEventListener("fetch", (event) => {
+  // Sirf GET requests cache karo
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+
+      const network = fetch(event.request)
+        .then((response) => {
+
+          // Successful response ko cache me save karo
+          if (
+            response &&
+            response.status === 200 &&
+            response.type !== "opaque"
+          ) {
+            const clone = response.clone();
+
+            caches.open(CACHE)
+              .then((cache) => cache.put(event.request, clone))
+              .catch(() => {});
           }
-          return res;
+
+          return response;
         })
-        .catch(() => cached);
-      return cached || fetchPromise;
+        .catch(() => {
+          // Internet nahi hai to cached version return karo
+          return (
+            cached ||
+            new Response("Offline", {
+              status: 503,
+              headers: {
+                "Content-Type": "text/plain"
+              }
+            })
+          );
+        });
+
+      // Pehle cache, nahi mila to network
+      return cached || network;
     })
   );
 });
