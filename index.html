@@ -88,6 +88,11 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .settings-btn{width:26px;height:26px;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;transition:background .15s,transform .15s;}
 .settings-btn:hover{background:rgba(255,255,255,.22);}
 .settings-btn:active{transform:scale(.88);}
+.lang-select{appearance:none;-webkit-appearance:none;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="white"/></svg>') no-repeat right 9px center;background-size:10px 6px;color:#fff;font-size:12px;font-weight:700;padding:7px 24px 7px 12px;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px);}
+.lang-select option{color:#181B34;background:#fff;}
+.name-chip{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.10);color:#fff;font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.side-lang-select{width:100%;appearance:none;-webkit-appearance:none;border:1.5px solid var(--border);background:var(--surface-2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%235B6178"/></svg>') no-repeat right 12px center;background-size:10px 6px;color:var(--ink);font-size:13px;font-weight:700;padding:10px 30px 10px 12px;border-radius:var(--radius-s);cursor:pointer;margin-bottom:8px;}
+.side-name-input{width:100%;border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink);font-size:13px;font-weight:600;padding:10px 12px;border-radius:var(--radius-s);margin-bottom:4px;}
 
 .balance-block{margin-top:18px;position:relative;animation:flip3D .55s var(--ease-out) both;}
 .balance-label{font-size:12px;opacity:.78;font-weight:600;}
@@ -306,7 +311,8 @@ const LANG_META = {
   en:{label:"English", native:"English", locale:"en-IN"},
   hi:{label:"हिंदी", native:"शुद्ध हिंदी", locale:"hi-IN"},
 };
-function curLang(){ return (DB && DB.meta && LANGS.includes(DB.meta.lang)) ? DB.meta.lang : "hg"; }
+function curLang(){ return (DB && DB.meta && LANGS.includes(DB.meta.lang)) ? DB.meta.lang : "en"; }
+function curName(){ return (DB && DB.meta && DB.meta.name && DB.meta.name.trim()) ? DB.meta.name.trim() : "You"; }
 
 const DEFAULT_CAT_NAMES = {
   c_food:        {hg:"Khana / Food",   en:"Food",           hi:"खाना"},
@@ -355,10 +361,10 @@ hg: {
   groupSheet:{title:"Naya group banao",name:"Group ka naam",namePh:"e.g. Flat 302 ya Goa Trip",members:"Members (comma se separate karo)",membersPh:"You, Raj, Priya, Aman",save:"Group banao",err:"Naam aur kam se kam 2 members daalo"},
   groupExpSheet:{title:"Shared kharcha add karo",desc:"Kis cheez ka kharcha",descPh:"e.g. Groceries, Cab fare",amount:"Amount (₹)",paidBy:"Kisne pay kiya",splitAmong:"Kis-kis mein split hoga",save:"Kharcha add karo",errFields:"Sahi detail bharo",errSplit:"Kam se kam ek member select karo"},
   assistant:{title:"🤖 Kharcha Assistant",tabChat:"🧮 Help & Calc",tabNotes:"📌 Yaad Rakho",chatEmpty:'Kuch bhi pucho — app ke features ya "2500+1800-300" jaisa calculation 🙂',chatPh:"e.g. recurring kaise set karu? ya 15% of 4500",notePh:"Kuch yaad rakhna hai? e.g. EMI date badal gayi",noteEmpty:"Kuch bhi yaad rakhne ke liye yahan add karo"},
-  settings:{title:"⚙️ Settings",langLabel:"App ki language chuno"},
-  toast:{txnUpdated:"Entry update ho gayi ✅",txnSaved:"Entry add ho gayi ✅",txnSavedRec:"Entry save ho gayi aur recurring set ho gaya ✅",txnDeleted:"Entry delete ho gayi",txnRestored:s=>s,catSaved:"Category save ho gayi ✅",catDeleted:"Category delete ho gayi",recSaved:"Recurring save ho gaya ✅",recDeleted:"Recurring delete ho gaya",groupCreated:"Group ban gaya ✅",groupExpAdded:"Kharcha add ho gaya ✅",resetDone:"Sab data reset ho gaya",backupDone:"Backup download ho gaya",restoreDone:"Backup restore ho gaya ✅",restoreBad:"Ye file valid backup nahi hai",undo:"Undo",storageFull:"Storage full ya block ho gaya — data save nahi hua",recurringAdded:n=>`${n} recurring entry automatic add ho gayi`,langChanged:"Language badal di gayi ✅",pdfMissing:"PDF library load nahi ho payi, dobara try karo"},
+  settings:{title:"⚙️ Settings",langLabel:"App ki language chuno",nameLabel:"Tumhara naam",namePh:"e.g. Rohit",nameSheetTitle:"Apna naam set karo",saveName:"Save karo"},
+  toast:{txnUpdated:"Entry update ho gayi ✅",txnSaved:"Entry add ho gayi ✅",txnSavedRec:"Entry save ho gayi aur recurring set ho gaya ✅",txnDeleted:"Entry delete ho gayi",txnRestored:s=>s,catSaved:"Category save ho gayi ✅",catDeleted:"Category delete ho gayi",recSaved:"Recurring save ho gaya ✅",recDeleted:"Recurring delete ho gaya",groupCreated:"Group ban gaya ✅",groupExpAdded:"Kharcha add ho gaya ✅",resetDone:"Sab data reset ho gaya",backupDone:"Backup download ho gaya",restoreDone:"Backup restore ho gaya ✅",restoreBad:"Ye file valid backup nahi hai",undo:"Undo",storageFull:"Storage full ya block ho gaya — data save nahi hua",recurringAdded:n=>`${n} recurring entry automatic add ho gayi`,langChanged:"Language badal di gayi ✅",pdfMissing:"PDF library load nahi ho payi, dobara try karo",nameSaved:"Naam save ho gaya ✅"},
   confirm:{reset:"Pakka? Sara data (categories, entries, recurring, groups, logs) hamesha ke liye mit jayega.",restore:"Backup restore karne se current data overwrite ho jayega. Continue?"},
-  bot:{recurring:"Recurring ke liye: entry add karte waqt '🔁 recurring hai' tick karo, ya Recurring tab me '+ Naya' se rent/EMI/subscription set karo. Daily se lekar apna custom gap (jaise 45 din) tak set kar sakte ho — app kholte hi due wale apne aap add ho jaate hain.",budget:"Category ✎ (edit) me 'Monthly budget' field bhar do — us category ki tile par progress bar dikhega, aur 80%+ ya cross hone par tip bhi milegi.",split:"Split Bill tab se group banao (members comma se likho), phir kharcha add karo — kaun kisko kitna dega automatic calculate ho jayega.",edit:"Kisi bhi entry par tap karo — edit sheet khulega. Save karne par 'edited' tag lag jata hai aur uska record Analysis > Activity log me dikhta hai.",del:"Entry ke ✕ button se delete hoti hai — turant 'Undo' ka option toast me 4 second tak milta hai.",backup:"Analysis tab > Data card me — PDF report, JSON backup download, aur restore, sab available hai.",offline:"Haan, poora app offline chalta hai — data sirf tumhare is device ke browser me locally save hota hai, kahin bhi upload nahi hota.",category:"Category tile par tap karo to uski full detail (budget, 6-mahine trend, saari entries edit/delete) khulegi; ✎ se naam/icon/color/budget edit kar sakte ho.",greet:"Namaste! Bolo, app ke baare me kuch puchna hai ya koi calculation karni hai?",fallback:"Ye samajh nahi aaya 🤔 — tum mujhse app ke features (recurring, budget, split, edit, backup, category) ke baare me puch sakte ho, ya koi bhi calculation type karo jaise '2450+1200-300' ya '18% of 5600'."},
+  bot:{recurring:"Recurring ke liye: entry add karte waqt '🔁 recurring hai' tick karo, ya Recurring tab me '+ Naya' se rent/EMI/subscription set karo. Daily se lekar apna custom gap (jaise 45 din) tak set kar sakte ho — app kholte hi due wale apne aap add ho jaate hain.",budget:"Category ✎ (edit) me 'Monthly budget' field bhar do — us category ki tile par progress bar dikhega, aur 80%+ ya cross hone par tip bhi milegi.",split:"Split Bill tab se group banao (members comma se likho), phir kharcha add karo — kaun kisko kitna dega automatic calculate ho jayega.",edit:"Kisi bhi entry par tap karo — edit sheet khulega. Save karne par 'edited' tag lag jata hai aur uska record Analysis > Activity log me dikhta hai.",del:"Entry ke ✕ button se delete hoti hai — turant 'Undo' ka option toast me 4 second tak milta hai.",backup:"Analysis tab > Data card me — PDF report, JSON backup download, aur restore, sab available hai.",offline:"Haan, poora app offline chalta hai — data sirf tumhare is device ke browser me locally save hota hai, kahin bhi upload nahi hota.",category:"Category tile par tap karo to uski full detail (budget, 6-mahine trend, saari entries edit/delete) khulegi; ✎ se naam/icon/color/budget edit kar sakte ho.",greet:n=>`Namaste ${n}! Bolo, app ke baare me kuch puchna hai ya koi calculation karni hai?`,fallback:"Ye samajh nahi aaya 🤔 — tum mujhse app ke features (recurring, budget, split, edit, backup, category) ke baare me puch sakte ho, ya koi bhi calculation type karo jaise '2450+1200-300' ya '18% of 5600'."},
   tips:{
     noData:"Is mahine abhi tak koi entry nahi hai. Transaction add karke shuru karo — analysis aur tips yahin dikhenge.",
     overspend:(e,i)=>`Is mahine kharcha (<b>${e}</b>) income (<b>${i}</b>) se zyada ho gaya hai. Agle hafte non-zaroori kharche kam karo.`,
@@ -393,10 +399,10 @@ en: {
   groupSheet:{title:"Create a new group",name:"Group name",namePh:"e.g. Flat 302 or Goa Trip",members:"Members (comma-separated)",membersPh:"You, Raj, Priya, Aman",save:"Create group",err:"Enter a name and at least 2 members"},
   groupExpSheet:{title:"Add shared expense",desc:"What's this expense for",descPh:"e.g. Groceries, Cab fare",amount:"Amount (₹)",paidBy:"Who paid",splitAmong:"Split among",save:"Add expense",errFields:"Fill in the details correctly",errSplit:"Select at least one member"},
   assistant:{title:"🤖 Kharcha Assistant",tabChat:"🧮 Help & Calc",tabNotes:"📌 Reminders",chatEmpty:'Ask me anything — about app features, or a calculation like "2500+1800-300" 🙂',chatPh:"e.g. how do I set up recurring? or 15% of 4500",notePh:"Something to remember? e.g. EMI date changed",noteEmpty:"Add anything you want to remember here"},
-  settings:{title:"⚙️ Settings",langLabel:"Choose app language"},
-  toast:{txnUpdated:"Entry updated ✅",txnSaved:"Entry added ✅",txnSavedRec:"Entry saved and recurring set up ✅",txnDeleted:"Entry deleted",txnRestored:s=>s,catSaved:"Category saved ✅",catDeleted:"Category deleted",recSaved:"Recurring saved ✅",recDeleted:"Recurring deleted",groupCreated:"Group created ✅",groupExpAdded:"Expense added ✅",resetDone:"All data has been reset",backupDone:"Backup downloaded",restoreDone:"Backup restored ✅",restoreBad:"That's not a valid backup file",undo:"Undo",storageFull:"Storage full or blocked — data was not saved",recurringAdded:n=>`${n} recurring entr${n===1?'y':'ies'} added automatically`,langChanged:"Language changed ✅",pdfMissing:"PDF library failed to load, please try again"},
+  settings:{title:"⚙️ Settings",langLabel:"Choose app language",nameLabel:"Your name",namePh:"e.g. Rohit",nameSheetTitle:"Set your name",saveName:"Save"},
+  toast:{txnUpdated:"Entry updated ✅",txnSaved:"Entry added ✅",txnSavedRec:"Entry saved and recurring set up ✅",txnDeleted:"Entry deleted",txnRestored:s=>s,catSaved:"Category saved ✅",catDeleted:"Category deleted",recSaved:"Recurring saved ✅",recDeleted:"Recurring deleted",groupCreated:"Group created ✅",groupExpAdded:"Expense added ✅",resetDone:"All data has been reset",backupDone:"Backup downloaded",restoreDone:"Backup restored ✅",restoreBad:"That's not a valid backup file",undo:"Undo",storageFull:"Storage full or blocked — data was not saved",recurringAdded:n=>`${n} recurring entr${n===1?'y':'ies'} added automatically`,langChanged:"Language changed ✅",pdfMissing:"PDF library failed to load, please try again",nameSaved:"Name saved ✅"},
   confirm:{reset:"Are you sure? All data (categories, entries, recurring, groups, logs) will be permanently deleted.",restore:"Restoring a backup will overwrite your current data. Continue?"},
-  bot:{recurring:"For recurring items: tick '🔁 this is recurring' while adding an entry, or set up rent/EMI/subscriptions from the Recurring tab's '+ New'. You can choose anything from daily to your own custom gap (like 45 days) — due items get added automatically when you open the app.",budget:"Fill in the 'Monthly budget' field via a category's ✎ (edit) button — a progress bar will show on that category's tile, and you'll get a tip once you cross 80% or go over.",split:"Create a group from the Split Bill tab (list members comma-separated), then add expenses — who owes whom gets calculated automatically.",edit:"Tap any entry to open the edit sheet. Once saved, an 'edited' tag appears, and it's logged in Analysis > Activity log.",del:"Entries delete via the ✕ button — an 'Undo' option stays in the toast for 4 seconds right after.",backup:"Everything's in Analysis tab > Data card — PDF report, JSON backup download, and restore, all available there.",offline:"Yes, the whole app works offline — your data is saved locally in this device's browser only, never uploaded anywhere.",category:"Tap a category tile to see its full detail (budget, 6-month trend, edit/delete all entries); use ✎ to edit name/icon/color/budget.",greet:"Hi! Go ahead — ask me about the app, or give me a calculation to do.",fallback:"I didn't quite get that 🤔 — you can ask me about app features (recurring, budget, split, edit, backup, category), or type any calculation like '2450+1200-300' or '18% of 5600'."},
+  bot:{recurring:"For recurring items: tick '🔁 this is recurring' while adding an entry, or set up rent/EMI/subscriptions from the Recurring tab's '+ New'. You can choose anything from daily to your own custom gap (like 45 days) — due items get added automatically when you open the app.",budget:"Fill in the 'Monthly budget' field via a category's ✎ (edit) button — a progress bar will show on that category's tile, and you'll get a tip once you cross 80% or go over.",split:"Create a group from the Split Bill tab (list members comma-separated), then add expenses — who owes whom gets calculated automatically.",edit:"Tap any entry to open the edit sheet. Once saved, an 'edited' tag appears, and it's logged in Analysis > Activity log.",del:"Entries delete via the ✕ button — an 'Undo' option stays in the toast for 4 seconds right after.",backup:"Everything's in Analysis tab > Data card — PDF report, JSON backup download, and restore, all available there.",offline:"Yes, the whole app works offline — your data is saved locally in this device's browser only, never uploaded anywhere.",category:"Tap a category tile to see its full detail (budget, 6-month trend, edit/delete all entries); use ✎ to edit name/icon/color/budget.",greet:n=>`Hi ${n}! Go ahead — ask me about the app, or give me a calculation to do.`,fallback:"I didn't quite get that 🤔 — you can ask me about app features (recurring, budget, split, edit, backup, category), or type any calculation like '2450+1200-300' or '18% of 5600'."},
   tips:{
     noData:"No entries yet this month. Add a transaction to get started — analysis and tips will show up here.",
     overspend:(e,i)=>`This month's expenses (<b>${e}</b>) have crossed your income (<b>${i}</b>). Try cutting non-essential spending next week.`,
@@ -431,10 +437,10 @@ hi: {
   groupSheet:{title:"नया ग्रुप बनाएं",name:"ग्रुप का नाम",namePh:"जैसे Flat 302 या गोवा ट्रिप",members:"सदस्य (कॉमा से अलग करें)",membersPh:"आप, राज, प्रिया, अमन",save:"ग्रुप बनाएं",err:"नाम और कम से कम 2 सदस्य डालें"},
   groupExpSheet:{title:"साझा खर्च जोड़ें",desc:"किस चीज़ का खर्च",descPh:"जैसे राशन, कैब किराया",amount:"राशि (₹)",paidBy:"किसने भुगतान किया",splitAmong:"किन-किन में बंटेगा",save:"खर्च जोड़ें",errFields:"सही जानकारी भरें",errSplit:"कम से कम एक सदस्य चुनें"},
   assistant:{title:"🤖 खर्चा असिस्टेंट",tabChat:"🧮 मदद और कैलकुलेटर",tabNotes:"📌 याद रखें",chatEmpty:'कुछ भी पूछें — ऐप के फीचर्स के बारे में, या "2500+1800-300" जैसी गणना 🙂',chatPh:"जैसे रिकरिंग कैसे सेट करूं? या 15% of 4500",notePh:"कुछ याद रखना है? जैसे EMI की तारीख बदल गई",noteEmpty:"यहां कुछ भी याद रखने के लिए जोड़ें"},
-  settings:{title:"⚙️ सेटिंग्स",langLabel:"ऐप की भाषा चुनें"},
-  toast:{txnUpdated:"एंट्री अपडेट हो गई ✅",txnSaved:"एंट्री जुड़ गई ✅",txnSavedRec:"एंट्री सेव हो गई और रिकरिंग सेट हो गया ✅",txnDeleted:"एंट्री डिलीट हो गई",txnRestored:s=>s,catSaved:"कैटेगरी सेव हो गई ✅",catDeleted:"कैटेगरी डिलीट हो गई",recSaved:"रिकरिंग सेव हो गया ✅",recDeleted:"रिकरिंग डिलीट हो गया",groupCreated:"ग्रुप बन गया ✅",groupExpAdded:"खर्च जुड़ गया ✅",resetDone:"सारा डेटा रीसेट हो गया",backupDone:"बैकअप डाउनलोड हो गया",restoreDone:"बैकअप रीस्टोर हो गया ✅",restoreBad:"यह वैध बैकअप फ़ाइल नहीं है",undo:"अनडू",storageFull:"स्टोरेज भर गया या ब्लॉक हो गया — डेटा सेव नहीं हुआ",recurringAdded:n=>`${n} रिकरिंग एंट्री अपने आप जुड़ गई`,langChanged:"भाषा बदल दी गई ✅",pdfMissing:"PDF लाइब्रेरी लोड नहीं हो पाई, दोबारा कोशिश करें"},
+  settings:{title:"⚙️ सेटिंग्स",langLabel:"ऐप की भाषा चुनें",nameLabel:"आपका नाम",namePh:"जैसे रोहित",nameSheetTitle:"अपना नाम सेट करें",saveName:"सेव करें"},
+  toast:{txnUpdated:"एंट्री अपडेट हो गई ✅",txnSaved:"एंट्री जुड़ गई ✅",txnSavedRec:"एंट्री सेव हो गई और रिकरिंग सेट हो गया ✅",txnDeleted:"एंट्री डिलीट हो गई",txnRestored:s=>s,catSaved:"कैटेगरी सेव हो गई ✅",catDeleted:"कैटेगरी डिलीट हो गई",recSaved:"रिकरिंग सेव हो गया ✅",recDeleted:"रिकरिंग डिलीट हो गया",groupCreated:"ग्रुप बन गया ✅",groupExpAdded:"खर्च जुड़ गया ✅",resetDone:"सारा डेटा रीसेट हो गया",backupDone:"बैकअप डाउनलोड हो गया",restoreDone:"बैकअप रीस्टोर हो गया ✅",restoreBad:"यह वैध बैकअप फ़ाइल नहीं है",undo:"अनडू",storageFull:"स्टोरेज भर गया या ब्लॉक हो गया — डेटा सेव नहीं हुआ",recurringAdded:n=>`${n} रिकरिंग एंट्री अपने आप जुड़ गई`,langChanged:"भाषा बदल दी गई ✅",pdfMissing:"PDF लाइब्रेरी लोड नहीं हो पाई, दोबारा कोशिश करें",nameSaved:"नाम सेव हो गया ✅"},
   confirm:{reset:"पक्का? सारा डेटा (कैटेगरी, एंट्रीज़, रिकरिंग, ग्रुप्स, लॉग्स) हमेशा के लिए मिट जाएगा।",restore:"बैकअप रीस्टोर करने से मौजूदा डेटा ओवरराइट हो जाएगा। जारी रखें?"},
-  bot:{recurring:"रिकरिंग के लिए: एंट्री जोड़ते समय '🔁 यह रिकरिंग है' टिक करें, या रिकरिंग टैब में '+ नई' से किराया/EMI/सब्सक्रिप्शन सेट करें। रोज़ाना से लेकर अपना कस्टम अंतराल (जैसे 45 दिन) तक सेट कर सकते हैं — ऐप खोलते ही देय आइटम अपने आप जुड़ जाते हैं।",budget:"कैटेगरी के ✎ (एडिट) में 'मासिक बजट' फ़ील्ड भरें — उस कैटेगरी की टाइल पर प्रोग्रेस बार दिखेगा, और 80%+ या पार होने पर सुझाव भी मिलेगा।",split:"स्प्लिट बिल टैब से ग्रुप बनाएं (सदस्य कॉमा से लिखें), फिर खर्च जोड़ें — कौन किसको कितना देगा अपने आप कैलकुलेट हो जाएगा।",edit:"किसी भी एंट्री पर टैप करें — एडिट शीट खुलेगी। सेव करने पर 'edited' टैग लग जाता है और उसका रिकॉर्ड Analysis > Activity log में दिखता है।",del:"एंट्री ✕ बटन से डिलीट होती है — तुरंत 'अनडू' का विकल्प टोस्ट में 4 सेकंड तक मिलता है।",backup:"Analysis टैब > Data कार्ड में — PDF रिपोर्ट, JSON बैकअप डाउनलोड, और रीस्टोर, सब उपलब्ध है।",offline:"हां, पूरा ऐप ऑफ़लाइन चलता है — डेटा सिर्फ आपके इसी डिवाइस के ब्राउज़र में लोकली सेव होता है, कहीं भी अपलोड नहीं होता।",category:"कैटेगरी टाइल पर टैप करें तो उसकी पूरी जानकारी (बजट, 6-महीने का रुझान, सभी एंट्रीज़ एडिट/डिलीट) खुलेगी; ✎ से नाम/आइकन/रंग/बजट एडिट कर सकते हैं।",greet:"नमस्ते! बताइए, ऐप के बारे में कुछ पूछना है या कोई गणना करनी है?",fallback:"यह समझ नहीं आया 🤔 — आप मुझसे ऐप के फीचर्स (रिकरिंग, बजट, स्प्लिट, एडिट, बैकअप, कैटेगरी) के बारे में पूछ सकते हैं, या कोई भी गणना टाइप करें जैसे '2450+1200-300' या '18% of 5600'।"},
+  bot:{recurring:"रिकरिंग के लिए: एंट्री जोड़ते समय '🔁 यह रिकरिंग है' टिक करें, या रिकरिंग टैब में '+ नई' से किराया/EMI/सब्सक्रिप्शन सेट करें। रोज़ाना से लेकर अपना कस्टम अंतराल (जैसे 45 दिन) तक सेट कर सकते हैं — ऐप खोलते ही देय आइटम अपने आप जुड़ जाते हैं।",budget:"कैटेगरी के ✎ (एडिट) में 'मासिक बजट' फ़ील्ड भरें — उस कैटेगरी की टाइल पर प्रोग्रेस बार दिखेगा, और 80%+ या पार होने पर सुझाव भी मिलेगा।",split:"स्प्लिट बिल टैब से ग्रुप बनाएं (सदस्य कॉमा से लिखें), फिर खर्च जोड़ें — कौन किसको कितना देगा अपने आप कैलकुलेट हो जाएगा।",edit:"किसी भी एंट्री पर टैप करें — एडिट शीट खुलेगी। सेव करने पर 'edited' टैग लग जाता है और उसका रिकॉर्ड Analysis > Activity log में दिखता है।",del:"एंट्री ✕ बटन से डिलीट होती है — तुरंत 'अनडू' का विकल्प टोस्ट में 4 सेकंड तक मिलता है।",backup:"Analysis टैब > Data कार्ड में — PDF रिपोर्ट, JSON बैकअप डाउनलोड, और रीस्टोर, सब उपलब्ध है।",offline:"हां, पूरा ऐप ऑफ़लाइन चलता है — डेटा सिर्फ आपके इसी डिवाइस के ब्राउज़र में लोकली सेव होता है, कहीं भी अपलोड नहीं होता।",category:"कैटेगरी टाइल पर टैप करें तो उसकी पूरी जानकारी (बजट, 6-महीने का रुझान, सभी एंट्रीज़ एडिट/डिलीट) खुलेगी; ✎ से नाम/आइकन/रंग/बजट एडिट कर सकते हैं।",greet:n=>`नमस्ते ${n}! बताइए, ऐप के बारे में कुछ पूछना है या कोई गणना करनी है?`,fallback:"यह समझ नहीं आया 🤔 — आप मुझसे ऐप के फीचर्स (रिकरिंग, बजट, स्प्लिट, एडिट, बैकअप, कैटेगरी) के बारे में पूछ सकते हैं, या कोई भी गणना टाइप करें जैसे '2450+1200-300' या '18% of 5600'।"},
   tips:{
     noData:"इस महीने अभी तक कोई एंट्री नहीं है। ट्रांज़ैक्शन जोड़कर शुरू करें — विश्लेषण और सुझाव यहीं दिखेंगे।",
     overspend:(e,i)=>`इस महीने खर्च (<b>${e}</b>) आय (<b>${i}</b>) से ज़्यादा हो गया है। अगले हफ्ते गैर-ज़रूरी खर्च कम करें।`,
@@ -483,7 +489,7 @@ function defaultData(){
     activityLog:[],
     botChat:[],
     reminders:[],
-    meta:{createdAt:Date.now(), lang:"hg"}
+    meta:{createdAt:Date.now(), lang:"en", name:"You"}
   };
 }
 
@@ -500,7 +506,8 @@ function load(){
     if(!parsed.botChat) parsed.botChat = [];
     if(!parsed.reminders) parsed.reminders = [];
     if(!parsed.meta) parsed.meta = {createdAt:Date.now()};
-    if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = "hg";
+    if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = "en";
+    if(typeof parsed.meta.name !== "string" || !parsed.meta.name.trim()) parsed.meta.name = "You";
     return parsed;
   }catch(e){ return defaultData(); }
 }
@@ -807,7 +814,14 @@ function renderSidebar(){
         <span class="ic">${n.ic}</span><span>${n.label}</span>
       </button>`).join("")}
     <button class="side-fab" data-tab="add">${T().side.newEntry}</button>
-    <button class="side-nav-btn" data-act="openSettings" style="margin-top:4px;"><span class="ic">⚙️</span><span>${T().settings.title.replace('⚙️ ','')}</span></button>
+    <div style="margin-top:16px;">
+      <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;">${T().settings.langLabel}</label>
+      <select class="side-lang-select" id="sideLangSelect">
+        ${LANGS.map(l=>`<option value="${l}" ${curLang()===l?'selected':''}>${LANG_META[l].label}</option>`).join("")}
+      </select>
+      <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin:8px 0 6px;">${T().settings.nameLabel}</label>
+      <input type="text" class="side-name-input" id="sideNameInput" value="${curName().replace(/"/g,'&quot;')}" placeholder="${T().settings.namePh}">
+    </div>
     <div class="side-foot">${T().side.foot}</div>
   </div>`;
 }
@@ -823,7 +837,10 @@ function renderTopbar(){
           <span class="month-label">${monthLabel(state.month)}</span>
           <button data-act="nextMonth">›</button>
         </div>
-        <button class="settings-btn" data-act="openSettings" title="Settings">⚙️</button>
+        <select class="lang-select" id="topLangSelect" title="${T().settings.langLabel}">
+          ${LANGS.map(l=>`<option value="${l}" ${curLang()===l?'selected':''}>${LANG_META[l].label}</option>`).join("")}
+        </select>
+        <button class="name-chip" data-act="openNameSheet" title="${T().settings.nameLabel}">${curName()}</button>
       </div>
     </div>
     <div class="balance-block">
@@ -1297,26 +1314,30 @@ function closeSheet(overlay){
   setTimeout(()=> overlay.remove(), 260);
 }
 
-function sheetSettings(){
+function setLang(l){
+  if(!LANGS.includes(l)) return;
+  DB.meta.lang = l;
+  save();
+  render();
+  toast(T().toast.langChanged);
+}
+function sheetNameEdit(){
+  const trS = T().settings;
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">${T().settings.title}</div>
-    <div class="hint" style="margin-top:-10px;margin-bottom:14px;">${T().settings.langLabel}</div>
-    <div class="lang-row" id="langRow">
-      ${LANGS.map(l=>`
-        <div class="lang-opt ${curLang()===l?'active':''}" data-set-lang="${l}">
-          <div><div class="lname">${LANG_META[l].label}</div><div class="lnative">${LANG_META[l].native}</div></div>
-          <div class="check"></div>
-        </div>`).join("")}
+    <div class="sheet-title">${trS.nameSheetTitle}</div>
+    <div class="field">
+      <label>${trS.nameLabel}</label>
+      <input type="text" id="f_userName" value="${curName().replace(/"/g,'&quot;')}" placeholder="${trS.namePh}" autofocus>
     </div>
+    <button class="btn" id="saveName">${trS.saveName}</button>
   `);
-  $$("[data-set-lang]", overlay).forEach(el=> el.onclick = ()=>{
-    DB.meta.lang = el.dataset.setLang;
-    save();
-    closeSheet(overlay);
-    render();
-    toast(T().toast.langChanged);
-  });
+  $("#saveName", overlay).onclick = ()=>{
+    const v = $("#f_userName", overlay).value.trim();
+    DB.meta.name = v || "You";
+    save(); closeSheet(overlay); render();
+    toast(T().toast.nameSaved);
+  };
 }
 
 function sheetAddTransaction(existing, presetCategoryId){
@@ -1611,7 +1632,7 @@ function botReply(msg){
   if(has("backup","restore","export","download")) return tr.backup;
   if(has("offline","internet")) return tr.offline;
   if(has("category")) return tr.category;
-  if(has("hi","hello","hey","namaste")) return tr.greet;
+  if(has("hi","hello","hey","namaste")) return tr.greet(curName());
   return tr.fallback;
 }
 function chatBubbleHTML(m){
@@ -1802,7 +1823,7 @@ function sheetNewGroup(){
     <div class="sheet-handle"></div>
     <div class="sheet-title">${tr.title}</div>
     <div class="field"><label>${tr.name}</label><input type="text" id="g_name" placeholder="${tr.namePh}"></div>
-    <div class="field"><label>${tr.members}</label><input type="text" id="g_members" placeholder="${tr.membersPh}"></div>
+    <div class="field"><label>${tr.members}</label><input type="text" id="g_members" placeholder="${tr.membersPh}" value="${curName()}, "></div>
     <button class="btn" id="saveGroup">${tr.save}</button>
   `);
   $("#saveGroup", overlay).onclick = ()=>{
@@ -1858,7 +1879,15 @@ function bindGlobalEvents(){
   const nextBtn = $('[data-act="nextMonth"]');
   if(nextBtn) nextBtn.onclick = ()=>{ state.month = new Date(state.month.getFullYear(), state.month.getMonth()+1, 1); render(); };
 
-  $$('[data-act="openSettings"]').forEach(el=> el.onclick = sheetSettings);
+  $$('[data-act="openNameSheet"]').forEach(el=> el.onclick = sheetNameEdit);
+  const topLangSel = $('#topLangSelect'); if(topLangSel) topLangSel.onchange = (e)=> setLang(e.target.value);
+  const sideLangSel = $('#sideLangSelect'); if(sideLangSel) sideLangSel.onchange = (e)=> setLang(e.target.value);
+  const sideNameInp = $('#sideNameInput');
+  if(sideNameInp){
+    const commit = ()=>{ const v = sideNameInp.value.trim(); if(v !== curName()){ DB.meta.name = v || "You"; save(); render(); } };
+    sideNameInp.onblur = commit;
+    sideNameInp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); commit(); } });
+  }
 
   $$('[data-edit-txn]').forEach(el=> el.onclick = ()=> sheetAddTransaction(DB.transactions.find(t=>t.id===el.dataset.editTxn)));
   $$('[data-del-txn]').forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
@@ -1929,7 +1958,8 @@ function importData(e){
       if(!parsed.botChat) parsed.botChat = [];
       if(!parsed.reminders) parsed.reminders = [];
       if(!parsed.meta) parsed.meta = {createdAt:Date.now()};
-      if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = DB.meta.lang || "hg";
+      if(!LANGS.includes(parsed.meta.lang)) parsed.meta.lang = DB.meta.lang || "en";
+      if(typeof parsed.meta.name !== "string" || !parsed.meta.name.trim()) parsed.meta.name = "You";
       DB = parsed; save(); render();
       toast(T().toast.restoreDone);
     }catch(err){ toast(T().toast.restoreBad); }
