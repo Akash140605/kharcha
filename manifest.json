@@ -1,12 +1,12 @@
 {
   "name": "Kharcha — Money Manager",
   "short_name": "Kharcha",
-  "description": "Offline, on-device money management: categories, expenses, recurring auto-cut, analysis and tips.",
+  "description": "Offline expense & income tracker — recurring auto-cut, split bills, budgets, edit history aur analysis ke saath.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#EEF1F5",
-  "theme_color": "#16213A",
-  "orientation": "portrait",
+  "background_color": "#F3F4FB",
+  "theme_color": "#4834D4",
+  "orientation": "portrait-primary",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]

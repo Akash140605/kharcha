@@ -8,70 +8,29 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <style>
-/* ============================================================
-   Kharcha — design tokens
-============================================================ */
 :root{
-  --bg:#F3F4FB;
-  --surface:#FFFFFF;
-  --surface-2:#F3F5FC;
-  --ink:#181B34;
-  --ink-soft:#5B6178;
-  --muted:#9AA0B8;
-  --border:#E7E9F5;
-
-  --grad-1:#7C6CF0;
-  --grad-2:#4834D4;
-  --primary:#5B4CE0;
-  --primary-ink:#FFFFFF;
-
-  --accent:#F5A623;
-  --accent-2:#FFD166;
-  --accent-soft:#FFF3DC;
-
-  --income:#00B894;
-  --income-2:#00D8A8;
-  --income-soft:#E1FBF4;
-
-  --expense:#FF5E62;
-  --expense-2:#FF9966;
-  --expense-soft:#FFE9E8;
-
-  --teal:#17C3B2;
-  --pink:#F45B8D;
-  --blue:#3D8BFD;
-
-  --radius-s:12px;
-  --radius-m:18px;
-  --radius-l:26px;
-
+  --bg:#F3F4FB; --surface:#FFFFFF; --surface-2:#F3F5FC; --ink:#181B34; --ink-soft:#5B6178;
+  --muted:#9AA0B8; --border:#E7E9F5;
+  --grad-1:#7C6CF0; --grad-2:#4834D4; --primary:#5B4CE0; --primary-ink:#FFFFFF;
+  --accent:#F5A623; --accent-2:#FFD166; --accent-soft:#FFF3DC;
+  --income:#00B894; --income-2:#00D8A8; --income-soft:#E1FBF4;
+  --expense:#FF5E62; --expense-2:#FF9966; --expense-soft:#FFE9E8;
+  --teal:#17C3B2; --pink:#F45B8D; --blue:#3D8BFD;
+  --radius-s:12px; --radius-m:18px; --radius-l:26px;
   --shadow-sm:0 1px 2px rgba(24,27,52,.05), 0 2px 8px rgba(24,27,52,.05);
   --shadow-md:0 4px 14px rgba(24,27,52,.07), 0 12px 32px rgba(24,27,52,.06);
   --shadow-lg:0 8px 26px rgba(72,52,212,.16), 0 2px 8px rgba(24,27,52,.08);
   --glow-primary:0 10px 24px -6px rgba(91,76,224,.5);
   --glow-income:0 8px 20px -6px rgba(0,184,148,.45);
   --glow-expense:0 8px 20px -6px rgba(255,94,98,.4);
-
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-  --ease-spring:cubic-bezier(.34,1.56,.64,1);
-  --ease-out:cubic-bezier(.16,1,.3,1);
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1); --ease-out:cubic-bezier(.16,1,.3,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0B0D1C;
-    --surface:#151830;
-    --surface-2:#1B1E3A;
-    --ink:#EDEFFB;
-    --ink-soft:#B4B8D4;
-    --muted:#7A7FA0;
-    --border:#292D52;
-    --grad-1:#8A7BFA;
-    --grad-2:#5C4AE8;
-    --primary:#8A7BFA;
-    --accent-soft:#3A2E12;
-    --income-soft:#0E2E27;
-    --expense-soft:#3A1C1D;
+    --bg:#0B0D1C; --surface:#151830; --surface-2:#1B1E3A; --ink:#EDEFFB; --ink-soft:#B4B8D4;
+    --muted:#7A7FA0; --border:#292D52; --grad-1:#8A7BFA; --grad-2:#5C4AE8; --primary:#8A7BFA;
+    --accent-soft:#3A2E12; --income-soft:#0E2E27; --expense-soft:#3A1C1D;
     --shadow-sm:0 1px 2px rgba(0,0,0,.3), 0 2px 8px rgba(0,0,0,.25);
     --shadow-md:0 4px 14px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.3);
     --glow-primary:0 10px 26px -6px rgba(138,123,250,.55);
@@ -82,139 +41,75 @@
   --muted:#7A7FA0; --border:#292D52; --grad-1:#8A7BFA; --grad-2:#5C4AE8; --primary:#8A7BFA;
   --accent-soft:#3A2E12; --income-soft:#0E2E27; --expense-soft:#3A1C1D;
 }
-
 *{box-sizing:border-box;}
 html,body{height:100%;}
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
+  margin:0; background:var(--bg); color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:var(--safe-bottom);
-  overscroll-behavior-y:none;
-  position:relative;
+  -webkit-font-smoothing:antialiased; padding-bottom:var(--safe-bottom); overscroll-behavior-y:none; position:relative;
 }
 html{scroll-padding-top:var(--safe-top);}
 button{font-family:inherit;}
 @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
-
-/* ambient background blobs for depth */
-body::before, body::after{
-  content:"";position:fixed;z-index:0;border-radius:50%;filter:blur(70px);opacity:.35;pointer-events:none;
-}
+body::before, body::after{content:"";position:fixed;z-index:0;border-radius:50%;filter:blur(70px);opacity:.35;pointer-events:none;}
 body::before{width:340px;height:340px;top:-120px;right:-100px;background:radial-gradient(circle,var(--grad-1),transparent 70%);}
 body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial-gradient(circle,var(--accent),transparent 70%);opacity:.18;}
 
-/* ============================================================
-   Shell / layout
-============================================================ */
 .shell{position:relative;z-index:1;display:flex;min-height:100vh;}
 .sidebar{display:none;}
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;}
 .app-inner{max-width:560px;margin:0 auto;width:100%;padding-top:var(--safe-top);}
-
-/* ---------- Sidebar (desktop) ---------- */
-.sidebar{
-  width:250px;flex:none;padding:26px 16px;flex-direction:column;gap:6px;
-  border-right:1px solid var(--border);position:sticky;top:0;height:100vh;
-}
+.sidebar{width:250px;flex:none;padding:26px 16px;flex-direction:column;gap:6px;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;}
 .side-brand{display:flex;align-items:center;gap:10px;padding:6px 12px 26px;}
-.side-brand .logo{
-  width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--grad-1),var(--grad-2));
-  display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--glow-primary);
-}
+.side-brand .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--grad-1),var(--grad-2));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--glow-primary);}
 .side-brand .name{font-size:16.5px;font-weight:800;letter-spacing:-.02em;}
-.side-nav-btn{
-  display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-s);
-  border:none;background:transparent;color:var(--ink-soft);font-size:14px;font-weight:600;
-  cursor:pointer;text-align:left;transition:background .18s,color .18s,transform .15s;
-}
+.side-nav-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-s);border:none;background:transparent;color:var(--ink-soft);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:background .18s,color .18s,transform .15s;}
 .side-nav-btn .ic{font-size:18px;width:22px;text-align:center;}
 .side-nav-btn:hover{background:var(--surface-2);color:var(--ink);}
 .side-nav-btn.active{background:linear-gradient(135deg,var(--grad-1),var(--grad-2));color:#fff;box-shadow:var(--glow-primary);}
 .side-nav-btn:active{transform:scale(.97);}
-.side-fab{
-  margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px;border-radius:var(--radius-s);border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#3A2E00;font-weight:800;font-size:13.5px;
-  box-shadow:0 10px 22px -8px rgba(245,166,35,.55);transition:transform .15s;
-}
+.side-fab{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--radius-s);border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#3A2E00;font-weight:800;font-size:13.5px;box-shadow:0 10px 22px -8px rgba(245,166,35,.55);transition:transform .15s;}
 .side-fab:hover{transform:translateY(-2px);}
 .side-fab:active{transform:scale(.96);}
 .side-foot{margin-top:auto;padding:12px;font-size:11px;color:var(--muted);line-height:1.5;}
 
-/* ============================================================
-   Topbar / hero
-============================================================ */
-.topbar{
-  position:relative;overflow:hidden;
-  padding:calc(16px + var(--safe-top)) 20px 18px;
-  margin-top:calc(-1 * var(--safe-top));
-  background:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 100%);
-  color:#fff;border-radius:0 0 var(--radius-l) var(--radius-l);
-  box-shadow:var(--shadow-lg);
-}
-.topbar::before{
-  content:"";position:absolute;width:220px;height:220px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);
-  top:-90px;right:-60px;
-}
+.topbar{position:relative;overflow:hidden;padding:calc(16px + var(--safe-top)) 20px 18px;margin-top:calc(-1 * var(--safe-top));background:linear-gradient(135deg,var(--grad-1) 0%,var(--grad-2) 100%);color:#fff;border-radius:0 0 var(--radius-l) var(--radius-l);box-shadow:var(--shadow-lg);}
+.topbar::before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);top:-90px;right:-60px;}
 .topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;}
 .brand{display:flex;align-items:center;gap:8px;}
 .brand-mark{font-size:18px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px;}
 .brand-mark .dot{width:9px;height:9px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 0 4px rgba(255,209,102,.25);}
 .month-switch{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.14);border-radius:999px;padding:4px;backdrop-filter:blur(6px);}
-.month-switch button{
-  width:26px;height:26px;border:none;border-radius:50%;background:transparent;color:#fff;
-  font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;
-}
+.month-switch button{width:26px;height:26px;border:none;border-radius:50%;background:transparent;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;}
 .month-switch button:hover{background:rgba(255,255,255,.22);}
 .month-switch button:active{transform:scale(.85);}
 .month-label{font-size:12.5px;font-weight:700;min-width:80px;text-align:center;}
+.settings-btn{width:26px;height:26px;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 
-.balance-block{margin-top:18px;position:relative;}
+.balance-block{margin-top:18px;position:relative;animation:flip3D .55s var(--ease-out) both;}
 .balance-label{font-size:12px;opacity:.78;font-weight:600;}
-.balance-amount{font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:2px;
-  font-variant-numeric:tabular-nums;}
+.balance-amount{font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:2px;font-variant-numeric:tabular-nums;}
 .stat-row{display:flex;gap:10px;margin-top:18px;position:relative;}
-.stat-pill{
-  flex:1;background:rgba(255,255,255,.12);border-radius:var(--radius-m);
-  padding:11px 14px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);
-  transition:transform .2s var(--ease-out);
-}
+.stat-pill{flex:1;background:rgba(255,255,255,.12);border-radius:var(--radius-m);padding:11px 14px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);transition:transform .2s var(--ease-out);animation:popIn3D .5s var(--ease-out) both;}
+.stat-pill:nth-child(2){animation-delay:.08s;}
 .stat-pill:hover{transform:translateY(-2px);}
 .stat-pill .k{font-size:11px;opacity:.78;display:flex;align-items:center;gap:5px;}
 .stat-pill .v{font-size:16.5px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;}
 .stat-pill.income .v{color:#8CFFD6;}
 .stat-pill.expense .v{color:#FFC1B8;}
 
-/* ============================================================
-   Content
-============================================================ */
-.content{flex:1;padding:20px 18px 110px;position:relative;}
-.section-title{
-  font-size:14.5px;font-weight:800;margin:24px 0 11px;display:flex;align-items:center;justify-content:space-between;
-  color:var(--ink);letter-spacing:-.01em;
-}
+.content{flex:1;padding:20px 18px 110px;position:relative;perspective:1000px;}
+.section-title{font-size:14.5px;font-weight:800;margin:24px 0 11px;display:flex;align-items:center;justify-content:space-between;color:var(--ink);letter-spacing:-.01em;}
 .section-title .link{font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;transition:opacity .15s;}
 .section-title .link:hover{opacity:.7;}
-
-.card{
-  background:var(--surface);border-radius:var(--radius-m);
-  box-shadow:var(--shadow-sm);padding:17px;border:1px solid var(--border);
-  transition:box-shadow .25s var(--ease-out),transform .25s var(--ease-out);
-}
-@media (hover:hover) and (pointer:fine){
-  .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
-}
+.card{background:var(--surface);border-radius:var(--radius-m);box-shadow:var(--shadow-sm);padding:17px;border:1px solid var(--border);transition:box-shadow .25s var(--ease-out),transform .25s var(--ease-out);}
+@media (hover:hover) and (pointer:fine){ .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);} }
 .empty{text-align:center;color:var(--muted);font-size:13.5px;padding:30px 10px;}
 .empty .big{font-size:30px;display:block;margin-bottom:8px;animation:float 3s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
 
-/* entrance animation — replays automatically since content is re-inserted each render */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-.content > *{animation:fadeUp .5s var(--ease-out) both;}
+@keyframes contentEnter3D{from{opacity:0;transform:perspective(900px) rotateX(8deg) translateY(16px);}to{opacity:1;transform:perspective(900px) rotateX(0) translateY(0);}}
+.content > *{animation:contentEnter3D .5s var(--ease-out) both;}
 .content > *:nth-child(1){animation-delay:.02s;}
 .content > *:nth-child(2){animation-delay:.07s;}
 .content > *:nth-child(3){animation-delay:.12s;}
@@ -224,78 +119,56 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .content > *:nth-child(7){animation-delay:.32s;}
 .content > *:nth-child(8){animation-delay:.37s;}
 .content > *:nth-child(n+9){animation-delay:.4s;}
+@keyframes flip3D{0%{opacity:0;transform:perspective(700px) rotateX(-70deg);}100%{opacity:1;transform:perspective(700px) rotateX(0);}}
+@keyframes popIn3D{from{opacity:0;transform:perspective(600px) rotateY(-25deg) scale(.9);}to{opacity:1;transform:perspective(600px) rotateY(0) scale(1);}}
+@keyframes iconPop3D{0%{transform:perspective(400px) rotateX(80deg) scale(.5);opacity:0;}100%{transform:perspective(400px) rotateX(0) scale(1);opacity:1;}}
 
-/* dashboard responsive grid */
 .dash-grid{display:block;}
 .dash-col{min-width:0;}
 
-/* Pie chart */
 .pie-wrap{display:flex;align-items:center;gap:20px;}
-.pie{
-  width:132px;height:132px;border-radius:50%;flex:none;position:relative;
-  background:conic-gradient(var(--surface-2) 0 100%);
-  box-shadow:inset 0 2px 10px rgba(0,0,0,.05), var(--shadow-sm);
-  animation:popIn .55s var(--ease-spring) both;
-}
+.pie{width:132px;height:132px;border-radius:50%;flex:none;position:relative;background:conic-gradient(var(--surface-2) 0 100%);box-shadow:inset 0 2px 10px rgba(0,0,0,.05), var(--shadow-sm);animation:popIn .55s var(--ease-spring) both;}
 @keyframes popIn{from{opacity:0;transform:scale(.7) rotate(-40deg);}to{opacity:1;transform:scale(1) rotate(0);}}
-.pie-center{position:absolute;inset:22px;border-radius:50%;background:var(--surface);
-  box-shadow:0 1px 3px rgba(0,0,0,.06) inset;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pie-center{position:absolute;inset:22px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.06) inset;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .pie-center .t{font-size:9.5px;color:var(--muted);font-weight:700;}
 .pie-center .v{font-size:12.5px;font-weight:800;color:var(--ink);}
 .legend{flex:1;display:flex;flex-direction:column;gap:9px;min-width:0;}
 .legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;}
-.legend-dot{width:9px;height:9px;border-radius:50%;flex:none;box-shadow:0 0 0 3px currentColor22;}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex:none;}
 .legend-name{flex:1;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
-.legend-pct{font-weight:800;color:var(--ink);}
+.legend-pct{font-weight:800;color:var(--ink);display:flex;align-items:center;gap:4px;}
 
-/* Tips */
 .tip{display:flex;gap:11px;padding:12px 0;border-top:1px solid var(--border);}
 .tip:first-child{border-top:none;padding-top:2px;}
-.tip-icon{
-  font-size:17px;flex:none;width:32px;height:32px;border-radius:10px;background:var(--surface-2);
-  display:flex;align-items:center;justify-content:center;
-}
+.tip-icon{font-size:17px;flex:none;width:32px;height:32px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;}
 .tip-text{font-size:13px;color:var(--ink-soft);line-height:1.5;padding-top:4px;}
 .tip-text b{color:var(--ink);}
 
-/* Transactions list */
 .txn{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--border);transition:background .15s;}
 .txn:first-child{border-top:none;}
-.txn-icon{
-  width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  font-size:17px;flex:none;box-shadow:inset 0 -2px 4px rgba(0,0,0,.05);
-}
+.txn-icon{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:17px;flex:none;box-shadow:inset 0 -2px 4px rgba(0,0,0,.05);}
 .txn-main{flex:1;min-width:0;}
 .txn-cat{font-size:13.5px;font-weight:700;color:var(--ink);}
 .txn-note{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .txn-amt{font-size:14px;font-weight:800;flex:none;font-variant-numeric:tabular-nums;}
 .txn-amt.income{color:var(--income);}
 .txn-amt.expense{color:var(--expense);}
-.txn-del{
-  border:none;background:transparent;color:var(--muted);font-size:15px;padding:6px;cursor:pointer;flex:none;
-  border-radius:50%;transition:background .15s,color .15s;
-}
+.txn-del{border:none;background:transparent;color:var(--muted);font-size:15px;padding:6px;cursor:pointer;flex:none;border-radius:50%;transition:background .15s,color .15s;}
 .txn-del:hover{background:var(--expense-soft);color:var(--expense);}
 
-/* Grid (categories) */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
-.cat-tile{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
-  padding:15px 8px;text-align:center;cursor:pointer;transition:transform .2s var(--ease-out),box-shadow .2s;
-}
-.cat-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.cat-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:15px 8px;text-align:center;cursor:pointer;transition:transform .2s var(--ease-out),box-shadow .2s;position:relative;}
+.cat-edit-btn{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:50%;border:none;background:var(--surface-2);color:var(--muted);font-size:10.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
+.cat-tile:hover{transform:perspective(600px) rotateX(4deg) translateY(-3px);box-shadow:var(--shadow-md);}
 .cat-tile:active{transform:scale(.96);}
-.cat-tile .ic{
-  width:42px;height:42px;border-radius:13px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:19px;
-  box-shadow:inset 0 -3px 6px rgba(0,0,0,.06);
-}
+.cat-tile .ic{width:42px;height:42px;border-radius:13px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:inset 0 -3px 6px rgba(0,0,0,.06);}
 .cat-tile .nm{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cat-tile .amt{font-size:10.5px;color:var(--muted);margin-top:2px;font-weight:600;}
 .cat-tile.add{border-style:dashed;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--surface-2);}
 .cat-tile.add .ic{background:var(--surface);color:var(--primary);box-shadow:none;}
+.tile-budget-track{height:4px;background:var(--surface-2);border-radius:3px;margin-top:7px;overflow:hidden;}
+.tile-budget-fill{height:100%;border-radius:3px;transition:width .7s var(--ease-out);}
 
-/* Recurring list */
 .rec-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--border);}
 .rec-row:first-child{border-top:none;}
 .rec-main{flex:1;min-width:0;cursor:pointer;}
@@ -304,11 +177,9 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .rec-amt{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;}
 .switch{width:40px;height:23px;border-radius:999px;background:var(--border);position:relative;cursor:pointer;flex:none;border:none;transition:background .2s;}
 .switch.on{background:linear-gradient(135deg,var(--income),var(--income-2));}
-.switch::after{content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:50%;background:#fff;
-  transition:transform .22s var(--ease-spring);box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.switch::after{content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .22s var(--ease-spring);box-shadow:0 1px 3px rgba(0,0,0,.25);}
 .switch.on::after{transform:translateX(17px);}
 
-/* Analysis bars */
 .bar-row{margin-bottom:13px;}
 .bar-row-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;}
 .bar-row-top .nm{color:var(--ink-soft);font-weight:600;}
@@ -316,79 +187,39 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .bar-track{height:9px;border-radius:6px;background:var(--surface-2);overflow:hidden;}
 .bar-fill{height:100%;border-radius:6px;width:0;transition:width 1s var(--ease-out);}
 
-/* Bottom nav (mobile / tablet) */
-.tabbar{
-  position:fixed;left:0;right:0;bottom:0;z-index:30;
-  max-width:560px;margin:0 auto;
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:8px 6px calc(8px + var(--safe-bottom));
-  display:flex;justify-content:space-around;
-  box-shadow:0 -4px 20px rgba(24,27,52,.06);
-}
-.tab{
-  border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;
-  color:var(--muted);font-size:10.5px;font-weight:600;padding:5px 10px;cursor:pointer;flex:1;
-  transition:color .18s,transform .15s;
-}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:560px;margin:0 auto;background:var(--surface);border-top:1px solid var(--border);padding:8px 6px calc(8px + var(--safe-bottom));display:flex;justify-content:space-around;box-shadow:0 -4px 20px rgba(24,27,52,.06);}
+.tab{border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:600;padding:5px 10px;cursor:pointer;flex:1;transition:color .18s,transform .15s;}
 .tab .ic{font-size:19px;transition:transform .18s var(--ease-spring);}
 .tab.active{color:var(--primary);}
-.tab.active .ic{transform:translateY(-2px) scale(1.08);}
+.tab.active .ic{transform:translateY(-2px) scale(1.08);animation:iconPop3D .4s var(--ease-spring) both;}
 .tab:active{transform:scale(.92);}
-.tab.fab .ic{
-  width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#3A2E00;
-  display:flex;align-items:center;justify-content:center;font-size:23px;margin-top:-20px;
-  box-shadow:0 8px 18px -6px rgba(245,166,35,.6);
-}
+.tab.fab .ic{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#3A2E00;display:flex;align-items:center;justify-content:center;font-size:23px;margin-top:-20px;box-shadow:0 8px 18px -6px rgba(245,166,35,.6);}
 .tab.fab:active .ic{transform:scale(.9);}
 
-/* Modal / sheet */
-.sheet-overlay{
-  position:fixed;inset:0;background:rgba(11,13,28,.5);z-index:50;
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(2px);
-}
+.sheet-overlay{position:fixed;inset:0;background:rgba(11,13,28,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(2px);}
 .sheet-overlay.show{opacity:1;pointer-events:auto;}
-.sheet{
-  background:var(--surface);width:100%;max-width:520px;border-radius:var(--radius-l) var(--radius-l) 0 0;
-  padding:18px 20px calc(22px + var(--safe-bottom));
-  max-height:88vh;overflow-y:auto;
-  transform:translateY(24px);transition:transform .28s var(--ease-spring);
-  box-shadow:0 -12px 40px rgba(24,27,52,.18);
-}
-.sheet-overlay.show .sheet{transform:translateY(0);}
+.sheet{background:var(--surface);width:100%;max-width:520px;border-radius:var(--radius-l) var(--radius-l) 0 0;padding:18px 20px calc(22px + var(--safe-bottom));max-height:88vh;overflow-y:auto;transform:perspective(1000px) rotateX(10deg) translateY(26px);transform-origin:bottom center;transition:transform .3s var(--ease-spring);box-shadow:0 -12px 40px rgba(24,27,52,.18);}
+.sheet-overlay.show .sheet{transform:perspective(1000px) rotateX(0) translateY(0);}
 .sheet-handle{width:38px;height:4px;background:var(--border);border-radius:3px;margin:0 auto 16px;}
 .sheet-title{font-size:17.5px;font-weight:800;margin-bottom:18px;letter-spacing:-.01em;}
 .field{margin-bottom:15px;}
 .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:7px;}
-.field input,.field select,.field textarea{
-  width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);
-  background:var(--surface-2);color:var(--ink);font-size:14.5px;font-family:inherit;transition:border-color .15s,box-shadow .15s;
-}
+.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14.5px;font-family:inherit;transition:border-color .15s,box-shadow .15s;}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(91,76,224,.12);}
 .seg{display:flex;gap:8px;}
-.seg button{
-  flex:1;padding:11px;border-radius:var(--radius-s);border:1.5px solid var(--border);background:var(--surface-2);
-  color:var(--ink-soft);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;
-}
+.seg button{flex:1;padding:11px;border-radius:var(--radius-s);border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink-soft);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;}
+.seg button.active{background:var(--surface);border-color:var(--primary);color:var(--primary);}
 .seg button.active.income{background:var(--income-soft);border-color:var(--income);color:var(--income);}
 .seg button.active.expense{background:var(--expense-soft);border-color:var(--expense);color:var(--expense);}
 .icon-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:6px;}
-.icon-grid button{
-  aspect-ratio:1;border-radius:11px;border:1.5px solid var(--border);background:var(--surface-2);
-  font-size:16px;cursor:pointer;transition:transform .15s,border-color .15s;
-}
+.icon-grid button{aspect-ratio:1;border-radius:11px;border:1.5px solid var(--border);background:var(--surface-2);font-size:16px;cursor:pointer;transition:transform .15s,border-color .15s;}
 .icon-grid button:hover{transform:scale(1.08);}
 .icon-grid button.active{border-color:var(--primary);background:linear-gradient(135deg,#EFECFF,#F7F5FF);transform:scale(1.05);}
 .color-grid{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;}
 .color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:transform .15s;}
 .color-dot:hover{transform:scale(1.12);}
 .color-dot.active{border-color:var(--ink);transform:scale(1.15);}
-.btn{
-  width:100%;padding:14px;border-radius:var(--radius-s);border:none;
-  background:linear-gradient(135deg,var(--grad-1),var(--grad-2));color:#fff;
-  font-size:14.5px;font-weight:800;cursor:pointer;margin-top:6px;box-shadow:var(--glow-primary);
-  transition:transform .15s,box-shadow .15s;
-}
+.btn{width:100%;padding:14px;border-radius:var(--radius-s);border:none;background:linear-gradient(135deg,var(--grad-1),var(--grad-2));color:#fff;font-size:14.5px;font-weight:800;cursor:pointer;margin-top:6px;box-shadow:var(--glow-primary);transition:transform .15s,box-shadow .15s;}
 .btn:hover{transform:translateY(-2px);}
 .btn:active{transform:scale(.97);}
 .btn.secondary{background:var(--surface-2);color:var(--ink);border:1.5px solid var(--border);box-shadow:none;}
@@ -396,22 +227,22 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .btn-row{display:flex;gap:10px;margin-top:4px;}
 .btn-row .btn{margin-top:0;}
 
-.toast{
-  position:fixed;left:50%;bottom:calc(94px + var(--safe-bottom));transform:translateX(-50%) translateY(10px);
-  background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:12.5px;font-weight:600;
-  z-index:80;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 24px rgba(0,0,0,.25);
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast{position:fixed;left:50%;bottom:calc(94px + var(--safe-bottom));transform:translateX(-50%) translateY(10px);background:var(--ink);color:var(--bg);padding:11px 14px 11px 20px;border-radius:999px;font-size:12.5px;font-weight:600;z-index:80;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px;max-width:90vw;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.toast-undo{background:var(--accent);color:#3A2E00;border:none;padding:6px 13px;border-radius:999px;font-size:11.5px;font-weight:800;cursor:pointer;flex:none;}
 .hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.55;}
 .freq-chip{display:inline-block;font-size:10px;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:800;}
+.edited-chip{font-size:9px;color:var(--muted);font-weight:700;}
+.assistant-fab{position:fixed;right:16px;bottom:calc(92px + var(--safe-bottom));z-index:35;width:52px;height:52px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--grad-1),var(--grad-2));color:#fff;font-size:22px;box-shadow:var(--glow-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--ease-spring);animation:popIn3D .5s var(--ease-out) both;}
+.assistant-fab:hover{transform:scale(1.08) translateY(-2px);}
+.assistant-fab:active{transform:scale(.92);}
+@media (min-width:1024px){ .assistant-fab{bottom:24px;right:40px;} }
+.note-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--surface);flex:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800;transition:all .15s;}
+.note-check.done{background:linear-gradient(135deg,var(--income),var(--income-2));border-color:var(--income);}
+.chat-bubble{padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;max-width:82%;}
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
 
-/* ============================================================
-   Responsive breakpoints
-============================================================ */
-
-/* Tablet ~640px+ */
 @media (min-width:640px){
   .app-inner{max-width:660px;}
   .content{padding:22px 24px 120px;}
@@ -421,8 +252,6 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .sheet{max-width:480px;border-radius:var(--radius-l);margin-bottom:24px;}
   .sheet-overlay{align-items:center;}
 }
-
-/* Desktop ~1024px+ : sidebar layout */
 @media (min-width:1024px){
   body::before,body::after{opacity:.22;}
   .sidebar{display:flex;}
@@ -430,13 +259,9 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .shell{max-width:1280px;margin:0 auto;}
   .app-inner{max-width:none;padding:0;}
   .content{padding:28px 40px 60px;max-width:980px;}
-  .topbar{
-    margin:24px 40px 0;border-radius:var(--radius-l);padding:26px 30px;
-  }
+  .topbar{margin:24px 40px 0;border-radius:var(--radius-l);padding:26px 30px;}
   .balance-amount{font-size:40px;}
   .topbar-row{align-items:flex-start;}
-
-  /* two-column dashboard grid */
   .dash-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:0 28px;align-items:start;}
   .dash-col{display:contents;}
   .dash-col.left > *{grid-column:1;}
@@ -445,24 +270,17 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .content > *{grid-column:1 / -1;}
   .content > .grid-left{grid-column:1;}
   .content > .grid-right{grid-column:2;}
-
   .cat-grid{grid-template-columns:repeat(5,1fr);}
-  .card:hover{transform:translateY(-3px) scale(1.005);}
+  .card:hover{transform:perspective(1000px) rotateX(1.5deg) translateY(-3px);}
 }
-@media (min-width:1280px){
-  .cat-grid{grid-template-columns:repeat(6,1fr);}
-}
+@media (min-width:1280px){ .cat-grid{grid-template-columns:repeat(6,1fr);} }
 </style>
 </head>
 <body>
 <div class="shell" id="shell"></div>
 <div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* ============================================================
-   Kharcha — offline money manager. All data stays in this
-   browser's localStorage on this device. Nothing leaves it.
-============================================================ */
-
 const LS_KEY = "kharcha_data_v1";
 const $ = (sel, el=document) => el.querySelector(sel);
 const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
@@ -470,22 +288,28 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7
 
 const ICONS = ["🍔","🚌","🛍️","💡","🎬","🏥","📚","🏠","✈️","🎉","☕","📱","💰","💵","🎁","🧾","🐾","⚽","🧴","➕"];
 const COLORS = ["#FF5E62","#00B894","#F5A623","#5B4CE0","#8952C4","#F45B8D","#17C3B2","#3D8BFD","#F0933D","#2E9E6B"];
+const FREQ_LABELS = {daily:"Daily",every10:"10-din",weekly:"Weekly",monthly:"Monthly",quarterly:"Quarterly",halfyearly:"Half-yearly",yearly:"Yearly"};
+const ACT_ICON = {add:"➕",edit:"✎",delete:"🗑️",restore:"↩️"};
 
 function defaultData(){
   return {
     categories:[
-      {id:"c_food",name:"Khana / Food",type:"expense",icon:"🍔",color:"#FF5E62"},
-      {id:"c_transport",name:"Transport",type:"expense",icon:"🚌",color:"#F0933D"},
-      {id:"c_shopping",name:"Shopping",type:"expense",icon:"🛍️",color:"#8952C4"},
-      {id:"c_bills",name:"Bills & Rent",type:"expense",icon:"💡",color:"#5B4CE0"},
-      {id:"c_entertainment",name:"Entertainment",type:"expense",icon:"🎬",color:"#F45B8D"},
-      {id:"c_health",name:"Health",type:"expense",icon:"🏥",color:"#3D8BFD"},
-      {id:"c_other",name:"Other",type:"expense",icon:"🧾",color:"#2E9E6B"},
-      {id:"c_salary",name:"Salary",type:"income",icon:"💰",color:"#00B894"},
-      {id:"c_extra",name:"Extra Income",type:"income",icon:"💵",color:"#17C3B2"},
+      {id:"c_food",name:"Khana / Food",type:"expense",icon:"🍔",color:"#FF5E62",budget:null},
+      {id:"c_transport",name:"Transport",type:"expense",icon:"🚌",color:"#F0933D",budget:null},
+      {id:"c_shopping",name:"Shopping",type:"expense",icon:"🛍️",color:"#8952C4",budget:null},
+      {id:"c_bills",name:"Bills & Rent",type:"expense",icon:"💡",color:"#5B4CE0",budget:null},
+      {id:"c_entertainment",name:"Entertainment",type:"expense",icon:"🎬",color:"#F45B8D",budget:null},
+      {id:"c_health",name:"Health",type:"expense",icon:"🏥",color:"#3D8BFD",budget:null},
+      {id:"c_other",name:"Other",type:"expense",icon:"🧾",color:"#2E9E6B",budget:null},
+      {id:"c_salary",name:"Salary",type:"income",icon:"💰",color:"#00B894",budget:null},
+      {id:"c_extra",name:"Extra Income",type:"income",icon:"💵",color:"#17C3B2",budget:null},
     ],
     transactions:[],
     recurring:[],
+    groups:[],
+    activityLog:[],
+    botChat:[],
+    reminders:[],
     meta:{createdAt:Date.now()}
   };
 }
@@ -497,15 +321,33 @@ function load(){
     if(!raw) return defaultData();
     const parsed = JSON.parse(raw);
     if(!parsed.categories || !parsed.transactions) return defaultData();
+    if(!parsed.groups) parsed.groups = [];
+    if(!parsed.recurring) parsed.recurring = [];
+    if(!parsed.activityLog) parsed.activityLog = [];
+    if(!parsed.botChat) parsed.botChat = [];
+    if(!parsed.reminders) parsed.reminders = [];
     return parsed;
   }catch(e){ return defaultData(); }
 }
 function save(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }
   catch(e){ toast("Storage full ya block ho gaya — data save nahi hua"); }
+  document.dispatchEvent(new CustomEvent('kharcha:save'));
+}
+function logActivity(type, message){
+  DB.activityLog.unshift({id:uid(), ts:Date.now(), type, message});
+  if(DB.activityLog.length>300) DB.activityLog.length = 300;
+}
+function timeAgo(ts){
+  const diff = Math.floor((Date.now()-ts)/1000);
+  if(diff<60) return "abhi abhi";
+  if(diff<3600) return Math.floor(diff/60)+" min pehle";
+  if(diff<86400) return Math.floor(diff/3600)+" ghante pehle";
+  const d = Math.floor(diff/86400);
+  if(d<30) return d+" din pehle";
+  return fmtDate(ts);
 }
 
-/* ---------- formatting ---------- */
 function fmtINR(n){
   n = Math.round(n);
   const neg = n < 0; n = Math.abs(n);
@@ -521,22 +363,50 @@ function fmtDate(d){
 }
 function monthKey(d){ d=new Date(d); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 function monthLabel(d){ return d.toLocaleDateString("en-IN",{month:"long",year:"numeric"}); }
+function freqLabel(r){
+  if(r.frequency==="custom"){
+    const unit = r.customUnit==="days"?"din":r.customUnit==="weeks"?"hafte":"mahine";
+    return `Har ${r.customVal||1} ${unit}`;
+  }
+  return FREQ_LABELS[r.frequency]||r.frequency;
+}
 
-/* ---------- state ---------- */
 let state = {
   tab: "dashboard",
   month: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+  group: null,
+  txnSearch: "",
+  txnFilterType: "all",
 };
 let prevStats = {balance:0, income:0, expense:0};
 
-/* ---------- recurring engine (auto-cut) ---------- */
-function nextDateFor(dateStr, freq){
+function nextDateFor(dateStr, freq, customVal, customUnit){
   const d = new Date(dateStr);
   if(freq==="daily") d.setDate(d.getDate()+1);
+  else if(freq==="every10") d.setDate(d.getDate()+10);
   else if(freq==="weekly") d.setDate(d.getDate()+7);
   else if(freq==="monthly") d.setMonth(d.getMonth()+1);
+  else if(freq==="quarterly") d.setMonth(d.getMonth()+3);
+  else if(freq==="halfyearly") d.setMonth(d.getMonth()+6);
   else if(freq==="yearly") d.setFullYear(d.getFullYear()+1);
+  else if(freq==="custom"){
+    const v = Math.max(1, parseInt(customVal)||1);
+    if(customUnit==="weeks") d.setDate(d.getDate()+v*7);
+    else if(customUnit==="months") d.setMonth(d.getMonth()+v);
+    else d.setDate(d.getDate()+v);
+  }
+  else d.setMonth(d.getMonth()+1);
   return d.toISOString().slice(0,10);
+}
+function monthlyMult(r){
+  const m = {daily:30, every10:3, weekly:4.33, monthly:1, quarterly:1/3, halfyearly:1/6, yearly:1/12};
+  if(r.frequency==="custom"){
+    const v = Math.max(1, r.customVal||1);
+    if(r.customUnit==="days") return 30/v;
+    if(r.customUnit==="weeks") return 4.33/v;
+    if(r.customUnit==="months") return 1/v;
+  }
+  return m[r.frequency] ?? 1;
 }
 function runRecurringEngine(){
   const today = new Date().toISOString().slice(0,10);
@@ -548,10 +418,10 @@ function runRecurringEngine(){
       DB.transactions.push({
         id: uid(), categoryId: r.categoryId, amount: r.amount,
         note: (r.note? r.note+" ": "") + "(Auto)", date: r.nextDate,
-        type: r.type, recurringId: r.id
+        type: r.type, recurringId: r.id, history: []
       });
       r.lastRun = r.nextDate;
-      r.nextDate = nextDateFor(r.nextDate, r.frequency);
+      r.nextDate = nextDateFor(r.nextDate, r.frequency, r.customVal, r.customUnit);
       created++; guard++;
     }
   });
@@ -559,7 +429,6 @@ function runRecurringEngine(){
   return created;
 }
 
-/* ---------- derived helpers ---------- */
 function catById(id){ return DB.categories.find(c=>c.id===id); }
 function txnsForMonth(monthDate){
   const key = monthKey(monthDate);
@@ -580,8 +449,29 @@ function categoryBreakdown(txns, type="expense"){
     .filter(x=>x.cat)
     .sort((a,b)=>b.amount-a.amount);
 }
+function weekdayBreakdown(txns){
+  const names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const sums=[0,0,0,0,0,0,0];
+  txns.filter(t=>t.type==="expense").forEach(t=>{
+    let d = new Date(t.date).getDay();
+    d = (d+6)%7;
+    sums[d]+=t.amount;
+  });
+  return names.map((n,i)=>({name:n, amount:sums[i]}));
+}
+function highestExpense(txns){
+  const exp = txns.filter(t=>t.type==="expense");
+  if(!exp.length) return null;
+  return exp.reduce((a,b)=> b.amount>a.amount? b:a);
+}
+function dailyAverage(monthDate, txns){
+  const now = new Date();
+  const isCurrentMonth = monthDate.getFullYear()===now.getFullYear() && monthDate.getMonth()===now.getMonth();
+  const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth()+1, 0).getDate();
+  const daysElapsed = isCurrentMonth? now.getDate() : daysInMonth;
+  return totals(txns).expense / Math.max(1,daysElapsed);
+}
 
-/* ---------- tips engine ---------- */
 function buildTips(){
   const tips = [];
   const cur = txnsForMonth(state.month);
@@ -616,10 +506,7 @@ function buildTips(){
   }
   const activeRecurring = DB.recurring.filter(r=>r.active && r.type==="expense");
   if(activeRecurring.length){
-    const monthlyCommit = activeRecurring.reduce((s,r)=>{
-      const mult = r.frequency==="daily"?30:r.frequency==="weekly"?4.33:r.frequency==="yearly"?(1/12):1;
-      return s + r.amount*mult;
-    },0);
+    const monthlyCommit = activeRecurring.reduce((s,r)=> s + r.amount*monthlyMult(r), 0);
     if(curT.income>0 && monthlyCommit/curT.income > 0.5){
       tips.push({icon:"🔁", text:`Recurring (auto) kharche tumhari income ka <b>${Math.round(monthlyCommit/curT.income*100)}%</b> khaa rahe hain. Inhe review karo.`});
     }
@@ -628,21 +515,35 @@ function buildTips(){
   if(smallDaily && smallDaily.amount > 3000){
     tips.push({icon:"🍽️", text:`Khane-peene par is mahine <b>${fmtINR(smallDaily.amount)}</b> kharch hue. Ghar ka khana thoda badha kar bahar ke kharche kam ho sakte hain.`});
   }
+  DB.categories.filter(c=>c.budget).forEach(c=>{
+    const spent = cur.filter(t=>t.categoryId===c.id && t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    if(spent > c.budget){
+      tips.push({icon:"🚨", text:`<b>${c.name}</b> ka budget (${fmtINR(c.budget)}) cross ho gaya hai — abhi tak <b>${fmtINR(spent)}</b> kharch ho chuke hain.`});
+    } else if(spent > c.budget*0.8){
+      tips.push({icon:"⏳", text:`<b>${c.name}</b> budget ka <b>${Math.round(spent/c.budget*100)}%</b> use ho chuka hai.`});
+    }
+  });
+  const highest = highestExpense(cur);
+  if(highest && curT.expense>0 && highest.amount/curT.expense>0.25){
+    const hc = catById(highest.categoryId);
+    tips.push({icon:"💸", text:`Sabse bada single kharcha: <b>${fmtINR(highest.amount)}</b> (${hc?.name||'-'}, ${fmtDate(highest.date)}) — is mahine ke kul kharche ka bada hissa yahin gaya.`});
+  }
   if(tips.length===0) tips.push({icon:"✅", text:"Sab theek chal raha hai. Roz apni entries add karte raho taaki analysis accurate rahe."});
-  return tips.slice(0,5);
+  return tips.slice(0,6);
 }
 
-/* ---------- toast ---------- */
 let toastTimer;
-function toast(msg){
+function toast(msg, action){
   const el = $("#toast");
-  el.textContent = msg;
+  el.innerHTML = `<span>${msg}</span>` + (action? `<button class="toast-undo" id="toastActionBtn">${action.label}</button>` : "");
   el.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove("show"), 2200);
+  if(action){
+    $("#toastActionBtn").onclick = ()=>{ action.onClick(); el.classList.remove("show"); clearTimeout(toastTimer); };
+  }
+  toastTimer = setTimeout(()=>el.classList.remove("show"), action?4200:2200);
 }
 
-/* ---------- animated counters ---------- */
 function animateNumber(el, from, to, duration, fmt){
   if(!el) return;
   if(Math.abs(from-to)<1){ el.textContent = fmt(to); return; }
@@ -657,27 +558,24 @@ function animateNumber(el, from, to, duration, fmt){
   requestAnimationFrame(tick);
 }
 function animateBars(){
-  requestAnimationFrame(()=>{
-    $$(".bar-fill[data-w]").forEach(el=>{ el.style.width = el.dataset.w; });
-  });
+  requestAnimationFrame(()=>{ $$(".bar-fill[data-w]").forEach(el=>{ el.style.width = el.dataset.w; }); });
+}
+function animateBarsIn(container){
+  requestAnimationFrame(()=>{ $$(".bar-fill[data-w]", container).forEach(el=>{ el.style.width = el.dataset.w; }); });
 }
 
-/* ============================================================
-   Nav config
-============================================================ */
 const NAV = [
   {id:"dashboard", ic:"🏠", label:"Home"},
   {id:"transactions", ic:"📋", label:"Entries"},
   {id:"categories", ic:"🗂️", label:"Category"},
+  {id:"split", ic:"🤝", label:"Split bill"},
   {id:"recurring", ic:"🔁", label:"Recurring"},
   {id:"analysis", ic:"📊", label:"Analysis"},
 ];
 
-/* ============================================================
-   Render: shell
-============================================================ */
 function render(){
   const shell = $("#shell");
+  const focusInfo = captureFocus();
   shell.innerHTML = `
     ${renderSidebar()}
     <div class="main-col">
@@ -687,23 +585,34 @@ function render(){
       </div>
     </div>
     ${renderTabbar()}
+    <button class="assistant-fab" id="assistantFab" title="Assistant">🤖</button>
   `;
   bindGlobalEvents();
   animateBars();
+  restoreFocus(focusInfo);
   const t = totals(txnsForMonth(state.month));
   animateNumber($("#balanceValue"), prevStats.balance, t.balance, 700, fmtINR);
   animateNumber($("#incomeValue"), prevStats.income, t.income, 700, fmtINR);
   animateNumber($("#expenseValue"), prevStats.expense, t.expense, 700, fmtINR);
   prevStats = t;
 }
+function captureFocus(){
+  const el = document.activeElement;
+  if(el && el.id==="txnSearch"){
+    return {id:"txnSearch", pos:el.selectionStart};
+  }
+  return null;
+}
+function restoreFocus(info){
+  if(!info) return;
+  const el = $("#"+info.id);
+  if(el){ el.focus(); try{ el.setSelectionRange(info.pos, info.pos); }catch(e){} }
+}
 
 function renderSidebar(){
   return `
   <div class="sidebar">
-    <div class="side-brand">
-      <div class="logo">💸</div>
-      <div class="name">Kharcha</div>
-    </div>
+    <div class="side-brand"><div class="logo">💸</div><div class="name">Kharcha</div></div>
     ${NAV.map(n=>`
       <button class="side-nav-btn ${state.tab===n.id?'active':''}" data-tab="${n.id}">
         <span class="ic">${n.ic}</span><span>${n.label}</span>
@@ -717,9 +626,7 @@ function renderTopbar(){
   return `
   <div class="topbar">
     <div class="topbar-row">
-      <div class="brand">
-        <span class="brand-mark"><span class="dot"></span>Kharcha</span>
-      </div>
+      <div class="brand"><span class="brand-mark"><span class="dot"></span>Kharcha</span></div>
       <div class="month-switch">
         <button data-act="prevMonth">‹</button>
         <span class="month-label">${monthLabel(state.month)}</span>
@@ -742,8 +649,8 @@ function renderTabbar(){
     {id:"dashboard", ic:"🏠", label:"Home"},
     {id:"transactions", ic:"📋", label:"Entries"},
     {id:"add", ic:"+", label:"Add", fab:true},
+    {id:"split", ic:"🤝", label:"Split"},
     {id:"categories", ic:"🗂️", label:"Category"},
-    {id:"recurring", ic:"🔁", label:"Auto"},
     {id:"analysis", ic:"📊", label:"Analysis"},
   ];
   return `<div class="tabbar">
@@ -762,10 +669,10 @@ function renderTab(){
   if(state.tab==="categories") return renderCategories();
   if(state.tab==="recurring") return renderRecurring();
   if(state.tab==="analysis") return renderAnalysis();
+  if(state.tab==="split") return renderSplit();
   return "";
 }
 
-/* ---------- dashboard ---------- */
 function renderDashboard(){
   const cur = txnsForMonth(state.month);
   const breakdown = categoryBreakdown(cur,"expense");
@@ -826,7 +733,7 @@ function renderDashboard(){
       ${activeRec.slice(0,4).map(r=>`
         <div class="rec-row">
           <div class="rec-main">
-            <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${r.frequency}</span></div>
+            <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${freqLabel(r)}</span></div>
             <div class="rec-meta">Agli baar: ${fmtDate(r.nextDate)}</div>
           </div>
           <div class="rec-amt" style="color:${r.type==='income'?'var(--income)':'var(--expense)'}">${r.type==='income'?'+':'-'}${fmtINR(r.amount)}</div>
@@ -838,6 +745,20 @@ function renderDashboard(){
 
 function txnRow(t){
   const cat = catById(t.categoryId) || {name:"Deleted", icon:"❓", color:"#999"};
+  const edited = t.history && t.history.length;
+  return `
+  <div class="txn">
+    <div class="txn-icon" style="background:${cat.color}22;color:${cat.color}">${cat.icon}</div>
+    <div class="txn-main" data-edit-txn="${t.id}" style="cursor:pointer;">
+      <div class="txn-cat">${cat.name} ${edited? '<span class="edited-chip">(edited)</span>':''}</div>
+      <div class="txn-note">${fmtDate(t.date)}${t.note? " · "+t.note : ""}</div>
+    </div>
+    <div class="txn-amt ${t.type}">${t.type==='income'?'+':'-'}${fmtINR(t.amount)}</div>
+    <button class="txn-del" data-del-txn="${t.id}">✕</button>
+  </div>`;
+}
+function readOnlyTxnRow(t){
+  const cat = catById(t.categoryId) || {name:"Deleted", icon:"❓", color:"#999"};
   return `
   <div class="txn">
     <div class="txn-icon" style="background:${cat.color}22;color:${cat.color}">${cat.icon}</div>
@@ -846,35 +767,52 @@ function txnRow(t){
       <div class="txn-note">${fmtDate(t.date)}${t.note? " · "+t.note : ""}</div>
     </div>
     <div class="txn-amt ${t.type}">${t.type==='income'?'+':'-'}${fmtINR(t.amount)}</div>
-    <button class="txn-del" data-del-txn="${t.id}">✕</button>
   </div>`;
 }
 
-/* ---------- transactions tab ---------- */
 function renderTransactions(){
-  const cur = [...txnsForMonth(state.month)].sort((a,b)=> b.date.localeCompare(a.date));
+  const q = (state.txnSearch||"").toLowerCase().trim();
+  const filterType = state.txnFilterType || "all";
+  let cur = [...txnsForMonth(state.month)].sort((a,b)=> b.date.localeCompare(a.date));
+  if(filterType!=="all") cur = cur.filter(t=>t.type===filterType);
+  if(q) cur = cur.filter(t=>{
+    const cat = catById(t.categoryId);
+    return (t.note||"").toLowerCase().includes(q) || (cat?.name||"").toLowerCase().includes(q);
+  });
   return `
-  <div class="section-title">Is mahine ki entries</div>
+  <div class="field" style="margin-bottom:10px;">
+    <input type="text" id="txnSearch" placeholder="🔍 Note ya category search karo..." value="${state.txnSearch? state.txnSearch.replace(/"/g,'&quot;'):''}">
+  </div>
+  <div class="seg" style="margin-bottom:14px;">
+    <button type="button" class="${filterType==='all'?'active':''}" data-filter-type="all">Sab</button>
+    <button type="button" class="${filterType==='income'?'active income':''}" data-filter-type="income">Income</button>
+    <button type="button" class="${filterType==='expense'?'active expense':''}" data-filter-type="expense">Expense</button>
+  </div>
+  <div class="section-title">Entries ${(q||filterType!=='all')? `(${cur.length} mile)`:''}</div>
   <div class="card">
-    ${cur.length? cur.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>Koi entry nahi hai — + dabakar add karo</div>`}
+    ${cur.length? cur.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>Koi entry nahi mili</div>`}
   </div>`;
 }
 
-/* ---------- categories tab ---------- */
 function renderCategories(){
   const cur = txnsForMonth(state.month);
   const expCats = DB.categories.filter(c=>c.type==="expense");
   const incCats = DB.categories.filter(c=>c.type==="income");
-  function spent(catId){
-    return cur.filter(t=>t.categoryId===catId).reduce((s,t)=>s+t.amount,0);
-  }
-  const tile = c => `
-    <div class="cat-tile" data-edit-cat="${c.id}">
+  function spent(catId){ return cur.filter(t=>t.categoryId===catId).reduce((s,t)=>s+t.amount,0); }
+  const tile = c => {
+    const sp = spent(c.id);
+    const budgetBar = c.budget? `<div class="tile-budget-track"><div class="tile-budget-fill" style="width:${Math.min(100, sp/c.budget*100)}%;background:${sp>c.budget?'var(--expense)':c.color}"></div></div>` : "";
+    return `
+    <div class="cat-tile" data-view-cat="${c.id}">
+      <button class="cat-edit-btn" data-edit-cat="${c.id}">✎</button>
       <div class="ic" style="background:${c.color}22;color:${c.color}">${c.icon}</div>
       <div class="nm">${c.name}</div>
-      <div class="amt">${spent(c.id)? fmtINR(spent(c.id)) : "—"}</div>
+      <div class="amt">${sp? fmtINR(sp) : "—"}</div>
+      ${budgetBar}
     </div>`;
+  };
   return `
+  <div class="hint" style="margin-bottom:12px;">Kisi bhi category par tap karo — uski poori detail report aur PDF download yahin milega. ✎ se budget bhi set kar sakte ho.</div>
   <div class="section-title">Expense categories</div>
   <div class="cat-grid">
     ${expCats.map(tile).join("")}
@@ -888,17 +826,16 @@ function renderCategories(){
   `;
 }
 
-/* ---------- recurring tab ---------- */
 function renderRecurring(){
   const list = [...DB.recurring].sort((a,b)=> a.nextDate.localeCompare(b.nextDate));
   return `
   <div class="section-title">Recurring / Auto-cut <span class="link" data-act="newRecurring">+ Naya</span></div>
-  <div class="hint">Ye items automatic set date par transaction ke roop mein cut ho jaate hain — jaise rent, subscription, EMI. App kholte hi due items apne aap add ho jaate hain.</div>
+  <div class="hint">Ye items automatic set date par transaction ke roop mein cut ho jaate hain — jaise rent, subscription, EMI. App kholte hi due items apne aap add ho jaate hain. 10-din, quarterly, half-yearly ya apna custom gap bhi set kar sakte ho.</div>
   <div class="card" style="margin-top:12px;">
     ${list.length? list.map(r=>`
       <div class="rec-row">
         <div class="rec-main" data-edit-rec="${r.id}">
-          <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${r.frequency}</span></div>
+          <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${freqLabel(r)}</span></div>
           <div class="rec-meta">Agli baar: ${fmtDate(r.nextDate)}</div>
         </div>
         <div class="rec-amt" style="color:${r.type==='income'?'var(--income)':'var(--expense)'}">${r.type==='income'?'+':'-'}${fmtINR(r.amount)}</div>
@@ -907,20 +844,104 @@ function renderRecurring(){
   </div>`;
 }
 
-/* ---------- analysis tab ---------- */
+function renderSplit(){
+  const groups = DB.groups;
+  const gid = state.group || groups[0]?.id;
+  const g = groups.find(x=>x.id===gid);
+  let html = `
+  <div class="section-title">Split bill <span class="link" data-act="newGroup">+ Naya group</span></div>
+  <div class="hint" style="margin-bottom:14px;">Room ke saathiyon ya trip ke doston ke saath shared kharcha track karo — kaun kisko kitna dega turant pata chal jayega.</div>`;
+  if(!groups.length){
+    html += `<div class="card"><div class="empty"><span class="big">🤝</span>Koi group nahi hai. Room ya trip ke liye pehla group banao.</div></div>`;
+    return html;
+  }
+  html += `<div class="cat-grid" style="grid-template-columns:repeat(auto-fill,minmax(108px,1fr));">
+    ${groups.map(gr=>`
+      <div class="cat-tile" style="${gr.id===gid? 'border-color:var(--primary);background:var(--surface-2)':''}" data-select-group="${gr.id}">
+        <div class="ic" style="background:var(--primary)22;color:var(--primary)">🏘️</div>
+        <div class="nm">${gr.name}</div>
+        <div class="amt">${gr.members.length} log</div>
+      </div>`).join("")}
+  </div>`;
+  if(!g) return html;
+  const bal = groupBalances(g);
+  const settlements = settleUpGroup(bal);
+  html += `
+  <div class="section-title">${g.name} <span class="link" data-act="addGroupExpense" data-group="${g.id}">+ Kharcha add karo</span></div>
+  <div class="hint" style="margin-top:-6px;">Members: ${g.members.join(", ")}</div>
+  <div class="section-title">Balance</div>
+  <div class="card">
+    ${g.members.map(m=>{
+      const v = bal[m]||0;
+      return `<div class="rec-row"><div class="rec-main"><div class="rec-name">${m}</div></div>
+        <div class="rec-amt" style="color:${v>=0?'var(--income)':'var(--expense)'}">${v>=0? 'Wapas milega ':'Dena hai '}${fmtINR(Math.abs(v))}</div></div>`;
+    }).join("")}
+  </div>
+  <div class="section-title">Settle up</div>
+  <div class="card">
+    ${settlements.length? settlements.map(s=>`
+      <div class="rec-row"><div class="rec-main"><div class="rec-name">${s.from} → ${s.to}</div></div>
+        <div class="rec-amt">${fmtINR(s.amt)}</div></div>`).join("") : `<div class="empty">Sab clear hai 🎉</div>`}
+  </div>
+  <div class="section-title">Kharche</div>
+  <div class="card">
+    ${g.expenses.length? [...g.expenses].reverse().map(e=>`
+      <div class="txn">
+        <div class="txn-icon" style="background:var(--primary)22;color:var(--primary)">🧾</div>
+        <div class="txn-main">
+          <div class="txn-cat">${e.desc}</div>
+          <div class="txn-note">${e.paidBy} ne pay kiya · ${e.split.length} logon mein split · ${fmtDate(e.date)}</div>
+        </div>
+        <div class="txn-amt expense">${fmtINR(e.amount)}</div>
+        <button class="txn-del" data-del-group-exp="${e.id}" data-group="${g.id}">✕</button>
+      </div>`).join("") : `<div class="empty">Abhi koi shared kharcha nahi hai</div>`}
+  </div>`;
+  return html;
+}
+function groupBalances(g){
+  const bal={}; g.members.forEach(m=>bal[m]=0);
+  g.expenses.forEach(e=>{
+    const share = e.amount / e.split.length;
+    e.split.forEach(m=> bal[m]=(bal[m]||0)-share);
+    bal[e.paidBy]=(bal[e.paidBy]||0)+e.amount;
+  });
+  Object.keys(bal).forEach(k=> bal[k]=Math.round(bal[k]*100)/100);
+  return bal;
+}
+function settleUpGroup(bal){
+  const debtors=[], creditors=[];
+  Object.entries(bal).forEach(([m,v])=>{
+    if(v<-0.5) debtors.push({m,v:-v});
+    else if(v>0.5) creditors.push({m,v});
+  });
+  const res=[]; let i=0,j=0;
+  while(i<debtors.length && j<creditors.length){
+    const amt = Math.min(debtors[i].v, creditors[j].v);
+    res.push({from:debtors[i].m, to:creditors[j].m, amt:Math.round(amt*100)/100});
+    debtors[i].v-=amt; creditors[j].v-=amt;
+    if(debtors[i].v<0.5) i++;
+    if(creditors[j].v<0.5) j++;
+  }
+  return res;
+}
+
 function renderAnalysis(){
   const cur = txnsForMonth(state.month);
   const t = totals(cur);
   const breakdown = categoryBreakdown(cur,"expense");
   const totalExp = breakdown.reduce((s,b)=>s+b.amount,0);
+  const prevMonth = new Date(state.month.getFullYear(), state.month.getMonth()-1, 1);
+  const prevBreakdown = categoryBreakdown(txnsForMonth(prevMonth), "expense");
+  const prevAmt = id => (prevBreakdown.find(b=>b.categoryId===id)||{amount:0}).amount;
 
   const months = [];
-  for(let i=5;i>=0;i--){
-    const d = new Date(state.month.getFullYear(), state.month.getMonth()-i, 1);
-    months.push(d);
-  }
+  for(let i=5;i>=0;i--){ months.push(new Date(state.month.getFullYear(), state.month.getMonth()-i, 1)); }
   const trendMax = Math.max(1, ...months.map(d=> totals(txnsForMonth(d)).expense ));
   const savingsRate = t.income>0 ? Math.round(((t.income-t.expense)/t.income)*100) : null;
+  const wk = weekdayBreakdown(cur);
+  const wkMax = Math.max(1, ...wk.map(w=>w.amount));
+  const highest = highestExpense(cur);
+  const avgDaily = dailyAverage(state.month, cur);
 
   return `
   <div class="grid-left">
@@ -935,15 +956,36 @@ function renderAnalysis(){
         <div class="bar-track"><div class="bar-fill" data-w="${t.income>0?Math.min(100,t.expense/t.income*100):(t.expense>0?100:0)}%" style="background:linear-gradient(90deg,var(--expense),var(--expense-2))"></div></div>
       </div>
       ${savingsRate!==null? `<div class="hint">Saving rate: <b style="color:var(--ink)">${savingsRate}%</b></div>` : ``}
+      <div class="hint">Daily average kharcha: <b style="color:var(--ink)">${fmtINR(avgDaily)}</b></div>
+      ${highest? `<div class="hint">Sabse bada kharcha: <b style="color:var(--ink)">${fmtINR(highest.amount)}</b> — ${catById(highest.categoryId)?.name||'-'} (${fmtDate(highest.date)})</div>` : ``}
     </div>
 
     <div class="section-title">Category-wise kharcha</div>
     <div class="card">
-      ${breakdown.length? breakdown.map(b=>`
+      ${breakdown.length? breakdown.map(b=>{
+        const prev = prevAmt(b.categoryId);
+        let trend = "";
+        if(prev>0){
+          const diffPct = Math.round((b.amount-prev)/prev*100);
+          if(Math.abs(diffPct)>=5){
+            trend = `<span style="font-size:10.5px;color:${diffPct>0?'var(--expense)':'var(--income)'};font-weight:800;">${diffPct>0?'▲':'▼'} ${Math.abs(diffPct)}%</span>`;
+          }
+        }
+        return `
         <div class="bar-row">
-          <div class="bar-row-top"><span class="nm">${b.cat.icon} ${b.cat.name}</span><span class="amt">${fmtINR(b.amount)} · ${Math.round(b.amount/totalExp*100)}%</span></div>
+          <div class="bar-row-top"><span class="nm">${b.cat.icon} ${b.cat.name}</span><span class="amt">${fmtINR(b.amount)} · ${Math.round(b.amount/totalExp*100)}% ${trend}</span></div>
           <div class="bar-track"><div class="bar-fill" data-w="${Math.round(b.amount/totalExp*100)}%" style="background:${b.cat.color}"></div></div>
-        </div>`).join("") : `<div class="empty">Data nahi hai</div>`}
+        </div>`;
+      }).join("") : `<div class="empty">Data nahi hai</div>`}
+    </div>
+
+    <div class="section-title">Weekday-wise kharcha pattern</div>
+    <div class="card">
+      ${wk.map(w=>`
+        <div class="bar-row">
+          <div class="bar-row-top"><span class="nm">${w.name}</span><span class="amt">${fmtINR(w.amount)}</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="${Math.round(w.amount/wkMax*100)}%" style="background:linear-gradient(90deg,var(--teal),var(--blue))"></div></div>
+        </div>`).join("")}
     </div>
   </div>
 
@@ -964,9 +1006,17 @@ function renderAnalysis(){
       ${buildTips().map(t=>`<div class="tip"><span class="tip-icon">${t.icon}</span><span class="tip-text">${t.text}</span></div>`).join("")}
     </div>
 
+    <div class="section-title">📝 Activity log</div>
+    <div class="card">
+      ${DB.activityLog.length? DB.activityLog.slice(0,15).map(a=>`
+        <div class="tip"><span class="tip-icon">${ACT_ICON[a.type]||"•"}</span><span class="tip-text">${a.message}<br><span style="color:var(--muted);font-size:11px;">${timeAgo(a.ts)}</span></span></div>
+      `).join("") : `<div class="empty">Abhi koi activity nahi hai</div>`}
+    </div>
+
     <div class="section-title">Data</div>
     <div class="card">
-      <button class="btn secondary" data-act="exportData">⬇️ Backup (JSON) download karo</button>
+      <button class="btn" data-act="exportPdf">📄 Is mahine ka PDF report</button>
+      <button class="btn secondary" data-act="exportData" style="margin-top:10px;">⬇️ Backup (JSON) download karo</button>
       <div class="btn-row" style="margin-top:10px;">
         <label class="btn secondary" style="text-align:center;">
           ⬆️ Restore
@@ -980,7 +1030,69 @@ function renderAnalysis(){
   `;
 }
 
-/* ============ Sheets (modals) ============ */
+function pdfDocHeader(doc, subtitle){
+  doc.setFontSize(16); doc.setTextColor(91,76,224);
+  doc.text("Kharcha", 14, 18);
+  doc.setFontSize(11); doc.setTextColor(90,90,90);
+  doc.text(subtitle, 14, 26);
+  doc.text("Generated: " + new Date().toLocaleDateString("en-IN"), 14, 32);
+  doc.setDrawColor(220,220,220); doc.line(14,36,196,36);
+  return 44;
+}
+function ensurePdfLib(){
+  if(!window.jspdf){ toast("PDF library load nahi ho payi, dobara try karo"); return false; }
+  return true;
+}
+function exportCategoryPDF(cat, txns, total){
+  if(!ensurePdfLib()) return;
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF();
+  let y = pdfDocHeader(doc, "Category report: " + cat.name);
+  doc.setFontSize(11); doc.setTextColor(20,20,20);
+  doc.text(`Total: ${fmtINR(total)}  (${txns.length} entries)`, 14, y);
+  y += 12;
+  doc.setFontSize(10); doc.setTextColor(90,90,90);
+  doc.text("Date",14,y); doc.text("Note",50,y); doc.text("Amount",165,y);
+  y+=6; doc.setDrawColor(230,230,230); doc.line(14,y-4,196,y-4);
+  doc.setTextColor(20,20,20);
+  [...txns].reverse().forEach(t=>{
+    if(y>280){ doc.addPage(); y=20; }
+    doc.text(fmtDate(t.date),14,y);
+    doc.text((t.note||"-").slice(0,44),50,y);
+    doc.text((t.type==='income'?'+':'-')+fmtINR(t.amount),165,y);
+    y+=7;
+  });
+  doc.save(`kharcha-${cat.name.replace(/\s+/g,'_').toLowerCase()}-report.pdf`);
+}
+function exportFullPDF(){
+  if(!ensurePdfLib()) return;
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF();
+  const cur = txnsForMonth(state.month);
+  const t = totals(cur);
+  let y = pdfDocHeader(doc, "Full report — " + monthLabel(state.month));
+  doc.setFontSize(11); doc.setTextColor(20,20,20);
+  doc.text("Income: " + fmtINR(t.income), 14, y);
+  doc.text("Expense: " + fmtINR(t.expense), 14, y+7);
+  doc.text("Balance: " + fmtINR(t.balance), 14, y+14);
+  y += 26;
+  doc.setFontSize(10); doc.setTextColor(90,90,90);
+  doc.text("Date",14,y); doc.text("Type",44,y); doc.text("Category",64,y); doc.text("Note",104,y); doc.text("Amount",165,y);
+  y+=6; doc.setDrawColor(230,230,230); doc.line(14,y-4,196,y-4);
+  doc.setTextColor(20,20,20);
+  [...cur].sort((a,b)=>a.date.localeCompare(b.date)).forEach(tr=>{
+    if(y>280){ doc.addPage(); y=20; }
+    const cat = catById(tr.categoryId);
+    doc.text(fmtDate(tr.date),14,y);
+    doc.text(tr.type,44,y);
+    doc.text((cat?.name||"-").slice(0,20),64,y);
+    doc.text((tr.note||"-").slice(0,26),104,y);
+    doc.text((tr.type==='income'?'+':'-')+fmtINR(tr.amount),165,y);
+    y+=7;
+  });
+  doc.save(`kharcha-report-${monthKey(state.month)}.pdf`);
+}
+
 function openSheet(html){
   const overlay = document.createElement("div");
   overlay.className = "sheet-overlay";
@@ -992,39 +1104,63 @@ function openSheet(html){
 }
 function closeSheet(overlay){
   overlay.classList.remove("show");
-  setTimeout(()=> overlay.remove(), 220);
+  setTimeout(()=> overlay.remove(), 260);
 }
 
-function sheetAddTransaction(){
-  let type = "expense";
+function sheetAddTransaction(existing, presetCategoryId){
+  let type = existing?.type || (presetCategoryId? (catById(presetCategoryId)?.type) : null) || "expense";
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Nayi entry add karo</div>
+    <div class="sheet-title">${existing? "Entry edit karo":"Nayi entry add karo"}</div>
     <div class="seg" id="typeSeg">
-      <button type="button" class="active expense" data-type="expense">➖ Expense</button>
-      <button type="button" class="income" data-type="income">➕ Income</button>
+      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
+      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
     </div>
     <div class="field" style="margin-top:14px;">
       <label>Amount (₹)</label>
-      <input type="number" inputmode="decimal" id="f_amount" placeholder="0" autofocus>
+      <input type="number" inputmode="decimal" id="f_amount" placeholder="0" value="${existing?existing.amount:''}" autofocus>
     </div>
-    <div class="field">
-      <label>Category</label>
-      <select id="f_cat"></select>
+    <div class="field"><label>Category</label><select id="f_cat"></select></div>
+    <div class="field"><label>Date</label><input type="date" id="f_date" value="${existing? existing.date : new Date().toISOString().slice(0,10)}"></div>
+    <div class="field"><label>Note (optional)</label><input type="text" id="f_note" value="${existing? (existing.note||'').replace(/"/g,'&quot;') : ''}" placeholder="e.g. Zomato order"></div>
+    ${!existing? `
+    <div class="field" style="margin-top:2px;">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0;">
+        <input type="checkbox" id="f_recurring" style="width:18px;height:18px;flex:none;">
+        <span style="color:var(--ink);font-weight:600;">🔁 Ye recurring hai (rent, subscription, salary...)</span>
+      </label>
     </div>
-    <div class="field">
-      <label>Date</label>
-      <input type="date" id="f_date" value="${new Date().toISOString().slice(0,10)}">
+    <div class="field" id="freqWrap" style="display:none;">
+      <label>Kitni baar repeat hoga</label>
+      <select id="f_freq">
+        <option value="daily">Daily</option>
+        <option value="every10">Har 10 din</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly" selected>Monthly</option>
+        <option value="quarterly">Quarterly (3 mahine)</option>
+        <option value="halfyearly">Half-yearly (6 mahine)</option>
+        <option value="yearly">Yearly</option>
+        <option value="custom">Custom...</option>
+      </select>
     </div>
-    <div class="field">
-      <label>Note (optional)</label>
-      <input type="text" id="f_note" placeholder="e.g. Zomato order">
+    <div class="field" id="customFreqWrap" style="display:none;">
+      <label>Custom repeat</label>
+      <div style="display:flex;gap:8px;">
+        <input type="number" id="f_customVal" min="1" value="1" style="flex:1;">
+        <select id="f_customUnit" style="flex:1;">
+          <option value="days">Din (days)</option>
+          <option value="weeks">Hafte (weeks)</option>
+          <option value="months">Mahine (months)</option>
+        </select>
+      </div>
     </div>
-    <button class="btn" id="saveTxn">Save entry</button>
+    ` : ``}
+    <button class="btn" id="saveTxn">${existing? "Update karo":"Save entry"}</button>
+    ${existing? `<button class="btn danger" id="delTxnBtn" style="margin-top:8px;">Entry delete karo</button>` : ``}
   `);
   function refreshCatOptions(){
     const sel = $("#f_cat", overlay);
-    sel.innerHTML = DB.categories.filter(c=>c.type===type).map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join("");
+    sel.innerHTML = DB.categories.filter(c=>c.type===type).map(c=>`<option value="${c.id}" ${(existing&&existing.categoryId===c.id)||(!existing&&presetCategoryId===c.id)?'selected':''}>${c.icon} ${c.name}</option>`).join("");
   }
   refreshCatOptions();
   $$("#typeSeg button", overlay).forEach(b=> b.onclick = ()=>{
@@ -1033,6 +1169,12 @@ function sheetAddTransaction(){
     b.classList.add("active");
     refreshCatOptions();
   });
+  const recChk = $("#f_recurring", overlay);
+  if(recChk) recChk.onchange = function(){ $("#freqWrap", overlay).style.display = this.checked ? "block" : "none"; };
+  const freqSel = $("#f_freq", overlay);
+  if(freqSel) freqSel.addEventListener("change", function(){
+    $("#customFreqWrap", overlay).style.display = this.value==="custom" ? "block" : "none";
+  });
   $("#saveTxn", overlay).onclick = ()=>{
     const amount = parseFloat($("#f_amount", overlay).value);
     const categoryId = $("#f_cat", overlay).value;
@@ -1040,13 +1182,54 @@ function sheetAddTransaction(){
     const note = $("#f_note", overlay).value.trim();
     if(!amount || amount<=0){ toast("Sahi amount daalo"); return; }
     if(!categoryId){ toast("Pehle ek category banao"); return; }
-    DB.transactions.push({id:uid(), categoryId, amount, date, note, type});
-    save();
-    closeSheet(overlay);
-    state.month = new Date(date.slice(0,7)+"-01");
-    render();
-    toast("Entry add ho gayi ✅");
+    const cat = catById(categoryId);
+    if(existing){
+      existing.history = existing.history || [];
+      existing.history.unshift({ts:Date.now(), prev:{amount:existing.amount, categoryId:existing.categoryId, date:existing.date, note:existing.note, type:existing.type}});
+      const oldCat = catById(existing.categoryId);
+      existing.amount = amount; existing.categoryId = categoryId; existing.date = date; existing.note = note; existing.type = type;
+      logActivity('edit', `${cat.icon} entry edit hui — ${oldCat? oldCat.name : '?'} → ${cat.name}, ${fmtINR(amount)} (${fmtDate(date)})`);
+      save(); closeSheet(overlay); render();
+      toast("Entry update ho gayi ✅");
+    } else {
+      const isRecurring = $("#f_recurring", overlay)?.checked;
+      DB.transactions.push({id:uid(), categoryId, amount, date, note, type, history:[]});
+      logActivity('add', `${cat.icon} ${cat.name} — ${fmtINR(amount)} add hui (${fmtDate(date)})`);
+      if(isRecurring){
+        const freq = $("#f_freq", overlay).value;
+        const customVal = freq==="custom" ? (parseInt($("#f_customVal", overlay).value)||1) : null;
+        const customUnit = freq==="custom" ? $("#f_customUnit", overlay).value : null;
+        DB.recurring.push({id:uid(), categoryId, amount, note, type, frequency:freq, customVal, customUnit, nextDate: nextDateFor(date, freq, customVal, customUnit), active:true});
+        logActivity('add', `🔁 recurring "${note||cat.name}" set hua — ${freqLabel({frequency:freq,customVal,customUnit})}`);
+      }
+      save();
+      closeSheet(overlay);
+      state.month = new Date(date.slice(0,7)+"-01");
+      render();
+      toast(isRecurring? "Entry save ho gayi aur recurring set ho gaya ✅" : "Entry add ho gayi ✅");
+    }
   };
+  if(existing){
+    $("#delTxnBtn", overlay).onclick = ()=>{ closeSheet(overlay); deleteTxnWithUndo(existing.id); };
+  }
+}
+
+function deleteTxnWithUndo(id){
+  const idx = DB.transactions.findIndex(t=>t.id===id);
+  if(idx===-1) return;
+  const removed = DB.transactions[idx];
+  const cat = catById(removed.categoryId);
+  DB.transactions.splice(idx,1);
+  logActivity('delete', `${cat?.icon||'🗑️'} ${cat?.name||'Entry'} — ${fmtINR(removed.amount)} delete hui (${fmtDate(removed.date)})`);
+  save(); render();
+  toast("Entry delete ho gayi", {
+    label:"Undo",
+    onClick: ()=>{
+      DB.transactions.splice(Math.min(idx, DB.transactions.length),0,removed);
+      logActivity('restore', `${cat?.icon||'↩️'} ${cat?.name||'Entry'} — ${fmtINR(removed.amount)} wapas restore hui`);
+      save(); render();
+    }
+  });
 }
 
 function sheetCategory(defaultType, existing){
@@ -1060,22 +1243,18 @@ function sheetCategory(defaultType, existing){
       <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
       <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
     </div>
-    <div class="field" style="margin-top:14px;">
-      <label>Naam</label>
-      <input type="text" id="f_name" placeholder="e.g. Groceries" value="${existing?.name||""}">
-    </div>
-    <div class="field">
-      <label>Icon</label>
+    <div class="field" style="margin-top:14px;"><label>Naam</label><input type="text" id="f_name" placeholder="e.g. Groceries" value="${existing?.name||""}"></div>
+    <div class="field"><label>Icon</label>
       <div class="icon-grid" id="iconGrid">
         ${ICONS.map(i=>`<button type="button" data-icon="${i}" class="${i===icon?'active':''}">${i}</button>`).join("")}
       </div>
     </div>
-    <div class="field">
-      <label>Rang</label>
+    <div class="field"><label>Rang</label>
       <div class="color-grid" id="colorGrid">
         ${COLORS.map(c=>`<span class="color-dot ${c===color?'active':''}" data-color="${c}" style="background:${c}"></span>`).join("")}
       </div>
     </div>
+    <div class="field"><label>Monthly budget (₹) — optional</label><input type="number" inputmode="decimal" id="f_budget" placeholder="e.g. 5000" value="${existing?.budget||''}"></div>
     <button class="btn" id="saveCat">${existing? "Save karo":"Category banao"}</button>
     ${existing? `<button class="btn danger" id="delCat" style="margin-top:8px;">Category delete karo</button>` : ``}
   `);
@@ -1096,11 +1275,15 @@ function sheetCategory(defaultType, existing){
   });
   $("#saveCat", overlay).onclick = ()=>{
     const name = $("#f_name", overlay).value.trim();
+    const budgetVal = parseFloat($("#f_budget", overlay).value);
+    const budget = budgetVal>0 ? budgetVal : null;
     if(!name){ toast("Naam daalo"); return; }
     if(existing){
-      Object.assign(existing, {name, type, icon, color});
+      Object.assign(existing, {name, type, icon, color, budget});
+      logActivity('edit', `${icon} category "${name}" update hui`);
     } else {
-      DB.categories.push({id:"c_"+uid(), name, type, icon, color});
+      DB.categories.push({id:"c_"+uid(), name, type, icon, color, budget});
+      logActivity('add', `${icon} category "${name}" banayi gayi`);
     }
     save(); closeSheet(overlay); render();
     toast("Category save ho gayi ✅");
@@ -1110,10 +1293,212 @@ function sheetCategory(defaultType, existing){
       const inUse = DB.transactions.some(t=>t.categoryId===existing.id) || DB.recurring.some(r=>r.categoryId===existing.id);
       if(inUse && !confirm("Is category mein entries hain. Fir bhi delete karein?")) return;
       DB.categories = DB.categories.filter(c=>c.id!==existing.id);
+      logActivity('delete', `${existing.icon} category "${existing.name}" delete hui`);
       save(); closeSheet(overlay); render();
       toast("Category delete ho gayi");
     };
   }
+}
+
+function sheetCategoryReport(catId){
+  const overlay = openSheet(`<div class="sheet-handle"></div><div id="catReportBody"></div>`);
+
+  function refresh(){
+    const cat = catById(catId);
+    if(!cat){ closeSheet(overlay); return; }
+    const txns = DB.transactions.filter(t=>t.categoryId===catId).sort((a,b)=>b.date.localeCompare(a.date));
+    const total = txns.reduce((s,t)=>s+t.amount,0);
+    const count = txns.length;
+    const avg = count? total/count : 0;
+    const highest = count? txns.reduce((a,b)=> b.amount>a.amount?b:a) : null;
+
+    const months = [];
+    for(let i=5;i>=0;i--){ months.push(new Date(state.month.getFullYear(), state.month.getMonth()-i, 1)); }
+    const trend = months.map(d=>{
+      const key = monthKey(d);
+      const amt = txns.filter(t=>t.date.slice(0,7)===key).reduce((s,t)=>s+t.amount,0);
+      return {label:d.toLocaleDateString('en-IN',{month:'short'}), amt};
+    });
+    const trendMax = Math.max(1, ...trend.map(t=>t.amt));
+    const thisMonthSpent = txnsForMonth(state.month).filter(t=>t.categoryId===catId).reduce((s,t)=>s+t.amount,0);
+    const budgetPct = cat.budget? Math.min(100, (thisMonthSpent/cat.budget)*100) : null;
+
+    $("#catReportBody", overlay).innerHTML = `
+      <div class="sheet-title">${cat.icon} ${cat.name}</div>
+      <div class="hint" style="margin-top:-10px;margin-bottom:14px;">Total (all time): <b style="color:var(--ink)">${fmtINR(total)}</b> · ${count} entries · Avg: <b style="color:var(--ink)">${fmtINR(avg)}</b></div>
+      ${cat.budget? `
+      <div class="bar-row">
+        <div class="bar-row-top"><span class="nm">Is mahine budget</span><span class="amt">${fmtINR(thisMonthSpent)} / ${fmtINR(cat.budget)}</span></div>
+        <div class="bar-track"><div class="bar-fill" data-w="${budgetPct}%" style="background:${thisMonthSpent>cat.budget?'var(--expense)':cat.color}"></div></div>
+      </div>` : `<div class="hint" style="margin-bottom:10px;">Is category ka abhi koi monthly budget set nahi hai — ✎ edit se set kar sakte ho.</div>`}
+      ${highest? `<div class="hint">Sabse bada single entry: <b style="color:var(--ink)">${fmtINR(highest.amount)}</b> (${fmtDate(highest.date)})</div>` : ``}
+
+      <div class="section-title" style="margin-top:18px;">Pichle 6 mahine ka trend</div>
+      <div class="card" style="padding:14px;">
+        ${trend.map(t=>`
+          <div class="bar-row">
+            <div class="bar-row-top"><span class="nm">${t.label}</span><span class="amt">${fmtINR(t.amt)}</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="${Math.round(t.amt/trendMax*100)}%" style="background:${cat.color}"></div></div>
+          </div>`).join("")}
+      </div>
+
+      <div class="section-title">Saari entries</div>
+      <div style="max-height:260px;overflow-y:auto;">
+        ${count? txns.map(txnRow).join("") : '<div class="empty">Koi entry nahi hai</div>'}
+      </div>
+
+      <button class="btn" id="dlCatPdf" style="margin-top:16px;">⬇️ PDF report download karo</button>
+      <button class="btn secondary" id="addInCat" style="margin-top:10px;">➕ Isi category me entry add karo</button>
+    `;
+    animateBarsIn(overlay);
+    $("#dlCatPdf", overlay).onclick = ()=> exportCategoryPDF(cat, txns, total);
+    $("#addInCat", overlay).onclick = ()=> sheetAddTransaction(null, catId);
+    $$('[data-edit-txn]', overlay).forEach(el=> el.onclick = ()=> sheetAddTransaction(DB.transactions.find(t=>t.id===el.dataset.editTxn)));
+    $$('[data-del-txn]', overlay).forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
+  }
+
+  refresh();
+  const onSave = ()=>{
+    if(document.body.contains(overlay)) refresh();
+    else document.removeEventListener('kharcha:save', onSave);
+  };
+  document.addEventListener('kharcha:save', onSave);
+}
+
+function safeMathEval(str){
+  let s = str.trim();
+  let m = s.match(/^([\d.]+)\s*%\s*(of|ka|ki|ke)\s*([\d.]+)$/i);
+  if(m) return (parseFloat(m[1])/100)*parseFloat(m[3]);
+  s = s.replace(/x/gi,'*').replace(/×/g,'*').replace(/÷/g,'/').replace(/,/g,'');
+  if(!/^[\d\s+\-*/().%]+$/.test(s) || !/\d/.test(s)) return null;
+  s = s.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+  try{
+    const val = Function('"use strict"; return (' + s + ')')();
+    if(typeof val === "number" && isFinite(val)) return val;
+  }catch(e){}
+  return null;
+}
+function botReply(msg){
+  const q = msg.trim();
+  const mathResult = safeMathEval(q);
+  if(mathResult !== null){
+    const rounded = Math.round(mathResult*100)/100;
+    return `= <b>${rounded}</b>` + (Math.abs(rounded)>=1? ` (${fmtINR(rounded)})` : "");
+  }
+  const low = q.toLowerCase();
+  const has = (...words)=> words.some(w=> low.includes(w));
+  if(has("recurring","auto cut","auto-cut","autocut","emi","subscription"))
+    return "Recurring ke liye: entry add karte waqt '🔁 recurring hai' tick karo, ya Recurring tab me '+ Naya' se rent/EMI/subscription set karo. Daily se lekar apna custom gap (jaise 45 din) tak set kar sakte ho — app kholte hi due wale apne aap add ho jaate hain.";
+  if(has("budget"))
+    return "Category ✎ (edit) me 'Monthly budget' field bhar do — us category ki tile par progress bar dikhega, aur 80%+ ya cross hone par tip bhi milegi.";
+  if(has("split","group","room","trip"))
+    return "Split Bill tab se group banao (members comma se likho), phir kharcha add karo — kaun kisko kitna dega automatic calculate ho jayega.";
+  if(has("edit","update","badal"))
+    return "Kisi bhi entry par tap karo — edit sheet khulega. Save karne par 'edited' tag lag jata hai aur uska record Analysis > Activity log me dikhta hai.";
+  if(has("delete","hataye","hatao","remove"))
+    return "Entry ke ✕ button se delete hoti hai — turant 'Undo' ka option toast me 4 second tak milta hai.";
+  if(has("backup","restore","export","download"))
+    return "Analysis tab > Data card me — PDF report, JSON backup download, aur restore, sab available hai.";
+  if(has("offline","internet"))
+    return "Haan, poora app offline chalta hai — data sirf tumhare is device ke browser me locally save hota hai, kahin bhi upload nahi hota.";
+  if(has("category"))
+    return "Category tile par tap karo to uski full detail (budget, 6-mahine trend, saari entries edit/delete) khulegi; ✎ se naam/icon/color/budget edit kar sakte ho.";
+  if(has("hi","hello","hey","namaste"))
+    return "Namaste! Bolo, app ke baare me kuch puchna hai ya koi calculation karni hai?";
+  return "Ye samajh nahi aaya 🤔 — tum mujhse app ke features (recurring, budget, split, edit, backup, category) ke baare me puch sakte ho, ya koi bhi calculation type karo jaise '2450+1200-300' ya '18% of 5600'.";
+}
+function chatBubbleHTML(m){
+  const mine = m.role==="user";
+  return `<div class="chat-bubble" style="align-self:${mine?'flex-end':'flex-start'};background:${mine?'linear-gradient(135deg,var(--grad-1),var(--grad-2))':'var(--surface-2)'};color:${mine?'#fff':'var(--ink)'};${mine?'border-bottom-right-radius:4px;':'border-bottom-left-radius:4px;'}">${m.text}</div>`;
+}
+function sheetAssistant(){
+  let subtab = "chat";
+  const overlay = openSheet(`
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🤖 Kharcha Assistant</div>
+    <div class="seg" id="botSeg">
+      <button type="button" class="active" data-sub="chat">🧮 Help & Calc</button>
+      <button type="button" data-sub="notes">📌 Yaad Rakho</button>
+    </div>
+    <div id="botBody" style="margin-top:14px;"></div>
+  `);
+  function chatHTML(){
+    return `
+    <div id="chatLog" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px;">
+      ${DB.botChat.length? DB.botChat.map(chatBubbleHTML).join("") : `<div class="empty">Kuch bhi pucho — app ke features ya "2500+1800-300" jaisa calculation 🙂</div>`}
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;">
+      <input type="text" id="botInput" placeholder="e.g. recurring kaise set karu? ya 15% of 4500" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14px;">
+      <button class="btn" id="botSend" style="width:auto;margin-top:0;padding:0 18px;">➤</button>
+    </div>`;
+  }
+  function notesHTML(){
+    const notes = [...DB.reminders].sort((a,b)=> (a.done - b.done) || (b.ts-a.ts));
+    return `
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="noteInput" placeholder="Kuch yaad rakhna hai? e.g. EMI date badal gayi" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14px;">
+      <button class="btn" id="noteAdd" style="width:auto;margin-top:0;padding:0 16px;">+</button>
+    </div>
+    <div style="max-height:300px;overflow-y:auto;margin-top:8px;">
+      ${notes.length? notes.map(n=>`
+        <div class="rec-row">
+          <button class="note-check ${n.done?'done':''}" data-toggle-note="${n.id}">${n.done?'✓':''}</button>
+          <div class="rec-main" style="cursor:default;">
+            <div class="rec-name" style="${n.done?'text-decoration:line-through;color:var(--muted);':''}">${n.text}</div>
+            <div class="rec-meta">${timeAgo(n.ts)}</div>
+          </div>
+          <button class="txn-del" data-del-note="${n.id}">✕</button>
+        </div>`).join("") : `<div class="empty"><span class="big">📌</span>Kuch bhi yaad rakhne ke liye yahan add karo</div>`}
+    </div>`;
+  }
+  function bindChat(){
+    const doSend = ()=>{
+      const inp = $("#botInput", overlay);
+      const text = inp.value.trim();
+      if(!text) return;
+      DB.botChat.push({role:"user", text, ts:Date.now()});
+      DB.botChat.push({role:"bot", text: botReply(text), ts:Date.now()});
+      if(DB.botChat.length>60) DB.botChat = DB.botChat.slice(-60);
+      save();
+    };
+    $("#botSend", overlay).onclick = doSend;
+    $("#botInput", overlay).addEventListener("keydown", e=>{ if(e.key==="Enter") doSend(); });
+    const log = $("#chatLog", overlay); if(log) log.scrollTop = log.scrollHeight;
+  }
+  function bindNotes(){
+    $("#noteAdd", overlay).onclick = ()=>{
+      const inp = $("#noteInput", overlay);
+      const text = inp.value.trim();
+      if(!text) return;
+      DB.reminders.push({id:uid(), text, done:false, ts:Date.now()});
+      save();
+    };
+    $("#noteInput", overlay).addEventListener("keydown", e=>{ if(e.key==="Enter") $("#noteAdd",overlay).click(); });
+    $$("[data-toggle-note]", overlay).forEach(b=> b.onclick=()=>{
+      const n = DB.reminders.find(x=>x.id===b.dataset.toggleNote);
+      n.done = !n.done; save();
+    });
+    $$("[data-del-note]", overlay).forEach(b=> b.onclick=()=>{
+      DB.reminders = DB.reminders.filter(x=>x.id!==b.dataset.delNote);
+      save();
+    });
+  }
+  function renderBody(){
+    $("#botBody", overlay).innerHTML = subtab==="chat" ? chatHTML() : notesHTML();
+    if(subtab==="chat") bindChat(); else bindNotes();
+  }
+  $$("#botSeg button", overlay).forEach(b=> b.onclick=()=>{
+    subtab=b.dataset.sub;
+    $$("#botSeg button",overlay).forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    renderBody();
+  });
+  renderBody();
+  const onSave = ()=>{
+    if(document.body.contains(overlay)) renderBody();
+    else document.removeEventListener('kharcha:save', onSave);
+  };
+  document.addEventListener('kharcha:save', onSave);
 }
 
 function sheetRecurring(existing){
@@ -1125,31 +1510,33 @@ function sheetRecurring(existing){
       <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
       <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
     </div>
-    <div class="field" style="margin-top:14px;">
-      <label>Naam / Note</label>
-      <input type="text" id="f_note" placeholder="e.g. Ghar ka rent, Netflix" value="${existing?.note||""}">
-    </div>
-    <div class="field">
-      <label>Amount (₹)</label>
-      <input type="number" inputmode="decimal" id="f_amount" value="${existing?.amount||""}">
-    </div>
-    <div class="field">
-      <label>Category</label>
-      <select id="f_cat"></select>
-    </div>
-    <div class="field">
-      <label>Frequency</label>
+    <div class="field" style="margin-top:14px;"><label>Naam / Note</label><input type="text" id="f_note" placeholder="e.g. Ghar ka rent, Netflix" value="${existing?.note||""}"></div>
+    <div class="field"><label>Amount (₹)</label><input type="number" inputmode="decimal" id="f_amount" value="${existing?.amount||""}"></div>
+    <div class="field"><label>Category</label><select id="f_cat"></select></div>
+    <div class="field"><label>Frequency</label>
       <select id="f_freq">
         <option value="daily">Daily</option>
+        <option value="every10">Har 10 din</option>
         <option value="weekly">Weekly</option>
-        <option value="monthly" selected>Monthly</option>
+        <option value="monthly">Monthly</option>
+        <option value="quarterly">Quarterly (3 mahine)</option>
+        <option value="halfyearly">Half-yearly (6 mahine)</option>
         <option value="yearly">Yearly</option>
+        <option value="custom">Custom...</option>
       </select>
     </div>
-    <div class="field">
-      <label>Agli date (kab se cut hoga)</label>
-      <input type="date" id="f_next" value="${existing?.nextDate || new Date().toISOString().slice(0,10)}">
+    <div class="field" id="customFreqWrap" style="display:${existing?.frequency==='custom'?'block':'none'};">
+      <label>Custom repeat</label>
+      <div style="display:flex;gap:8px;">
+        <input type="number" id="f_customVal" min="1" value="${existing?.customVal||1}" style="flex:1;">
+        <select id="f_customUnit" style="flex:1;">
+          <option value="days" ${existing?.customUnit==='days'?'selected':''}>Din (days)</option>
+          <option value="weeks" ${existing?.customUnit==='weeks'?'selected':''}>Hafte (weeks)</option>
+          <option value="months" ${existing?.customUnit==='months'?'selected':''}>Mahine (months)</option>
+        </select>
+      </div>
     </div>
+    <div class="field"><label>Agli date (kab se cut hoga)</label><input type="date" id="f_next" value="${existing?.nextDate || new Date().toISOString().slice(0,10)}"></div>
     <button class="btn" id="saveRec">${existing? "Save karo":"Recurring banao"}</button>
     ${existing? `<button class="btn danger" id="delRec" style="margin-top:8px;">Delete karo</button>` : ``}
   `);
@@ -1159,6 +1546,9 @@ function sheetRecurring(existing){
   }
   refreshCatOptions();
   if(existing) $("#f_freq",overlay).value = existing.frequency;
+  $("#f_freq", overlay).addEventListener("change", function(){
+    $("#customFreqWrap", overlay).style.display = this.value==="custom" ? "block" : "none";
+  });
   $$("#typeSeg button", overlay).forEach(b=> b.onclick=()=>{
     type=b.dataset.type;
     $$("#typeSeg button",overlay).forEach(x=>x.classList.remove("active"));
@@ -1169,14 +1559,18 @@ function sheetRecurring(existing){
     const amount = parseFloat($("#f_amount",overlay).value);
     const categoryId = $("#f_cat",overlay).value;
     const frequency = $("#f_freq",overlay).value;
+    const customVal = frequency==="custom" ? (parseInt($("#f_customVal",overlay).value)||1) : null;
+    const customUnit = frequency==="custom" ? $("#f_customUnit",overlay).value : null;
     const nextDate = $("#f_next",overlay).value;
     const note = $("#f_note",overlay).value.trim();
     if(!amount||amount<=0){ toast("Sahi amount daalo"); return; }
     if(!categoryId){ toast("Pehle category banao"); return; }
     if(existing){
-      Object.assign(existing,{amount,categoryId,frequency,nextDate,note,type});
+      Object.assign(existing,{amount,categoryId,frequency,customVal,customUnit,nextDate,note,type});
+      logActivity('edit', `🔁 recurring "${note||catById(categoryId).name}" update hua`);
     } else {
-      DB.recurring.push({id:uid(),amount,categoryId,frequency,nextDate,note,type,active:true});
+      DB.recurring.push({id:uid(),amount,categoryId,frequency,customVal,customUnit,nextDate,note,type,active:true});
+      logActivity('add', `🔁 recurring "${note||catById(categoryId).name}" banaya gaya`);
     }
     save(); closeSheet(overlay); render();
     toast("Recurring save ho gaya ✅");
@@ -1184,13 +1578,62 @@ function sheetRecurring(existing){
   if(existing){
     $("#delRec",overlay).onclick = ()=>{
       DB.recurring = DB.recurring.filter(r=>r.id!==existing.id);
+      logActivity('delete', `🔁 recurring "${existing.note||catById(existing.categoryId)?.name||''}" delete hua`);
       save(); closeSheet(overlay); render();
       toast("Recurring delete ho gaya");
     };
   }
 }
 
-/* ============ events ============ */
+function sheetNewGroup(){
+  const overlay = openSheet(`
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Naya group banao</div>
+    <div class="field"><label>Group ka naam</label><input type="text" id="g_name" placeholder="e.g. Flat 302 ya Goa Trip"></div>
+    <div class="field"><label>Members (comma se separate karo)</label><input type="text" id="g_members" placeholder="You, Raj, Priya, Aman"></div>
+    <button class="btn" id="saveGroup">Group banao</button>
+  `);
+  $("#saveGroup", overlay).onclick = ()=>{
+    const name = $("#g_name", overlay).value.trim();
+    const members = $("#g_members", overlay).value.split(",").map(s=>s.trim()).filter(Boolean);
+    if(!name || members.length<2){ toast("Naam aur kam se kam 2 members daalo"); return; }
+    const g = {id:"g_"+uid(), name, members, expenses:[]};
+    DB.groups.push(g); state.group=g.id; save(); closeSheet(overlay); render();
+    toast("Group ban gaya ✅");
+  };
+}
+
+function sheetAddGroupExpense(gid){
+  const g = DB.groups.find(x=>x.id===gid);
+  if(!g) return;
+  const overlay = openSheet(`
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Shared kharcha add karo</div>
+    <div class="field"><label>Kis cheez ka kharcha</label><input type="text" id="e_desc" placeholder="e.g. Groceries, Cab fare"></div>
+    <div class="field"><label>Amount (₹)</label><input type="number" inputmode="decimal" id="e_amount"></div>
+    <div class="field"><label>Kisne pay kiya</label><select id="e_paidby">${g.members.map(m=>`<option value="${m}">${m}</option>`).join("")}</select></div>
+    <div class="field"><label>Kis-kis mein split hoga</label>
+      ${g.members.map(m=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;">
+          <input type="checkbox" checked value="${m}" class="splitChk" id="sc_${m}" style="width:18px;height:18px;">
+          <label for="sc_${m}" style="margin:0;font-size:13.5px;color:var(--ink);font-weight:500;">${m}</label>
+        </div>`).join("")}
+    </div>
+    <button class="btn" id="saveGroupExp">Kharcha add karo</button>
+  `);
+  $("#saveGroupExp", overlay).onclick = ()=>{
+    const desc = $("#e_desc",overlay).value.trim();
+    const amount = parseFloat($("#e_amount",overlay).value);
+    const paidBy = $("#e_paidby",overlay).value;
+    const split = $$(".splitChk:checked", overlay).map(c=>c.value);
+    if(!desc || !amount || amount<=0){ toast("Sahi detail bharo"); return; }
+    if(split.length===0){ toast("Kam se kam ek member select karo"); return; }
+    g.expenses.push({id:uid(), desc, amount, paidBy, split, date:new Date().toISOString().slice(0,10)});
+    save(); closeSheet(overlay); render();
+    toast("Kharcha add ho gaya ✅");
+  };
+}
+
 function bindGlobalEvents(){
   $$("[data-tab]").forEach(el=> el.onclick = ()=>{
     const tab = el.dataset.tab;
@@ -1202,14 +1645,15 @@ function bindGlobalEvents(){
   const nextBtn = $('[data-act="nextMonth"]');
   if(nextBtn) nextBtn.onclick = ()=>{ state.month = new Date(state.month.getFullYear(), state.month.getMonth()+1, 1); render(); };
 
-  $$('[data-del-txn]').forEach(el=> el.onclick = (e)=>{
-    e.stopPropagation();
-    const id = el.dataset.delTxn;
-    if(!confirm("Ye entry delete karein?")) return;
-    DB.transactions = DB.transactions.filter(t=>t.id!==id);
-    save(); render();
-  });
-  $$('[data-edit-cat]').forEach(el=> el.onclick = ()=> sheetCategory(null, catById(el.dataset.editCat)));
+  $$('[data-edit-txn]').forEach(el=> el.onclick = ()=> sheetAddTransaction(DB.transactions.find(t=>t.id===el.dataset.editTxn)));
+  $$('[data-del-txn]').forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
+
+  const searchInput = $('#txnSearch');
+  if(searchInput) searchInput.oninput = (e)=>{ state.txnSearch = e.target.value; render(); };
+  $$('[data-filter-type]').forEach(el=> el.onclick = ()=>{ state.txnFilterType = el.dataset.filterType; render(); });
+
+  $$('[data-view-cat]').forEach(el=> el.onclick = ()=> sheetCategoryReport(el.dataset.viewCat));
+  $$('[data-edit-cat]').forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); sheetCategory(null, catById(el.dataset.editCat)); });
   const newExp = $('[data-act="newCategoryExpense"]'); if(newExp) newExp.onclick = ()=> sheetCategory("expense");
   const newInc = $('[data-act="newCategoryIncome"]'); if(newInc) newInc.onclick = ()=> sheetCategory("income");
 
@@ -1221,13 +1665,28 @@ function bindGlobalEvents(){
     r.active = !r.active; save(); render();
   });
 
+  $$('[data-select-group]').forEach(el=> el.onclick = ()=>{ state.group = el.dataset.selectGroup; render(); });
+  const newGroupBtn = $('[data-act="newGroup"]'); if(newGroupBtn) newGroupBtn.onclick = sheetNewGroup;
+  $$('[data-act="addGroupExpense"]').forEach(el=> el.onclick = ()=> sheetAddGroupExpense(el.dataset.group));
+  $$('[data-del-group-exp]').forEach(el=> el.onclick = (e)=>{
+    e.stopPropagation();
+    const gid = el.dataset.group, eid = el.dataset.delGroupExp;
+    const g = DB.groups.find(x=>x.id===gid);
+    if(!g) return;
+    g.expenses = g.expenses.filter(x=>x.id!==eid);
+    save(); render();
+  });
+
+  const pdfBtn = $('[data-act="exportPdf"]'); if(pdfBtn) pdfBtn.onclick = exportFullPDF;
   const expBtn = $('[data-act="exportData"]'); if(expBtn) expBtn.onclick = exportData;
   const resetBtn = $('[data-act="resetData"]'); if(resetBtn) resetBtn.onclick = ()=>{
-    if(confirm("Pakka? Sara data (categories, entries, recurring) hamesha ke liye mit jayega.")){
+    if(confirm("Pakka? Sara data (categories, entries, recurring, groups, logs) hamesha ke liye mit jayega.")){
       DB = defaultData(); save(); render(); toast("Sab data reset ho gaya");
     }
   };
   const importFile = $('#importFile'); if(importFile) importFile.onchange = importData;
+
+  const fab = $('#assistantFab'); if(fab) fab.onclick = sheetAssistant;
 }
 
 function exportData(){
@@ -1248,6 +1707,11 @@ function importData(e){
       const parsed = JSON.parse(reader.result);
       if(!parsed.categories || !parsed.transactions) throw new Error("bad file");
       if(!confirm("Backup restore karne se current data overwrite ho jayega. Continue?")) return;
+      if(!parsed.groups) parsed.groups = [];
+      if(!parsed.recurring) parsed.recurring = [];
+      if(!parsed.activityLog) parsed.activityLog = [];
+      if(!parsed.botChat) parsed.botChat = [];
+      if(!parsed.reminders) parsed.reminders = [];
       DB = parsed; save(); render();
       toast("Backup restore ho gaya ✅");
     }catch(err){ toast("Ye file valid backup nahi hai"); }
@@ -1255,7 +1719,6 @@ function importData(e){
   reader.readAsText(file);
 }
 
-/* ============ boot ============ */
 (function boot(){
   const created = runRecurringEngine();
   render();
