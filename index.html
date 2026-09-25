@@ -285,6 +285,16 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .cat-grid{grid-template-columns:repeat(2,1fr);}
   .stat-pill .v{font-size:14.5px;}
 }
+.content.no-anim > *{animation:none !important;}
+.subcat-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.subcat-pill{padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink-soft);font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .12s;white-space:nowrap;}
+.subcat-pill:active{transform:scale(.95);}
+.subcat-pill.active{background:linear-gradient(135deg,var(--grad-1),var(--grad-2));border-color:var(--primary);color:#fff;}
+.subcat-pill.add-pill{border-style:dashed;border-color:var(--primary);color:var(--primary);background:transparent;}
+.subcat-inline-add{display:flex;gap:6px;margin-top:9px;}
+.subcat-inline-add input{flex:1;padding:9px 13px;border:1.5px solid var(--primary);border-radius:999px;background:var(--surface);color:var(--ink);font-size:16px;}
+.subcat-inline-add button{flex:none;width:37px;height:37px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;font-size:15px;}
+.subcat-inline-add button:active{transform:scale(.9);}
 </style>
 </head>
 <body>
@@ -343,7 +353,7 @@ const STR = {
     sharedExpTitle:"Shared kharcha add karo", whatFor:"Kis cheez ka kharcha", whatForPh:"e.g. Groceries, Cab fare",
     whoPaid:"Kisne pay kiya", splitBetween:"Kis-kis mein split hoga", saveSharedExp:"Kharcha add karo",
     settingsTitle:"⚙️ Settings", language:"Bhasha / Language", offlineNote:"Sara data sirf is device par, offline save hota hai.",
-    close:"Band karo",
+    close:"Band karo", general:"General", addSubCat:"+ Sub-category", subNamePh:"Sub-category ka naam",
   },
   english: {
     home:"Home", entries:"Entries", category:"Category", split:"Split bill", recurring:"Recurring", analysis:"Analysis", add:"Add",
@@ -384,7 +394,7 @@ const STR = {
     sharedExpTitle:"Add shared expense", whatFor:"What was it for", whatForPh:"e.g. Groceries, Cab fare",
     whoPaid:"Who paid", splitBetween:"Split between", saveSharedExp:"Add expense",
     settingsTitle:"⚙️ Settings", language:"Language", offlineNote:"All data is saved offline, only on this device.",
-    close:"Close",
+    close:"Close", general:"General", addSubCat:"+ Sub-category", subNamePh:"Sub-category name",
   },
   hindi: {
     home:"होम", entries:"एंट्री", category:"श्रेणी", split:"बिल बांटें", recurring:"रिकरिंग", analysis:"विश्लेषण", add:"जोड़ें",
@@ -425,7 +435,7 @@ const STR = {
     sharedExpTitle:"साझा खर्च जोड़ें", whatFor:"किस चीज़ का खर्च", whatForPh:"जैसे किराना, कैब किराया",
     whoPaid:"किसने भुगतान किया", splitBetween:"किन-किन में बांटा जाए", saveSharedExp:"खर्च जोड़ें",
     settingsTitle:"⚙️ सेटिंग्स", language:"भाषा / Language", offlineNote:"सारा डेटा केवल इस डिवाइस पर, ऑफ़लाइन सेव होता है।",
-    close:"बंद करें",
+    close:"बंद करें", general:"सामान्य", addSubCat:"+ उप-श्रेणी", subNamePh:"उप-श्रेणी का नाम",
   }
 };
 function curLang(){ return DB?.meta?.language || "hinglish"; }
@@ -526,6 +536,7 @@ let state = {
   txnFilterType: "all",
 };
 let prevStats = {balance:0, income:0, expense:0};
+let lastTab = null;
 
 function nextDateFor(dateStr, freq, customVal, customUnit){
   const d = new Date(dateStr);
@@ -588,10 +599,16 @@ function totals(txns){
   txns.forEach(t=> t.type==="income" ? income+=t.amount : expense+=t.amount );
   return {income, expense, balance: income-expense};
 }
+function topIdOf(catId){
+  const c = catById(catId);
+  if(!c) return catId;
+  return c.parentId || c.id;
+}
 function categoryBreakdown(txns, type="expense"){
   const map = {};
   txns.filter(t=>t.type===type).forEach(t=>{
-    map[t.categoryId] = (map[t.categoryId]||0) + t.amount;
+    const topId = topIdOf(t.categoryId);
+    map[topId] = (map[topId]||0) + t.amount;
   });
   return Object.entries(map)
     .map(([categoryId, amount])=>({categoryId, amount, cat: catById(categoryId)}))
@@ -665,7 +682,8 @@ function buildTips(){
     tips.push({icon:"🍽️", text:`Khane-peene par is mahine <b>${fmtINR(smallDaily.amount)}</b> kharch hue. Ghar ka khana thoda badha kar bahar ke kharche kam ho sakte hain.`});
   }
   DB.categories.filter(c=>c.budget).forEach(c=>{
-    const spent = cur.filter(t=>t.categoryId===c.id && t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const idsForBudget = [c.id, ...subCatsOf(c.id).map(s=>s.id)];
+    const spent = cur.filter(t=>idsForBudget.includes(t.categoryId) && t.type==='expense').reduce((s,t)=>s+t.amount,0);
     if(spent > c.budget){
       tips.push({icon:"🚨", text:`<b>${c.name}</b> ka budget (${fmtINR(c.budget)}) cross ho gaya hai — abhi tak <b>${fmtINR(spent)}</b> kharch ho chuke hain.`});
     } else if(spent > c.budget*0.8){
@@ -727,17 +745,19 @@ function renderNav(){
 function render(){
   const shell = $("#shell");
   const focusInfo = captureFocus();
+  const sameTab = state.tab === lastTab;
   shell.innerHTML = `
     ${renderSidebar()}
     <div class="main-col">
       <div class="app-inner">
         ${renderTopbar()}
-        <div class="content">${renderTab()}</div>
+        <div class="content ${sameTab?'no-anim':''}">${renderTab()}</div>
       </div>
     </div>
     ${renderTabbar()}
     <button class="assistant-fab" id="assistantFab" title="Assistant">🤖</button>
   `;
+  lastTab = state.tab;
   bindGlobalEvents();
   animateBars();
   restoreFocus(focusInfo);
@@ -1268,24 +1288,87 @@ function closeSheet(overlay){
   setTimeout(()=> overlay.remove(), 260);
 }
 
-function catOptionsHTML(type, selectedId){
-  const tops = topCats(type);
-  let html = "";
-  tops.forEach(p=>{
-    const subs = subCatsOf(p.id);
-    if(subs.length){
-      html += `<optgroup label="${p.icon} ${p.name}">`;
-      html += `<option value="${p.id}" ${selectedId===p.id?'selected':''}>${p.icon} ${p.name} (general)</option>`;
-      subs.forEach(s=>{
-        html += `<option value="${s.id}" ${selectedId===s.id?'selected':''}>&nbsp;&nbsp;↳ ${s.icon} ${s.name}</option>`;
-      });
-      html += `</optgroup>`;
-    } else {
-      html += `<option value="${p.id}" ${selectedId===p.id?'selected':''}>${p.icon} ${p.name}</option>`;
+/* Instant category + subcategory picker: top-level select + pill row (existing subs + inline "add sub" pill). */
+function buildCategoryPicker(overlay, opts){
+  let currentType = opts.type;
+  let topId = null, subId = null;
+  (function init(){
+    const sel = catById(opts.selectedId);
+    if(sel){ topId = sel.parentId || sel.id; subId = sel.parentId ? sel.id : null; }
+    else { topId = topCats(currentType)[0]?.id || null; subId = null; }
+  })();
+  function renderPicker(){
+    const tops = topCats(currentType);
+    const selWrap = $("#catPickerSelectWrap", overlay);
+    if(selWrap){
+      selWrap.innerHTML = `<select id="catPickerTopSel">${tops.map(c=>`<option value="${c.id}" ${c.id===topId?'selected':''}>${c.icon} ${c.name}</option>`).join("")}<option value="__new__">➕ ${T('newCategory')}...</option></select>`;
+      $("#catPickerTopSel", overlay).onchange = function(){
+        if(this.value === "__new__"){
+          const prevTop = topId;
+          sheetCategory(currentType, null, (newCat)=>{ topId = newCat.id; subId = null; renderPicker(); notify(); });
+          this.value = prevTop || "";
+          return;
+        }
+        topId = this.value; subId = null; renderPicker(); notify();
+      };
     }
-  });
-  html += `<option value="__new__">➕ ${T('newCategory')}...</option>`;
-  return html;
+    const pillsWrap = $("#catPickerPills", overlay);
+    if(pillsWrap){
+      const subs = topId ? subCatsOf(topId) : [];
+      const topCat = topId ? catById(topId) : null;
+      let html = "";
+      if(topCat){
+        html += `<button type="button" class="subcat-pill ${!subId?'active':''}" data-pill="${topCat.id}">${topCat.icon} ${T('general')}</button>`;
+        subs.forEach(s=>{
+          html += `<button type="button" class="subcat-pill ${subId===s.id?'active':''}" data-pill="${s.id}">${s.icon} ${s.name}</button>`;
+        });
+        html += `<button type="button" class="subcat-pill add-pill" id="catPickerAddSub">${T('addSubCat')}</button>`;
+      }
+      pillsWrap.innerHTML = html;
+      $$(".subcat-pill[data-pill]", overlay).forEach(p=> p.onclick = ()=>{
+        const val = p.dataset.pill;
+        subId = (val===topId) ? null : val;
+        renderPicker(); notify();
+      });
+      const addBtn = $("#catPickerAddSub", overlay);
+      if(addBtn) addBtn.onclick = ()=>{
+        const addWrap = $("#catPickerInlineAdd", overlay);
+        addWrap.innerHTML = `<div class="subcat-inline-add"><input type="text" id="catPickerNewSubName" placeholder="${T('subNamePh')}"><button type="button" id="catPickerConfirmSub">✓</button></div>`;
+        const inp = $("#catPickerNewSubName", overlay);
+        inp.focus();
+        const submit = ()=>{
+          const name = inp.value.trim();
+          if(!name) return;
+          const parent = catById(topId);
+          const siblings = DB.categories.filter(c=>c.parentId===topId);
+          const usedIcons = new Set(siblings.map(c=>c.icon));
+          const icon = ICONS.find(i=>!usedIcons.has(i) && i!=="➕") || parent.icon;
+          const color = COLORS[siblings.length % COLORS.length];
+          const newCat = {id:"c_"+uid(), name, type: currentType, icon, color, budget:null, parentId: topId};
+          DB.categories.push(newCat);
+          logActivity('add', `${icon} sub-category "${name}" (${parent.name} ke andar) banayi gayi`);
+          save();
+          subId = newCat.id;
+          addWrap.innerHTML = "";
+          renderPicker(); notify();
+        };
+        $("#catPickerConfirmSub", overlay).onclick = submit;
+        inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); submit(); } });
+      };
+    }
+    const addWrap = $("#catPickerInlineAdd", overlay);
+    if(addWrap) addWrap.innerHTML = "";
+  }
+  function notify(){ if(opts.onSelect) opts.onSelect(subId || topId); }
+  renderPicker();
+  notify();
+  return {
+    setType(t){ currentType = t; topId = topCats(t)[0]?.id || null; subId = null; renderPicker(); notify(); },
+    getSelected(){ return subId || topId; }
+  };
+}
+function categoryPickerHTML(){
+  return `<div id="catPickerSelectWrap"></div><div class="subcat-pills" id="catPickerPills"></div><div id="catPickerInlineAdd"></div>`;
 }
 
 function sheetAddTransaction(existing, presetCategoryId){
@@ -1301,7 +1384,7 @@ function sheetAddTransaction(existing, presetCategoryId){
       <label>${T('amount')}</label>
       <input type="number" inputmode="decimal" id="f_amount" placeholder="0" value="${existing?existing.amount:''}" autofocus>
     </div>
-    <div class="field"><label>${T('categoryLbl')}</label><select id="f_cat"></select></div>
+    <div class="field"><label>${T('categoryLbl')}</label>${categoryPickerHTML()}</div>
     <div class="field"><label>${T('date')}</label><input type="date" id="f_date" value="${existing? existing.date : new Date().toISOString().slice(0,10)}"></div>
     <div class="field"><label>${T('note')}</label><input type="text" id="f_note" value="${existing? (existing.note||'').replace(/"/g,'&quot;') : ''}" placeholder="${T('notePh')}"></div>
     ${!existing? `
@@ -1339,27 +1422,16 @@ function sheetAddTransaction(existing, presetCategoryId){
     <button class="btn" id="saveTxn">${existing? T('updateEntry'):T('saveEntry')}</button>
     ${existing? `<button class="btn danger" id="delTxnBtn" style="margin-top:8px;">${T('deleteEntry')}</button>` : ``}
   `);
-  function refreshCatOptions(){
-    const sel = $("#f_cat", overlay);
-    const selId = existing? existing.categoryId : presetCategoryId;
-    sel.innerHTML = catOptionsHTML(type, selId);
-  }
-  refreshCatOptions();
-  $("#f_cat", overlay).addEventListener("change", function(){
-    if(this.value === "__new__"){
-      const prevVal = existing?.categoryId || presetCategoryId || "";
-      sheetCategory(type, null, (newCat)=>{
-        refreshCatOptions();
-        $("#f_cat", overlay).value = newCat.id;
-      });
-      this.value = prevVal;
-    }
+  let selectedCategoryId = existing ? existing.categoryId : presetCategoryId;
+  const picker = buildCategoryPicker(overlay, {
+    type, selectedId: selectedCategoryId,
+    onSelect: (id)=>{ selectedCategoryId = id; }
   });
   $$("#typeSeg button", overlay).forEach(b=> b.onclick = ()=>{
     type = b.dataset.type;
     $$("#typeSeg button", overlay).forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
-    refreshCatOptions();
+    picker.setType(type);
   });
   const recChk = $("#f_recurring", overlay);
   if(recChk) recChk.onchange = function(){ $("#freqWrap", overlay).style.display = this.checked ? "block" : "none"; };
@@ -1369,11 +1441,11 @@ function sheetAddTransaction(existing, presetCategoryId){
   });
   $("#saveTxn", overlay).onclick = ()=>{
     const amount = parseFloat($("#f_amount", overlay).value);
-    const categoryId = $("#f_cat", overlay).value;
+    const categoryId = picker.getSelected();
     const date = $("#f_date", overlay).value || new Date().toISOString().slice(0,10);
     const note = $("#f_note", overlay).value.trim();
     if(!amount || amount<=0){ toast("Sahi amount daalo"); return; }
-    if(!categoryId || categoryId==="__new__"){ toast("Pehle ek category banao"); return; }
+    if(!categoryId){ toast("Pehle ek category banao"); return; }
     const cat = catById(categoryId);
     if(existing){
       existing.history = existing.history || [];
@@ -1763,7 +1835,7 @@ function sheetRecurring(existing){
     </div>
     <div class="field" style="margin-top:14px;"><label>${T('nameNote')}</label><input type="text" id="f_note" placeholder="${T('nameNotePh')}" value="${existing?.note||""}"></div>
     <div class="field"><label>${T('amount')}</label><input type="number" inputmode="decimal" id="f_amount" value="${existing?.amount||""}"></div>
-    <div class="field"><label>${T('categoryLbl')}</label><select id="f_cat"></select></div>
+    <div class="field"><label>${T('categoryLbl')}</label>${categoryPickerHTML()}</div>
     <div class="field"><label>${T('frequency')}</label>
       <select id="f_freq">
         <option value="daily">Daily</option>
@@ -1791,17 +1863,10 @@ function sheetRecurring(existing){
     <button class="btn" id="saveRec">${existing? T('saveCat'):T('saveRecurring')}</button>
     ${existing? `<button class="btn danger" id="delRec" style="margin-top:8px;">${T('deleteRecurring')}</button>` : ``}
   `);
-  function refreshCatOptions(){
-    const sel = $("#f_cat", overlay);
-    sel.innerHTML = catOptionsHTML(type, existing?.categoryId);
-  }
-  refreshCatOptions();
-  $("#f_cat", overlay).addEventListener("change", function(){
-    if(this.value === "__new__"){
-      const prevVal = existing?.categoryId || "";
-      sheetCategory(type, null, (newCat)=>{ refreshCatOptions(); $("#f_cat", overlay).value = newCat.id; });
-      this.value = prevVal;
-    }
+  let selectedCategoryId = existing?.categoryId;
+  const picker = buildCategoryPicker(overlay, {
+    type, selectedId: selectedCategoryId,
+    onSelect: (id)=>{ selectedCategoryId = id; }
   });
   if(existing) $("#f_freq",overlay).value = existing.frequency;
   $("#f_freq", overlay).addEventListener("change", function(){
@@ -1811,18 +1876,18 @@ function sheetRecurring(existing){
     type=b.dataset.type;
     $$("#typeSeg button",overlay).forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
-    refreshCatOptions();
+    picker.setType(type);
   });
   $("#saveRec", overlay).onclick = ()=>{
     const amount = parseFloat($("#f_amount",overlay).value);
-    const categoryId = $("#f_cat",overlay).value;
+    const categoryId = picker.getSelected();
     const frequency = $("#f_freq",overlay).value;
     const customVal = frequency==="custom" ? (parseInt($("#f_customVal",overlay).value)||1) : null;
     const customUnit = frequency==="custom" ? $("#f_customUnit",overlay).value : null;
     const nextDate = $("#f_next",overlay).value;
     const note = $("#f_note",overlay).value.trim();
     if(!amount||amount<=0){ toast("Sahi amount daalo"); return; }
-    if(!categoryId || categoryId==="__new__"){ toast("Pehle category banao"); return; }
+    if(!categoryId){ toast("Pehle category banao"); return; }
     if(existing){
       Object.assign(existing,{amount,categoryId,frequency,customVal,customUnit,nextDate,note,type});
       logActivity('edit', `🔁 recurring "${note||catById(categoryId).name}" update hua`);
@@ -1909,7 +1974,11 @@ function bindGlobalEvents(){
   $$('[data-del-txn]').forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
 
   const searchInput = $('#txnSearch');
-  if(searchInput) searchInput.oninput = (e)=>{ state.txnSearch = e.target.value; render(); };
+  if(searchInput) searchInput.oninput = (e)=>{
+    const val = e.target.value;
+    clearTimeout(searchInput._deb);
+    searchInput._deb = setTimeout(()=>{ state.txnSearch = val; render(); }, 200);
+  };
   $$('[data-filter-type]').forEach(el=> el.onclick = ()=>{ state.txnFilterType = el.dataset.filterType; render(); });
 
   $$('[data-view-cat]').forEach(el=> el.onclick = ()=> sheetCategoryReport(el.dataset.viewCat));
