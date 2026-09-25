@@ -168,6 +168,7 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .cat-tile.add .ic{background:var(--surface);color:var(--primary);box-shadow:none;}
 .tile-budget-track{height:4px;background:var(--surface-2);border-radius:3px;margin-top:7px;overflow:hidden;}
 .tile-budget-fill{height:100%;border-radius:3px;transition:width .7s var(--ease-out);}
+.tile-sub-count{font-size:9px;color:var(--primary);font-weight:800;margin-top:2px;}
 
 .rec-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--border);}
 .rec-row:first-child{border-top:none;}
@@ -204,13 +205,18 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
 .sheet-title{font-size:17.5px;font-weight:800;margin-bottom:18px;letter-spacing:-.01em;}
 .field{margin-bottom:15px;}
 .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:7px;}
-.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14.5px;font-family:inherit;transition:border-color .15s,box-shadow .15s;}
+.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:16px;font-family:inherit;transition:border-color .15s,box-shadow .15s;}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(91,76,224,.12);}
+.field-row{display:flex;gap:8px;align-items:flex-end;}
+.field-row .field{flex:1;margin-bottom:0;}
+.field-add-btn{flex:none;height:47px;padding:0 14px;border-radius:var(--radius-s);border:1.5px dashed var(--primary);background:var(--surface-2);color:var(--primary);font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;}
+.field-add-btn:active{transform:scale(.96);}
 .seg{display:flex;gap:8px;}
 .seg button{flex:1;padding:11px;border-radius:var(--radius-s);border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink-soft);font-weight:700;font-size:13px;cursor:pointer;transition:all .18s;}
 .seg button.active{background:var(--surface);border-color:var(--primary);color:var(--primary);}
 .seg button.active.income{background:var(--income-soft);border-color:var(--income);color:var(--income);}
 .seg button.active.expense{background:var(--expense-soft);border-color:var(--expense);color:var(--expense);}
+.seg.seg-3 button{font-size:11.5px;padding:10px 4px;}
 .icon-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:6px;}
 .icon-grid button{aspect-ratio:1;border-radius:11px;border:1.5px solid var(--border);background:var(--surface-2);font-size:16px;cursor:pointer;transition:transform .15s,border-color .15s;}
 .icon-grid button:hover{transform:scale(1.08);}
@@ -274,6 +280,11 @@ body::after{width:300px;height:300px;bottom:-100px;left:-100px;background:radial
   .card:hover{transform:perspective(1000px) rotateX(1.5deg) translateY(-3px);}
 }
 @media (min-width:1280px){ .cat-grid{grid-template-columns:repeat(6,1fr);} }
+@media (max-width:359px){
+  .balance-amount{font-size:32px;}
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-pill .v{font-size:14.5px;}
+}
 </style>
 </head>
 <body>
@@ -291,18 +302,151 @@ const COLORS = ["#FF5E62","#00B894","#F5A623","#5B4CE0","#8952C4","#F45B8D","#17
 const FREQ_LABELS = {daily:"Daily",every10:"10-din",weekly:"Weekly",monthly:"Monthly",quarterly:"Quarterly",halfyearly:"Half-yearly",yearly:"Yearly"};
 const ACT_ICON = {add:"➕",edit:"✎",delete:"🗑️",restore:"↩️"};
 
+/* ---------------- LANGUAGE / i18n ---------------- */
+const STR = {
+  hinglish: {
+    home:"Home", entries:"Entries", category:"Category", split:"Split bill", recurring:"Recurring", analysis:"Analysis", add:"Add",
+    balance:"Is mahine ka balance", income:"Income", expense:"Expense",
+    kharchaBreakdown:"Kharcha breakdown", recentEntries:"Recent entries", seeAll:"Sab dekho →", tips:"💡 Tips",
+    autoCut:"🔁 Auto-cut recurring", noExpenseMonth:"Is mahine abhi koi kharcha nahi hai", noEntry:"Koi entry nahi hai",
+    searchPlaceholder:"🔍 Note ya category search karo...", all:"Sab", entriesFound:n=>`(${n} mile)`,
+    entriesTitle:"Entries", noEntryFound:"Koi entry nahi mili",
+    expenseCategories:"Expense categories", incomeCategories:"Income categories", nayi:"Nayi",
+    catHint:"Kisi bhi category par tap karo — uski poori detail report aur PDF download yahin milega. ✎ se budget bhi set kar sakte ho.",
+    recurringTitle:"Recurring / Auto-cut", naya:"+ Naya",
+    recurringHint:"Ye items automatic set date par transaction ke roop mein cut ho jaate hain — jaise rent, subscription, EMI. App kholte hi due items apne aap add ho jaate hain. 10-din, quarterly, half-yearly ya apna custom gap bhi set kar sakte ho.",
+    noRecurring:"Koi recurring item nahi hai", nextTime:"Agli baar:",
+    splitTitle:"Split bill", newGroup:"+ Naya group",
+    splitHint:"Room ke saathiyon ya trip ke doston ke saath shared kharcha track karo — kaun kisko kitna dega turant pata chal jayega.",
+    noGroup:"Koi group nahi hai. Room ya trip ke liye pehla group banao.",
+    addExpense:"+ Kharcha add karo", members:"Members:", balanceTitle:"Balance",
+    willGet:"Wapas milega ", willGive:"Dena hai ", settleUp:"Settle up", allClear:"Sab clear hai 🎉",
+    expensesTitle:"Kharche", noSharedExpense:"Abhi koi shared kharcha nahi hai",
+    overview:"Overview", savingRate:"Saving rate:", dailyAvg:"Daily average kharcha:", highestExpense:"Sabse bada kharcha:",
+    categoryWise:"Category-wise kharcha", noData:"Data nahi hai", weekdayPattern:"Weekday-wise kharcha pattern",
+    last6:"Pichle 6 mahine (expense)", activityLog:"📝 Activity log", noActivity:"Abhi koi activity nahi hai",
+    dataSection:"Data", pdfReport:"📄 Is mahine ka PDF report", backup:"⬇️ Backup (JSON) download karo",
+    restore:"⬆️ Restore", reset:"Reset", dataHint:"Sara data sirf isi device ke browser mein locally save hota hai — kahin bhi upload nahi hota. Backup zaroor rakho.",
+    saveEntry:"Save entry", updateEntry:"Update karo", newEntry:"Nayi entry add karo", editEntry:"Entry edit karo",
+    amount:"Amount (₹)", categoryLbl:"Category", date:"Date", note:"Note (optional)", notePh:"e.g. Zomato order",
+    isRecurring:"🔁 Ye recurring hai (rent, subscription, salary...)", repeatFreq:"Kitni baar repeat hoga",
+    customRepeat:"Custom repeat", nextDate:"Agli date (kab se cut hoga)",
+    deleteEntry:"Entry delete karo", newCatBanao:"Category banao", saveCat:"Save karo", newCategory:"Nayi category",
+    editCategory:"Category edit karo", catName:"Naam", catNamePh:"e.g. Groceries", icon:"Icon", color:"Rang",
+    parentCat:"Parent category (optional)", noneTopLevel:"— Koi nahi (top-level) —",
+    monthlyBudget:"Monthly budget (₹) — optional", budgetPh:"e.g. 5000", deleteCat:"Category delete karo",
+    newRecurringTitle:"Naya recurring (auto-cut)", editRecurringTitle:"Recurring edit karo",
+    nameNote:"Naam / Note", nameNotePh:"e.g. Ghar ka rent, Netflix", frequency:"Frequency",
+    saveRecurring:"Recurring banao", deleteRecurring:"Delete karo",
+    newGroupTitle:"Naya group banao", groupName:"Group ka naam", groupNamePh:"e.g. Flat 302 ya Goa Trip",
+    membersLbl:"Members (comma se separate karo)", membersPh:"You, Raj, Priya, Aman", saveGroup:"Group banao",
+    sharedExpTitle:"Shared kharcha add karo", whatFor:"Kis cheez ka kharcha", whatForPh:"e.g. Groceries, Cab fare",
+    whoPaid:"Kisne pay kiya", splitBetween:"Kis-kis mein split hoga", saveSharedExp:"Kharcha add karo",
+    settingsTitle:"⚙️ Settings", language:"Bhasha / Language", offlineNote:"Sara data sirf is device par, offline save hota hai.",
+    close:"Band karo",
+  },
+  english: {
+    home:"Home", entries:"Entries", category:"Category", split:"Split bill", recurring:"Recurring", analysis:"Analysis", add:"Add",
+    balance:"This month's balance", income:"Income", expense:"Expense",
+    kharchaBreakdown:"Expense breakdown", recentEntries:"Recent entries", seeAll:"See all →", tips:"💡 Tips",
+    autoCut:"🔁 Auto-cut recurring", noExpenseMonth:"No expenses recorded this month yet", noEntry:"No entries yet",
+    searchPlaceholder:"🔍 Search by note or category...", all:"All", entriesFound:n=>`(${n} found)`,
+    entriesTitle:"Entries", noEntryFound:"No matching entries found",
+    expenseCategories:"Expense categories", incomeCategories:"Income categories", nayi:"New",
+    catHint:"Tap any category to see its full report and download a PDF. Use ✎ to set a budget too.",
+    recurringTitle:"Recurring / Auto-cut", naya:"+ New",
+    recurringHint:"These items get added automatically on a set date — like rent, subscriptions, or EMIs. Due items are added the moment you open the app. You can set 10-day, quarterly, half-yearly, or your own custom gap.",
+    noRecurring:"No recurring items yet", nextTime:"Next:",
+    splitTitle:"Split bill", newGroup:"+ New group",
+    splitHint:"Track shared expenses with roommates or trip friends — instantly see who owes whom.",
+    noGroup:"No groups yet. Create your first group for a room or trip.",
+    addExpense:"+ Add expense", members:"Members:", balanceTitle:"Balance",
+    willGet:"Gets back ", willGive:"Owes ", settleUp:"Settle up", allClear:"All settled 🎉",
+    expensesTitle:"Expenses", noSharedExpense:"No shared expenses yet",
+    overview:"Overview", savingRate:"Saving rate:", dailyAvg:"Daily average spend:", highestExpense:"Highest expense:",
+    categoryWise:"Category-wise spending", noData:"No data", weekdayPattern:"Weekday spending pattern",
+    last6:"Last 6 months (expense)", activityLog:"📝 Activity log", noActivity:"No activity yet",
+    dataSection:"Data", pdfReport:"📄 This month's PDF report", backup:"⬇️ Download backup (JSON)",
+    restore:"⬆️ Restore", reset:"Reset", dataHint:"All data is saved locally in this device's browser only — nothing is uploaded anywhere. Keep a backup.",
+    saveEntry:"Save entry", updateEntry:"Update", newEntry:"Add new entry", editEntry:"Edit entry",
+    amount:"Amount (₹)", categoryLbl:"Category", date:"Date", note:"Note (optional)", notePh:"e.g. Zomato order",
+    isRecurring:"🔁 This is recurring (rent, subscription, salary...)", repeatFreq:"Repeat frequency",
+    customRepeat:"Custom repeat", nextDate:"Next date (when it starts cutting)",
+    deleteEntry:"Delete entry", newCatBanao:"Create category", saveCat:"Save", newCategory:"New category",
+    editCategory:"Edit category", catName:"Name", catNamePh:"e.g. Groceries", icon:"Icon", color:"Color",
+    parentCat:"Parent category (optional)", noneTopLevel:"— None (top-level) —",
+    monthlyBudget:"Monthly budget (₹) — optional", budgetPh:"e.g. 5000", deleteCat:"Delete category",
+    newRecurringTitle:"New recurring (auto-cut)", editRecurringTitle:"Edit recurring",
+    nameNote:"Name / Note", nameNotePh:"e.g. Rent, Netflix", frequency:"Frequency",
+    saveRecurring:"Create recurring", deleteRecurring:"Delete",
+    newGroupTitle:"Create new group", groupName:"Group name", groupNamePh:"e.g. Flat 302 or Goa Trip",
+    membersLbl:"Members (comma separated)", membersPh:"You, Raj, Priya, Aman", saveGroup:"Create group",
+    sharedExpTitle:"Add shared expense", whatFor:"What was it for", whatForPh:"e.g. Groceries, Cab fare",
+    whoPaid:"Who paid", splitBetween:"Split between", saveSharedExp:"Add expense",
+    settingsTitle:"⚙️ Settings", language:"Language", offlineNote:"All data is saved offline, only on this device.",
+    close:"Close",
+  },
+  hindi: {
+    home:"होम", entries:"एंट्री", category:"श्रेणी", split:"बिल बांटें", recurring:"रिकरिंग", analysis:"विश्लेषण", add:"जोड़ें",
+    balance:"इस महीने का बैलेंस", income:"आय", expense:"खर्च",
+    kharchaBreakdown:"खर्च का विवरण", recentEntries:"हाल की एंट्री", seeAll:"सब देखें →", tips:"💡 सुझाव",
+    autoCut:"🔁 ऑटो-कट रिकरिंग", noExpenseMonth:"इस महीने अभी कोई खर्च नहीं है", noEntry:"कोई एंट्री नहीं है",
+    searchPlaceholder:"🔍 नोट या श्रेणी खोजें...", all:"सभी", entriesFound:n=>`(${n} मिलीं)`,
+    entriesTitle:"एंट्री", noEntryFound:"कोई एंट्री नहीं मिली",
+    expenseCategories:"खर्च की श्रेणियाँ", incomeCategories:"आय की श्रेणियाँ", nayi:"नई",
+    catHint:"किसी भी श्रेणी पर टैप करें — पूरी रिपोर्ट और PDF डाउनलोड यहीं मिलेगा। ✎ से बजट भी सेट कर सकते हैं।",
+    recurringTitle:"रिकरिंग / ऑटो-कट", naya:"+ नया",
+    recurringHint:"ये आइटम तय तारीख़ पर अपने आप कट जाते हैं — जैसे किराया, सब्सक्रिप्शन, EMI। ऐप खोलते ही ड्यू आइटम अपने आप जुड़ जाते हैं। 10-दिन, तिमाही, छमाही या अपना कस्टम अंतराल भी सेट कर सकते हैं।",
+    noRecurring:"कोई रिकरिंग आइटम नहीं है", nextTime:"अगली बार:",
+    splitTitle:"बिल बांटें", newGroup:"+ नया समूह",
+    splitHint:"रूममेट या ट्रिप के दोस्तों के साथ साझा खर्च ट्रैक करें — तुरंत पता चलेगा किसे कितना देना है।",
+    noGroup:"कोई समूह नहीं है। रूम या ट्रिप के लिए पहला समूह बनाएं।",
+    addExpense:"+ खर्च जोड़ें", members:"सदस्य:", balanceTitle:"बैलेंस",
+    willGet:"वापस मिलेगा ", willGive:"देना है ", settleUp:"हिसाब चुकता करें", allClear:"सब क्लियर है 🎉",
+    expensesTitle:"खर्चे", noSharedExpense:"अभी कोई साझा खर्च नहीं है",
+    overview:"सारांश", savingRate:"बचत दर:", dailyAvg:"रोज़ाना औसत खर्च:", highestExpense:"सबसे बड़ा खर्च:",
+    categoryWise:"श्रेणी-वार खर्च", noData:"कोई डेटा नहीं", weekdayPattern:"सप्ताह के दिन अनुसार खर्च",
+    last6:"पिछले 6 महीने (खर्च)", activityLog:"📝 गतिविधि लॉग", noActivity:"अभी कोई गतिविधि नहीं है",
+    dataSection:"डेटा", pdfReport:"📄 इस महीने की PDF रिपोर्ट", backup:"⬇️ बैकअप (JSON) डाउनलोड करें",
+    restore:"⬆️ रीस्टोर", reset:"रीसेट", dataHint:"सारा डेटा केवल इसी डिवाइस के ब्राउज़र में सुरक्षित है — कहीं अपलोड नहीं होता। बैकअप ज़रूर रखें।",
+    saveEntry:"एंट्री सेव करें", updateEntry:"अपडेट करें", newEntry:"नई एंट्री जोड़ें", editEntry:"एंट्री एडिट करें",
+    amount:"राशि (₹)", categoryLbl:"श्रेणी", date:"तारीख़", note:"नोट (वैकल्पिक)", notePh:"जैसे Zomato ऑर्डर",
+    isRecurring:"🔁 यह रिकरिंग है (किराया, सब्सक्रिप्शन, सैलरी...)", repeatFreq:"कितनी बार दोहराया जाएगा",
+    customRepeat:"कस्टम रिपीट", nextDate:"अगली तारीख़ (कब से कटेगा)",
+    deleteEntry:"एंट्री डिलीट करें", newCatBanao:"श्रेणी बनाएं", saveCat:"सेव करें", newCategory:"नई श्रेणी",
+    editCategory:"श्रेणी एडिट करें", catName:"नाम", catNamePh:"जैसे किराना", icon:"आइकन", color:"रंग",
+    parentCat:"मुख्य श्रेणी (वैकल्पिक)", noneTopLevel:"— कोई नहीं (टॉप-लेवल) —",
+    monthlyBudget:"मासिक बजट (₹) — वैकल्पिक", budgetPh:"जैसे 5000", deleteCat:"श्रेणी डिलीट करें",
+    newRecurringTitle:"नया रिकरिंग (ऑटो-कट)", editRecurringTitle:"रिकरिंग एडिट करें",
+    nameNote:"नाम / नोट", nameNotePh:"जैसे घर का किराया, Netflix", frequency:"आवृत्ति",
+    saveRecurring:"रिकरिंग बनाएं", deleteRecurring:"डिलीट करें",
+    newGroupTitle:"नया समूह बनाएं", groupName:"समूह का नाम", groupNamePh:"जैसे Flat 302 या गोवा ट्रिप",
+    membersLbl:"सदस्य (कॉमा से अलग करें)", membersPh:"आप, राज, प्रिया, अमन", saveGroup:"समूह बनाएं",
+    sharedExpTitle:"साझा खर्च जोड़ें", whatFor:"किस चीज़ का खर्च", whatForPh:"जैसे किराना, कैब किराया",
+    whoPaid:"किसने भुगतान किया", splitBetween:"किन-किन में बांटा जाए", saveSharedExp:"खर्च जोड़ें",
+    settingsTitle:"⚙️ सेटिंग्स", language:"भाषा / Language", offlineNote:"सारा डेटा केवल इस डिवाइस पर, ऑफ़लाइन सेव होता है।",
+    close:"बंद करें",
+  }
+};
+function curLang(){ return DB?.meta?.language || "hinglish"; }
+function T(key, ...args){
+  const dict = STR[curLang()] || STR.hinglish;
+  const v = dict[key] ?? STR.hinglish[key] ?? key;
+  return typeof v === "function" ? v(...args) : v;
+}
+
 function defaultData(){
   return {
     categories:[
-      {id:"c_food",name:"Khana / Food",type:"expense",icon:"🍔",color:"#FF5E62",budget:null},
-      {id:"c_transport",name:"Transport",type:"expense",icon:"🚌",color:"#F0933D",budget:null},
-      {id:"c_shopping",name:"Shopping",type:"expense",icon:"🛍️",color:"#8952C4",budget:null},
-      {id:"c_bills",name:"Bills & Rent",type:"expense",icon:"💡",color:"#5B4CE0",budget:null},
-      {id:"c_entertainment",name:"Entertainment",type:"expense",icon:"🎬",color:"#F45B8D",budget:null},
-      {id:"c_health",name:"Health",type:"expense",icon:"🏥",color:"#3D8BFD",budget:null},
-      {id:"c_other",name:"Other",type:"expense",icon:"🧾",color:"#2E9E6B",budget:null},
-      {id:"c_salary",name:"Salary",type:"income",icon:"💰",color:"#00B894",budget:null},
-      {id:"c_extra",name:"Extra Income",type:"income",icon:"💵",color:"#17C3B2",budget:null},
+      {id:"c_food",name:"Khana / Food",type:"expense",icon:"🍔",color:"#FF5E62",budget:null,parentId:null},
+      {id:"c_transport",name:"Transport",type:"expense",icon:"🚌",color:"#F0933D",budget:null,parentId:null},
+      {id:"c_shopping",name:"Shopping",type:"expense",icon:"🛍️",color:"#8952C4",budget:null,parentId:null},
+      {id:"c_bills",name:"Bills & Rent",type:"expense",icon:"💡",color:"#5B4CE0",budget:null,parentId:null},
+      {id:"c_entertainment",name:"Entertainment",type:"expense",icon:"🎬",color:"#F45B8D",budget:null,parentId:null},
+      {id:"c_health",name:"Health",type:"expense",icon:"🏥",color:"#3D8BFD",budget:null,parentId:null},
+      {id:"c_other",name:"Other",type:"expense",icon:"🧾",color:"#2E9E6B",budget:null,parentId:null},
+      {id:"c_salary",name:"Salary",type:"income",icon:"💰",color:"#00B894",budget:null,parentId:null},
+      {id:"c_extra",name:"Extra Income",type:"income",icon:"💵",color:"#17C3B2",budget:null,parentId:null},
     ],
     transactions:[],
     recurring:[],
@@ -310,7 +454,7 @@ function defaultData(){
     activityLog:[],
     botChat:[],
     reminders:[],
-    meta:{createdAt:Date.now()}
+    meta:{createdAt:Date.now(), language:"hinglish"}
   };
 }
 
@@ -326,6 +470,9 @@ function load(){
     if(!parsed.activityLog) parsed.activityLog = [];
     if(!parsed.botChat) parsed.botChat = [];
     if(!parsed.reminders) parsed.reminders = [];
+    if(!parsed.meta) parsed.meta = {createdAt:Date.now(), language:"hinglish"};
+    if(!parsed.meta.language) parsed.meta.language = "hinglish";
+    parsed.categories.forEach(c=>{ if(c.parentId===undefined) c.parentId = null; });
     return parsed;
   }catch(e){ return defaultData(); }
 }
@@ -430,6 +577,8 @@ function runRecurringEngine(){
 }
 
 function catById(id){ return DB.categories.find(c=>c.id===id); }
+function subCatsOf(id){ return DB.categories.filter(c=>c.parentId===id); }
+function topCats(type){ return DB.categories.filter(c=>c.type===type && !c.parentId); }
 function txnsForMonth(monthDate){
   const key = monthKey(monthDate);
   return DB.transactions.filter(t=> t.date.slice(0,7)===key );
@@ -564,14 +713,16 @@ function animateBarsIn(container){
   requestAnimationFrame(()=>{ $$(".bar-fill[data-w]", container).forEach(el=>{ el.style.width = el.dataset.w; }); });
 }
 
-const NAV = [
-  {id:"dashboard", ic:"🏠", label:"Home"},
-  {id:"transactions", ic:"📋", label:"Entries"},
-  {id:"categories", ic:"🗂️", label:"Category"},
-  {id:"split", ic:"🤝", label:"Split bill"},
-  {id:"recurring", ic:"🔁", label:"Recurring"},
-  {id:"analysis", ic:"📊", label:"Analysis"},
-];
+function renderNav(){
+  return [
+    {id:"dashboard", ic:"🏠", label:T("home")},
+    {id:"transactions", ic:"📋", label:T("entries")},
+    {id:"categories", ic:"🗂️", label:T("category")},
+    {id:"split", ic:"🤝", label:T("split")},
+    {id:"recurring", ic:"🔁", label:T("recurring")},
+    {id:"analysis", ic:"📊", label:T("analysis")},
+  ];
+}
 
 function render(){
   const shell = $("#shell");
@@ -613,12 +764,12 @@ function renderSidebar(){
   return `
   <div class="sidebar">
     <div class="side-brand"><div class="logo">💸</div><div class="name">Kharcha</div></div>
-    ${NAV.map(n=>`
+    ${renderNav().map(n=>`
       <button class="side-nav-btn ${state.tab===n.id?'active':''}" data-tab="${n.id}">
         <span class="ic">${n.ic}</span><span>${n.label}</span>
       </button>`).join("")}
-    <button class="side-fab" data-tab="add">＋ Nayi entry</button>
-    <div class="side-foot">Sara data sirf is device par, offline save hota hai.</div>
+    <button class="side-fab" data-tab="add">＋ ${T("newEntry")}</button>
+    <div class="side-foot">${T("offlineNote")}</div>
   </div>`;
 }
 
@@ -627,31 +778,34 @@ function renderTopbar(){
   <div class="topbar">
     <div class="topbar-row">
       <div class="brand"><span class="brand-mark"><span class="dot"></span>Kharcha</span></div>
-      <div class="month-switch">
-        <button data-act="prevMonth">‹</button>
-        <span class="month-label">${monthLabel(state.month)}</span>
-        <button data-act="nextMonth">›</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="month-switch">
+          <button data-act="prevMonth">‹</button>
+          <span class="month-label">${monthLabel(state.month)}</span>
+          <button data-act="nextMonth">›</button>
+        </div>
+        <button class="settings-btn" data-act="openSettings">⚙</button>
       </div>
     </div>
     <div class="balance-block">
-      <div class="balance-label">Is mahine ka balance</div>
+      <div class="balance-label">${T("balance")}</div>
       <div class="balance-amount" id="balanceValue">₹0</div>
     </div>
     <div class="stat-row">
-      <div class="stat-pill income"><div class="k">↗ Income</div><div class="v" id="incomeValue">₹0</div></div>
-      <div class="stat-pill expense"><div class="k">↘ Expense</div><div class="v" id="expenseValue">₹0</div></div>
+      <div class="stat-pill income"><div class="k">↗ ${T("income")}</div><div class="v" id="incomeValue">₹0</div></div>
+      <div class="stat-pill expense"><div class="k">↘ ${T("expense")}</div><div class="v" id="expenseValue">₹0</div></div>
     </div>
   </div>`;
 }
 
 function renderTabbar(){
   const tabs = [
-    {id:"dashboard", ic:"🏠", label:"Home"},
-    {id:"transactions", ic:"📋", label:"Entries"},
-    {id:"add", ic:"+", label:"Add", fab:true},
-    {id:"split", ic:"🤝", label:"Split"},
-    {id:"categories", ic:"🗂️", label:"Category"},
-    {id:"analysis", ic:"📊", label:"Analysis"},
+    {id:"dashboard", ic:"🏠", label:T("home")},
+    {id:"transactions", ic:"📋", label:T("entries")},
+    {id:"add", ic:"+", label:T("add"), fab:true},
+    {id:"split", ic:"🤝", label:T("split")},
+    {id:"categories", ic:"🗂️", label:T("category")},
+    {id:"analysis", ic:"📊", label:T("analysis")},
   ];
   return `<div class="tabbar">
     ${tabs.map(t=>`
@@ -693,7 +847,7 @@ function renderDashboard(){
 
   return `
   <div class="grid-left">
-    <div class="section-title">Kharcha breakdown <span class="link" data-tab="analysis">Analysis →</span></div>
+    <div class="section-title">${T("kharchaBreakdown")} <span class="link" data-tab="analysis">${T("seeAll")}</span></div>
     <div class="card">
       ${breakdown.length? `
       <div class="pie-wrap">
@@ -708,19 +862,19 @@ function renderDashboard(){
               <span class="legend-pct">${Math.round(b.amount/totalExp*100)}%</span>
             </div>`).join("")}
         </div>
-      </div>` : `<div class="empty"><span class="big">🥧</span>Is mahine abhi koi kharcha nahi hai</div>`}
+      </div>` : `<div class="empty"><span class="big">🥧</span>${T("noExpenseMonth")}</div>`}
     </div>
   </div>
 
   <div class="grid-left">
-    <div class="section-title">Recent entries <span class="link" data-tab="transactions">Sab dekho →</span></div>
+    <div class="section-title">${T("recentEntries")} <span class="link" data-tab="transactions">${T("seeAll")}</span></div>
     <div class="card">
-      ${recent.length? recent.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>Koi entry nahi hai</div>`}
+      ${recent.length? recent.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>${T("noEntry")}</div>`}
     </div>
   </div>
 
   <div class="grid-right">
-    <div class="section-title">💡 Tips</div>
+    <div class="section-title">${T("tips")}</div>
     <div class="card">
       ${tips.map(t=>`<div class="tip"><span class="tip-icon">${t.icon}</span><span class="tip-text">${t.text}</span></div>`).join("")}
     </div>
@@ -728,13 +882,13 @@ function renderDashboard(){
 
   ${activeRec.length? `
   <div class="grid-right">
-    <div class="section-title">🔁 Auto-cut recurring <span class="link" data-tab="recurring">Sab dekho →</span></div>
+    <div class="section-title">${T("autoCut")} <span class="link" data-tab="recurring">${T("seeAll")}</span></div>
     <div class="card">
       ${activeRec.slice(0,4).map(r=>`
         <div class="rec-row">
           <div class="rec-main">
             <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${freqLabel(r)}</span></div>
-            <div class="rec-meta">Agli baar: ${fmtDate(r.nextDate)}</div>
+            <div class="rec-meta">${T("nextTime")} ${fmtDate(r.nextDate)}</div>
           </div>
           <div class="rec-amt" style="color:${r.type==='income'?'var(--income)':'var(--expense)'}">${r.type==='income'?'+':'-'}${fmtINR(r.amount)}</div>
         </div>`).join("")}
@@ -743,6 +897,11 @@ function renderDashboard(){
   `;
 }
 
+function catLabel(c){
+  if(!c) return "";
+  if(c.parentId){ const p = catById(c.parentId); return (p? p.icon+" "+p.name+" › " : "") + c.icon + " " + c.name; }
+  return c.icon + " " + c.name;
+}
 function txnRow(t){
   const cat = catById(t.categoryId) || {name:"Deleted", icon:"❓", color:"#999"};
   const edited = t.history && t.history.length;
@@ -781,26 +940,27 @@ function renderTransactions(){
   });
   return `
   <div class="field" style="margin-bottom:10px;">
-    <input type="text" id="txnSearch" placeholder="🔍 Note ya category search karo..." value="${state.txnSearch? state.txnSearch.replace(/"/g,'&quot;'):''}">
+    <input type="text" id="txnSearch" placeholder="${T('searchPlaceholder')}" value="${state.txnSearch? state.txnSearch.replace(/"/g,'&quot;'):''}">
   </div>
   <div class="seg" style="margin-bottom:14px;">
-    <button type="button" class="${filterType==='all'?'active':''}" data-filter-type="all">Sab</button>
-    <button type="button" class="${filterType==='income'?'active income':''}" data-filter-type="income">Income</button>
-    <button type="button" class="${filterType==='expense'?'active expense':''}" data-filter-type="expense">Expense</button>
+    <button type="button" class="${filterType==='all'?'active':''}" data-filter-type="all">${T('all')}</button>
+    <button type="button" class="${filterType==='income'?'active income':''}" data-filter-type="income">${T('income')}</button>
+    <button type="button" class="${filterType==='expense'?'active expense':''}" data-filter-type="expense">${T('expense')}</button>
   </div>
-  <div class="section-title">Entries ${(q||filterType!=='all')? `(${cur.length} mile)`:''}</div>
+  <div class="section-title">${T('entriesTitle')} ${(q||filterType!=='all')? T('entriesFound',cur.length):''}</div>
   <div class="card">
-    ${cur.length? cur.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>Koi entry nahi mili</div>`}
+    ${cur.length? cur.map(txnRow).join("") : `<div class="empty"><span class="big">🧾</span>${T('noEntryFound')}</div>`}
   </div>`;
 }
 
 function renderCategories(){
   const cur = txnsForMonth(state.month);
-  const expCats = DB.categories.filter(c=>c.type==="expense");
-  const incCats = DB.categories.filter(c=>c.type==="income");
+  const expCats = topCats("expense");
+  const incCats = topCats("income");
   function spent(catId){ return cur.filter(t=>t.categoryId===catId).reduce((s,t)=>s+t.amount,0); }
   const tile = c => {
-    const sp = spent(c.id);
+    const subs = subCatsOf(c.id);
+    const sp = spent(c.id) + subs.reduce((s,sc)=>s+spent(sc.id),0);
     const budgetBar = c.budget? `<div class="tile-budget-track"><div class="tile-budget-fill" style="width:${Math.min(100, sp/c.budget*100)}%;background:${sp>c.budget?'var(--expense)':c.color}"></div></div>` : "";
     return `
     <div class="cat-tile" data-view-cat="${c.id}">
@@ -808,20 +968,21 @@ function renderCategories(){
       <div class="ic" style="background:${c.color}22;color:${c.color}">${c.icon}</div>
       <div class="nm">${c.name}</div>
       <div class="amt">${sp? fmtINR(sp) : "—"}</div>
+      ${subs.length? `<div class="tile-sub-count">+${subs.length} sub</div>` : ""}
       ${budgetBar}
     </div>`;
   };
   return `
-  <div class="hint" style="margin-bottom:12px;">Kisi bhi category par tap karo — uski poori detail report aur PDF download yahin milega. ✎ se budget bhi set kar sakte ho.</div>
-  <div class="section-title">Expense categories</div>
+  <div class="hint" style="margin-bottom:12px;">${T('catHint')}</div>
+  <div class="section-title">${T('expenseCategories')}</div>
   <div class="cat-grid">
     ${expCats.map(tile).join("")}
-    <div class="cat-tile add" data-act="newCategoryExpense"><div class="ic">＋</div><div class="nm">Nayi</div></div>
+    <div class="cat-tile add" data-act="newCategoryExpense"><div class="ic">＋</div><div class="nm">${T('nayi')}</div></div>
   </div>
-  <div class="section-title">Income categories</div>
+  <div class="section-title">${T('incomeCategories')}</div>
   <div class="cat-grid">
     ${incCats.map(tile).join("")}
-    <div class="cat-tile add" data-act="newCategoryIncome"><div class="ic">＋</div><div class="nm">Nayi</div></div>
+    <div class="cat-tile add" data-act="newCategoryIncome"><div class="ic">＋</div><div class="nm">${T('nayi')}</div></div>
   </div>
   `;
 }
@@ -829,18 +990,18 @@ function renderCategories(){
 function renderRecurring(){
   const list = [...DB.recurring].sort((a,b)=> a.nextDate.localeCompare(b.nextDate));
   return `
-  <div class="section-title">Recurring / Auto-cut <span class="link" data-act="newRecurring">+ Naya</span></div>
-  <div class="hint">Ye items automatic set date par transaction ke roop mein cut ho jaate hain — jaise rent, subscription, EMI. App kholte hi due items apne aap add ho jaate hain. 10-din, quarterly, half-yearly ya apna custom gap bhi set kar sakte ho.</div>
+  <div class="section-title">${T('recurringTitle')} <span class="link" data-act="newRecurring">${T('naya')}</span></div>
+  <div class="hint">${T('recurringHint')}</div>
   <div class="card" style="margin-top:12px;">
     ${list.length? list.map(r=>`
       <div class="rec-row">
         <div class="rec-main" data-edit-rec="${r.id}">
           <div class="rec-name">${catById(r.categoryId)?.icon||"🔁"} ${r.note||catById(r.categoryId)?.name||"Recurring"}<span class="freq-chip">${freqLabel(r)}</span></div>
-          <div class="rec-meta">Agli baar: ${fmtDate(r.nextDate)}</div>
+          <div class="rec-meta">${T('nextTime')} ${fmtDate(r.nextDate)}</div>
         </div>
         <div class="rec-amt" style="color:${r.type==='income'?'var(--income)':'var(--expense)'}">${r.type==='income'?'+':'-'}${fmtINR(r.amount)}</div>
         <button class="switch ${r.active?'on':''}" data-toggle-rec="${r.id}"></button>
-      </div>`).join("") : `<div class="empty"><span class="big">🔁</span>Koi recurring item nahi hai</div>`}
+      </div>`).join("") : `<div class="empty"><span class="big">🔁</span>${T('noRecurring')}</div>`}
   </div>`;
 }
 
@@ -849,10 +1010,10 @@ function renderSplit(){
   const gid = state.group || groups[0]?.id;
   const g = groups.find(x=>x.id===gid);
   let html = `
-  <div class="section-title">Split bill <span class="link" data-act="newGroup">+ Naya group</span></div>
-  <div class="hint" style="margin-bottom:14px;">Room ke saathiyon ya trip ke doston ke saath shared kharcha track karo — kaun kisko kitna dega turant pata chal jayega.</div>`;
+  <div class="section-title">${T('splitTitle')} <span class="link" data-act="newGroup">${T('newGroup')}</span></div>
+  <div class="hint" style="margin-bottom:14px;">${T('splitHint')}</div>`;
   if(!groups.length){
-    html += `<div class="card"><div class="empty"><span class="big">🤝</span>Koi group nahi hai. Room ya trip ke liye pehla group banao.</div></div>`;
+    html += `<div class="card"><div class="empty"><span class="big">🤝</span>${T('noGroup')}</div></div>`;
     return html;
   }
   html += `<div class="cat-grid" style="grid-template-columns:repeat(auto-fill,minmax(108px,1fr));">
@@ -867,23 +1028,23 @@ function renderSplit(){
   const bal = groupBalances(g);
   const settlements = settleUpGroup(bal);
   html += `
-  <div class="section-title">${g.name} <span class="link" data-act="addGroupExpense" data-group="${g.id}">+ Kharcha add karo</span></div>
-  <div class="hint" style="margin-top:-6px;">Members: ${g.members.join(", ")}</div>
-  <div class="section-title">Balance</div>
+  <div class="section-title">${g.name} <span class="link" data-act="addGroupExpense" data-group="${g.id}">${T('addExpense')}</span></div>
+  <div class="hint" style="margin-top:-6px;">${T('members')} ${g.members.join(", ")}</div>
+  <div class="section-title">${T('balanceTitle')}</div>
   <div class="card">
     ${g.members.map(m=>{
       const v = bal[m]||0;
       return `<div class="rec-row"><div class="rec-main"><div class="rec-name">${m}</div></div>
-        <div class="rec-amt" style="color:${v>=0?'var(--income)':'var(--expense)'}">${v>=0? 'Wapas milega ':'Dena hai '}${fmtINR(Math.abs(v))}</div></div>`;
+        <div class="rec-amt" style="color:${v>=0?'var(--income)':'var(--expense)'}">${v>=0? T('willGet'):T('willGive')}${fmtINR(Math.abs(v))}</div></div>`;
     }).join("")}
   </div>
-  <div class="section-title">Settle up</div>
+  <div class="section-title">${T('settleUp')}</div>
   <div class="card">
     ${settlements.length? settlements.map(s=>`
       <div class="rec-row"><div class="rec-main"><div class="rec-name">${s.from} → ${s.to}</div></div>
-        <div class="rec-amt">${fmtINR(s.amt)}</div></div>`).join("") : `<div class="empty">Sab clear hai 🎉</div>`}
+        <div class="rec-amt">${fmtINR(s.amt)}</div></div>`).join("") : `<div class="empty">${T('allClear')}</div>`}
   </div>
-  <div class="section-title">Kharche</div>
+  <div class="section-title">${T('expensesTitle')}</div>
   <div class="card">
     ${g.expenses.length? [...g.expenses].reverse().map(e=>`
       <div class="txn">
@@ -894,7 +1055,7 @@ function renderSplit(){
         </div>
         <div class="txn-amt expense">${fmtINR(e.amount)}</div>
         <button class="txn-del" data-del-group-exp="${e.id}" data-group="${g.id}">✕</button>
-      </div>`).join("") : `<div class="empty">Abhi koi shared kharcha nahi hai</div>`}
+      </div>`).join("") : `<div class="empty">${T('noSharedExpense')}</div>`}
   </div>`;
   return html;
 }
@@ -945,22 +1106,22 @@ function renderAnalysis(){
 
   return `
   <div class="grid-left">
-    <div class="section-title">Overview — ${monthLabel(state.month)}</div>
+    <div class="section-title">${T('overview')} — ${monthLabel(state.month)}</div>
     <div class="card">
       <div class="bar-row">
-        <div class="bar-row-top"><span class="nm">Income</span><span class="amt">${fmtINR(t.income)}</span></div>
+        <div class="bar-row-top"><span class="nm">${T('income')}</span><span class="amt">${fmtINR(t.income)}</span></div>
         <div class="bar-track"><div class="bar-fill" data-w="100%" style="background:linear-gradient(90deg,var(--income),var(--income-2))"></div></div>
       </div>
       <div class="bar-row">
-        <div class="bar-row-top"><span class="nm">Expense</span><span class="amt">${fmtINR(t.expense)}</span></div>
+        <div class="bar-row-top"><span class="nm">${T('expense')}</span><span class="amt">${fmtINR(t.expense)}</span></div>
         <div class="bar-track"><div class="bar-fill" data-w="${t.income>0?Math.min(100,t.expense/t.income*100):(t.expense>0?100:0)}%" style="background:linear-gradient(90deg,var(--expense),var(--expense-2))"></div></div>
       </div>
-      ${savingsRate!==null? `<div class="hint">Saving rate: <b style="color:var(--ink)">${savingsRate}%</b></div>` : ``}
-      <div class="hint">Daily average kharcha: <b style="color:var(--ink)">${fmtINR(avgDaily)}</b></div>
-      ${highest? `<div class="hint">Sabse bada kharcha: <b style="color:var(--ink)">${fmtINR(highest.amount)}</b> — ${catById(highest.categoryId)?.name||'-'} (${fmtDate(highest.date)})</div>` : ``}
+      ${savingsRate!==null? `<div class="hint">${T('savingRate')} <b style="color:var(--ink)">${savingsRate}%</b></div>` : ``}
+      <div class="hint">${T('dailyAvg')} <b style="color:var(--ink)">${fmtINR(avgDaily)}</b></div>
+      ${highest? `<div class="hint">${T('highestExpense')} <b style="color:var(--ink)">${fmtINR(highest.amount)}</b> — ${catById(highest.categoryId)?.name||'-'} (${fmtDate(highest.date)})</div>` : ``}
     </div>
 
-    <div class="section-title">Category-wise kharcha</div>
+    <div class="section-title">${T('categoryWise')}</div>
     <div class="card">
       ${breakdown.length? breakdown.map(b=>{
         const prev = prevAmt(b.categoryId);
@@ -973,13 +1134,13 @@ function renderAnalysis(){
         }
         return `
         <div class="bar-row">
-          <div class="bar-row-top"><span class="nm">${b.cat.icon} ${b.cat.name}</span><span class="amt">${fmtINR(b.amount)} · ${Math.round(b.amount/totalExp*100)}% ${trend}</span></div>
+          <div class="bar-row-top"><span class="nm">${catLabel(b.cat)}</span><span class="amt">${fmtINR(b.amount)} · ${Math.round(b.amount/totalExp*100)}% ${trend}</span></div>
           <div class="bar-track"><div class="bar-fill" data-w="${Math.round(b.amount/totalExp*100)}%" style="background:${b.cat.color}"></div></div>
         </div>`;
-      }).join("") : `<div class="empty">Data nahi hai</div>`}
+      }).join("") : `<div class="empty">${T('noData')}</div>`}
     </div>
 
-    <div class="section-title">Weekday-wise kharcha pattern</div>
+    <div class="section-title">${T('weekdayPattern')}</div>
     <div class="card">
       ${wk.map(w=>`
         <div class="bar-row">
@@ -990,7 +1151,7 @@ function renderAnalysis(){
   </div>
 
   <div class="grid-right">
-    <div class="section-title">Pichle 6 mahine (expense)</div>
+    <div class="section-title">${T('last6')}</div>
     <div class="card">
       ${months.map(d=>{
         const exp = totals(txnsForMonth(d)).expense;
@@ -1001,30 +1162,30 @@ function renderAnalysis(){
       }).join("")}
     </div>
 
-    <div class="section-title">💡 Tips</div>
+    <div class="section-title">${T('tips')}</div>
     <div class="card">
       ${buildTips().map(t=>`<div class="tip"><span class="tip-icon">${t.icon}</span><span class="tip-text">${t.text}</span></div>`).join("")}
     </div>
 
-    <div class="section-title">📝 Activity log</div>
+    <div class="section-title">${T('activityLog')}</div>
     <div class="card">
       ${DB.activityLog.length? DB.activityLog.slice(0,15).map(a=>`
         <div class="tip"><span class="tip-icon">${ACT_ICON[a.type]||"•"}</span><span class="tip-text">${a.message}<br><span style="color:var(--muted);font-size:11px;">${timeAgo(a.ts)}</span></span></div>
-      `).join("") : `<div class="empty">Abhi koi activity nahi hai</div>`}
+      `).join("") : `<div class="empty">${T('noActivity')}</div>`}
     </div>
 
-    <div class="section-title">Data</div>
+    <div class="section-title">${T('dataSection')}</div>
     <div class="card">
-      <button class="btn" data-act="exportPdf">📄 Is mahine ka PDF report</button>
-      <button class="btn secondary" data-act="exportData" style="margin-top:10px;">⬇️ Backup (JSON) download karo</button>
+      <button class="btn" data-act="exportPdf">${T('pdfReport')}</button>
+      <button class="btn secondary" data-act="exportData" style="margin-top:10px;">${T('backup')}</button>
       <div class="btn-row" style="margin-top:10px;">
         <label class="btn secondary" style="text-align:center;">
-          ⬆️ Restore
+          ${T('restore')}
           <input type="file" id="importFile" accept="application/json" style="display:none;">
         </label>
-        <button class="btn danger" data-act="resetData">Reset</button>
+        <button class="btn danger" data-act="resetData">${T('reset')}</button>
       </div>
-      <div class="hint">Sara data sirf isi device ke browser mein locally save hota hai — kahin bhi upload nahi hota. Backup zaroor rakho.</div>
+      <div class="hint">${T('dataHint')}</div>
     </div>
   </div>
   `;
@@ -1107,31 +1268,51 @@ function closeSheet(overlay){
   setTimeout(()=> overlay.remove(), 260);
 }
 
+function catOptionsHTML(type, selectedId){
+  const tops = topCats(type);
+  let html = "";
+  tops.forEach(p=>{
+    const subs = subCatsOf(p.id);
+    if(subs.length){
+      html += `<optgroup label="${p.icon} ${p.name}">`;
+      html += `<option value="${p.id}" ${selectedId===p.id?'selected':''}>${p.icon} ${p.name} (general)</option>`;
+      subs.forEach(s=>{
+        html += `<option value="${s.id}" ${selectedId===s.id?'selected':''}>&nbsp;&nbsp;↳ ${s.icon} ${s.name}</option>`;
+      });
+      html += `</optgroup>`;
+    } else {
+      html += `<option value="${p.id}" ${selectedId===p.id?'selected':''}>${p.icon} ${p.name}</option>`;
+    }
+  });
+  html += `<option value="__new__">➕ ${T('newCategory')}...</option>`;
+  return html;
+}
+
 function sheetAddTransaction(existing, presetCategoryId){
   let type = existing?.type || (presetCategoryId? (catById(presetCategoryId)?.type) : null) || "expense";
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">${existing? "Entry edit karo":"Nayi entry add karo"}</div>
+    <div class="sheet-title">${existing? T('editEntry'):T('newEntry')}</div>
     <div class="seg" id="typeSeg">
-      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
-      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
+      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ ${T('expense')}</button>
+      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ ${T('income')}</button>
     </div>
     <div class="field" style="margin-top:14px;">
-      <label>Amount (₹)</label>
+      <label>${T('amount')}</label>
       <input type="number" inputmode="decimal" id="f_amount" placeholder="0" value="${existing?existing.amount:''}" autofocus>
     </div>
-    <div class="field"><label>Category</label><select id="f_cat"></select></div>
-    <div class="field"><label>Date</label><input type="date" id="f_date" value="${existing? existing.date : new Date().toISOString().slice(0,10)}"></div>
-    <div class="field"><label>Note (optional)</label><input type="text" id="f_note" value="${existing? (existing.note||'').replace(/"/g,'&quot;') : ''}" placeholder="e.g. Zomato order"></div>
+    <div class="field"><label>${T('categoryLbl')}</label><select id="f_cat"></select></div>
+    <div class="field"><label>${T('date')}</label><input type="date" id="f_date" value="${existing? existing.date : new Date().toISOString().slice(0,10)}"></div>
+    <div class="field"><label>${T('note')}</label><input type="text" id="f_note" value="${existing? (existing.note||'').replace(/"/g,'&quot;') : ''}" placeholder="${T('notePh')}"></div>
     ${!existing? `
     <div class="field" style="margin-top:2px;">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0;">
         <input type="checkbox" id="f_recurring" style="width:18px;height:18px;flex:none;">
-        <span style="color:var(--ink);font-weight:600;">🔁 Ye recurring hai (rent, subscription, salary...)</span>
+        <span style="color:var(--ink);font-weight:600;">${T('isRecurring')}</span>
       </label>
     </div>
     <div class="field" id="freqWrap" style="display:none;">
-      <label>Kitni baar repeat hoga</label>
+      <label>${T('repeatFreq')}</label>
       <select id="f_freq">
         <option value="daily">Daily</option>
         <option value="every10">Har 10 din</option>
@@ -1144,7 +1325,7 @@ function sheetAddTransaction(existing, presetCategoryId){
       </select>
     </div>
     <div class="field" id="customFreqWrap" style="display:none;">
-      <label>Custom repeat</label>
+      <label>${T('customRepeat')}</label>
       <div style="display:flex;gap:8px;">
         <input type="number" id="f_customVal" min="1" value="1" style="flex:1;">
         <select id="f_customUnit" style="flex:1;">
@@ -1155,14 +1336,25 @@ function sheetAddTransaction(existing, presetCategoryId){
       </div>
     </div>
     ` : ``}
-    <button class="btn" id="saveTxn">${existing? "Update karo":"Save entry"}</button>
-    ${existing? `<button class="btn danger" id="delTxnBtn" style="margin-top:8px;">Entry delete karo</button>` : ``}
+    <button class="btn" id="saveTxn">${existing? T('updateEntry'):T('saveEntry')}</button>
+    ${existing? `<button class="btn danger" id="delTxnBtn" style="margin-top:8px;">${T('deleteEntry')}</button>` : ``}
   `);
   function refreshCatOptions(){
     const sel = $("#f_cat", overlay);
-    sel.innerHTML = DB.categories.filter(c=>c.type===type).map(c=>`<option value="${c.id}" ${(existing&&existing.categoryId===c.id)||(!existing&&presetCategoryId===c.id)?'selected':''}>${c.icon} ${c.name}</option>`).join("");
+    const selId = existing? existing.categoryId : presetCategoryId;
+    sel.innerHTML = catOptionsHTML(type, selId);
   }
   refreshCatOptions();
+  $("#f_cat", overlay).addEventListener("change", function(){
+    if(this.value === "__new__"){
+      const prevVal = existing?.categoryId || presetCategoryId || "";
+      sheetCategory(type, null, (newCat)=>{
+        refreshCatOptions();
+        $("#f_cat", overlay).value = newCat.id;
+      });
+      this.value = prevVal;
+    }
+  });
   $$("#typeSeg button", overlay).forEach(b=> b.onclick = ()=>{
     type = b.dataset.type;
     $$("#typeSeg button", overlay).forEach(x=>x.classList.remove("active"));
@@ -1181,7 +1373,7 @@ function sheetAddTransaction(existing, presetCategoryId){
     const date = $("#f_date", overlay).value || new Date().toISOString().slice(0,10);
     const note = $("#f_note", overlay).value.trim();
     if(!amount || amount<=0){ toast("Sahi amount daalo"); return; }
-    if(!categoryId){ toast("Pehle ek category banao"); return; }
+    if(!categoryId || categoryId==="__new__"){ toast("Pehle ek category banao"); return; }
     const cat = catById(categoryId);
     if(existing){
       existing.history = existing.history || [];
@@ -1232,36 +1424,45 @@ function deleteTxnWithUndo(id){
   });
 }
 
-function sheetCategory(defaultType, existing){
+function sheetCategory(defaultType, existing, onCreated){
   let type = existing?.type || defaultType || "expense";
   let icon = existing?.icon || ICONS[0];
   let color = existing?.color || COLORS[0];
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">${existing? "Category edit karo":"Nayi category"}</div>
+    <div class="sheet-title">${existing? T('editCategory'):T('newCatBanao')}</div>
     <div class="seg" id="typeSeg">
-      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
-      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
+      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ ${T('expense')}</button>
+      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ ${T('income')}</button>
     </div>
-    <div class="field" style="margin-top:14px;"><label>Naam</label><input type="text" id="f_name" placeholder="e.g. Groceries" value="${existing?.name||""}"></div>
-    <div class="field"><label>Icon</label>
+    <div class="field" style="margin-top:14px;"><label>${T('catName')}</label><input type="text" id="f_name" placeholder="${T('catNamePh')}" value="${existing?.name||""}"></div>
+    <div class="field"><label>${T('parentCat')}</label><select id="f_parent"></select></div>
+    <div class="field"><label>${T('icon')}</label>
       <div class="icon-grid" id="iconGrid">
         ${ICONS.map(i=>`<button type="button" data-icon="${i}" class="${i===icon?'active':''}">${i}</button>`).join("")}
       </div>
     </div>
-    <div class="field"><label>Rang</label>
+    <div class="field"><label>${T('color')}</label>
       <div class="color-grid" id="colorGrid">
         ${COLORS.map(c=>`<span class="color-dot ${c===color?'active':''}" data-color="${c}" style="background:${c}"></span>`).join("")}
       </div>
     </div>
-    <div class="field"><label>Monthly budget (₹) — optional</label><input type="number" inputmode="decimal" id="f_budget" placeholder="e.g. 5000" value="${existing?.budget||''}"></div>
-    <button class="btn" id="saveCat">${existing? "Save karo":"Category banao"}</button>
-    ${existing? `<button class="btn danger" id="delCat" style="margin-top:8px;">Category delete karo</button>` : ``}
+    <div class="field"><label>${T('monthlyBudget')}</label><input type="number" inputmode="decimal" id="f_budget" placeholder="${T('budgetPh')}" value="${existing?.budget||''}"></div>
+    <button class="btn" id="saveCat">${existing? T('saveCat'):T('newCatBanao')}</button>
+    ${existing? `<button class="btn danger" id="delCat" style="margin-top:8px;">${T('deleteCat')}</button>` : ``}
   `);
+  function refreshParentOptions(){
+    const sel = $("#f_parent", overlay);
+    const tops = topCats(type).filter(c=> !existing || c.id!==existing.id);
+    sel.innerHTML = `<option value="">${T('noneTopLevel')}</option>` +
+      tops.map(c=>`<option value="${c.id}" ${existing?.parentId===c.id?'selected':''}>${c.icon} ${c.name}</option>`).join("");
+  }
+  refreshParentOptions();
   $$("#typeSeg button", overlay).forEach(b=> b.onclick=()=>{
     type=b.dataset.type;
     $$("#typeSeg button",overlay).forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
+    refreshParentOptions();
   });
   $$("#iconGrid button", overlay).forEach(b=> b.onclick=()=>{
     icon=b.dataset.icon;
@@ -1277,22 +1478,28 @@ function sheetCategory(defaultType, existing){
     const name = $("#f_name", overlay).value.trim();
     const budgetVal = parseFloat($("#f_budget", overlay).value);
     const budget = budgetVal>0 ? budgetVal : null;
+    const parentId = $("#f_parent", overlay).value || null;
     if(!name){ toast("Naam daalo"); return; }
+    let catObj;
     if(existing){
-      Object.assign(existing, {name, type, icon, color, budget});
+      Object.assign(existing, {name, type, icon, color, budget, parentId});
+      catObj = existing;
       logActivity('edit', `${icon} category "${name}" update hui`);
     } else {
-      DB.categories.push({id:"c_"+uid(), name, type, icon, color, budget});
+      catObj = {id:"c_"+uid(), name, type, icon, color, budget, parentId};
+      DB.categories.push(catObj);
       logActivity('add', `${icon} category "${name}" banayi gayi`);
     }
     save(); closeSheet(overlay); render();
     toast("Category save ho gayi ✅");
+    if(onCreated) onCreated(catObj);
   };
   if(existing){
     $("#delCat", overlay).onclick = ()=>{
-      const inUse = DB.transactions.some(t=>t.categoryId===existing.id) || DB.recurring.some(r=>r.categoryId===existing.id);
-      if(inUse && !confirm("Is category mein entries hain. Fir bhi delete karein?")) return;
+      const inUse = DB.transactions.some(t=>t.categoryId===existing.id) || DB.recurring.some(r=>r.categoryId===existing.id) || DB.categories.some(c=>c.parentId===existing.id);
+      if(inUse && !confirm("Is category mein entries ya sub-category hain. Fir bhi delete karein?")) return;
       DB.categories = DB.categories.filter(c=>c.id!==existing.id);
+      DB.categories.forEach(c=>{ if(c.parentId===existing.id) c.parentId=null; });
       logActivity('delete', `${existing.icon} category "${existing.name}" delete hui`);
       save(); closeSheet(overlay); render();
       toast("Category delete ho gayi");
@@ -1306,7 +1513,9 @@ function sheetCategoryReport(catId){
   function refresh(){
     const cat = catById(catId);
     if(!cat){ closeSheet(overlay); return; }
-    const txns = DB.transactions.filter(t=>t.categoryId===catId).sort((a,b)=>b.date.localeCompare(a.date));
+    const subs = subCatsOf(catId);
+    const idsToCount = [catId, ...subs.map(s=>s.id)];
+    const txns = DB.transactions.filter(t=>idsToCount.includes(t.categoryId)).sort((a,b)=>b.date.localeCompare(a.date));
     const total = txns.reduce((s,t)=>s+t.amount,0);
     const count = txns.length;
     const avg = count? total/count : 0;
@@ -1320,8 +1529,9 @@ function sheetCategoryReport(catId){
       return {label:d.toLocaleDateString('en-IN',{month:'short'}), amt};
     });
     const trendMax = Math.max(1, ...trend.map(t=>t.amt));
-    const thisMonthSpent = txnsForMonth(state.month).filter(t=>t.categoryId===catId).reduce((s,t)=>s+t.amount,0);
+    const thisMonthSpent = txnsForMonth(state.month).filter(t=>idsToCount.includes(t.categoryId)).reduce((s,t)=>s+t.amount,0);
     const budgetPct = cat.budget? Math.min(100, (thisMonthSpent/cat.budget)*100) : null;
+    const subBreakdown = subs.map(s=>({sub:s, amt: txns.filter(t=>t.categoryId===s.id).reduce((sm,t)=>sm+t.amount,0)})).filter(x=>x.amt>0);
 
     $("#catReportBody", overlay).innerHTML = `
       <div class="sheet-title">${cat.icon} ${cat.name}</div>
@@ -1332,6 +1542,13 @@ function sheetCategoryReport(catId){
         <div class="bar-track"><div class="bar-fill" data-w="${budgetPct}%" style="background:${thisMonthSpent>cat.budget?'var(--expense)':cat.color}"></div></div>
       </div>` : `<div class="hint" style="margin-bottom:10px;">Is category ka abhi koi monthly budget set nahi hai — ✎ edit se set kar sakte ho.</div>`}
       ${highest? `<div class="hint">Sabse bada single entry: <b style="color:var(--ink)">${fmtINR(highest.amount)}</b> (${fmtDate(highest.date)})</div>` : ``}
+      ${subBreakdown.length? `
+      <div class="section-title" style="margin-top:18px;">Sub-categories</div>
+      <div class="card" style="padding:14px;">
+        ${subBreakdown.map(x=>`
+          <div class="rec-row"><div class="rec-main"><div class="rec-name">${x.sub.icon} ${x.sub.name}</div></div>
+            <div class="rec-amt">${fmtINR(x.amt)}</div></div>`).join("")}
+      </div>` : ``}
 
       <div class="section-title" style="margin-top:18px;">Pichle 6 mahine ka trend</div>
       <div class="card" style="padding:14px;">
@@ -1349,10 +1566,16 @@ function sheetCategoryReport(catId){
 
       <button class="btn" id="dlCatPdf" style="margin-top:16px;">⬇️ PDF report download karo</button>
       <button class="btn secondary" id="addInCat" style="margin-top:10px;">➕ Isi category me entry add karo</button>
+      <button class="btn secondary" id="addSubCat" style="margin-top:10px;">➕ Sub-category add karo</button>
     `;
     animateBarsIn(overlay);
     $("#dlCatPdf", overlay).onclick = ()=> exportCategoryPDF(cat, txns, total);
     $("#addInCat", overlay).onclick = ()=> sheetAddTransaction(null, catId);
+    $("#addSubCat", overlay).onclick = ()=>{
+      const sc = {parentId: catId, type: cat.type};
+      sheetCategory(cat.type, null, ()=> refresh());
+      setTimeout(()=>{ const psel = $("#f_parent"); if(psel) psel.value = catId; }, 0);
+    };
     $$('[data-edit-txn]', overlay).forEach(el=> el.onclick = ()=> sheetAddTransaction(DB.transactions.find(t=>t.id===el.dataset.editTxn)));
     $$('[data-del-txn]', overlay).forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
   }
@@ -1401,11 +1624,15 @@ function botReply(msg){
     return "Analysis tab > Data card me — PDF report, JSON backup download, aur restore, sab available hai.";
   if(has("offline","internet"))
     return "Haan, poora app offline chalta hai — data sirf tumhare is device ke browser me locally save hota hai, kahin bhi upload nahi hota.";
+  if(has("language","bhasha","hindi","english"))
+    return "Topbar ke ⚙ (settings) icon se bhasha badal sakte ho — Hindi, English ya Hinglish, jo pasand ho.";
+  if(has("sub category","subcategory","sub-category"))
+    return "Category banate waqt 'Parent category' select karo to woh sub-category ban jaati hai. Category report me sub-categories ka alag breakdown bhi dikhta hai.";
   if(has("category"))
-    return "Category tile par tap karo to uski full detail (budget, 6-mahine trend, saari entries edit/delete) khulegi; ✎ se naam/icon/color/budget edit kar sakte ho.";
+    return "Category tile par tap karo to uski full detail (budget, 6-mahine trend, saari entries edit/delete) khulegi; ✎ se naam/icon/color/budget/parent edit kar sakte ho.";
   if(has("hi","hello","hey","namaste"))
     return "Namaste! Bolo, app ke baare me kuch puchna hai ya koi calculation karni hai?";
-  return "Ye samajh nahi aaya 🤔 — tum mujhse app ke features (recurring, budget, split, edit, backup, category) ke baare me puch sakte ho, ya koi bhi calculation type karo jaise '2450+1200-300' ya '18% of 5600'.";
+  return "Ye samajh nahi aaya 🤔 — tum mujhse app ke features (recurring, budget, split, edit, backup, category, sub-category, language) ke baare me puch sakte ho, ya koi bhi calculation type karo jaise '2450+1200-300' ya '18% of 5600'.";
 }
 function chatBubbleHTML(m){
   const mine = m.role==="user";
@@ -1428,7 +1655,7 @@ function sheetAssistant(){
       ${DB.botChat.length? DB.botChat.map(chatBubbleHTML).join("") : `<div class="empty">Kuch bhi pucho — app ke features ya "2500+1800-300" jaisa calculation 🙂</div>`}
     </div>
     <div style="margin-top:12px;display:flex;gap:8px;">
-      <input type="text" id="botInput" placeholder="e.g. recurring kaise set karu? ya 15% of 4500" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14px;">
+      <input type="text" id="botInput" placeholder="e.g. recurring kaise set karu? ya 15% of 4500" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:16px;">
       <button class="btn" id="botSend" style="width:auto;margin-top:0;padding:0 18px;">➤</button>
     </div>`;
   }
@@ -1436,7 +1663,7 @@ function sheetAssistant(){
     const notes = [...DB.reminders].sort((a,b)=> (a.done - b.done) || (b.ts-a.ts));
     return `
     <div style="display:flex;gap:8px;">
-      <input type="text" id="noteInput" placeholder="Kuch yaad rakhna hai? e.g. EMI date badal gayi" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:14px;">
+      <input type="text" id="noteInput" placeholder="Kuch yaad rakhna hai? e.g. EMI date badal gayi" style="flex:1;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--radius-s);background:var(--surface-2);color:var(--ink);font-size:16px;">
       <button class="btn" id="noteAdd" style="width:auto;margin-top:0;padding:0 16px;">+</button>
     </div>
     <div style="max-height:300px;overflow-y:auto;margin-top:8px;">
@@ -1501,19 +1728,43 @@ function sheetAssistant(){
   document.addEventListener('kharcha:save', onSave);
 }
 
+function sheetSettings(){
+  const overlay = openSheet(`
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">${T('settingsTitle')}</div>
+    <div class="field">
+      <label>${T('language')}</label>
+      <div class="seg seg-3" id="langSeg">
+        <button type="button" data-lang="hinglish" class="${curLang()==='hinglish'?'active':''}">Hinglish</button>
+        <button type="button" data-lang="english" class="${curLang()==='english'?'active':''}">English</button>
+        <button type="button" data-lang="hindi" class="${curLang()==='hindi'?'active':''}">हिन्दी</button>
+      </div>
+    </div>
+    <div class="hint">${T('offlineNote')}</div>
+    <button class="btn secondary" id="closeSettings" style="margin-top:14px;">${T('close')}</button>
+  `);
+  $$("#langSeg button", overlay).forEach(b=> b.onclick=()=>{
+    DB.meta.language = b.dataset.lang;
+    save();
+    closeSheet(overlay);
+    render();
+  });
+  $("#closeSettings", overlay).onclick = ()=> closeSheet(overlay);
+}
+
 function sheetRecurring(existing){
   let type = existing?.type || "expense";
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">${existing? "Recurring edit karo":"Naya recurring (auto-cut)"}</div>
+    <div class="sheet-title">${existing? T('editRecurringTitle'):T('newRecurringTitle')}</div>
     <div class="seg" id="typeSeg">
-      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ Expense</button>
-      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ Income</button>
+      <button type="button" class="${type==='expense'?'active expense':''}" data-type="expense">➖ ${T('expense')}</button>
+      <button type="button" class="${type==='income'?'active income':''}" data-type="income">➕ ${T('income')}</button>
     </div>
-    <div class="field" style="margin-top:14px;"><label>Naam / Note</label><input type="text" id="f_note" placeholder="e.g. Ghar ka rent, Netflix" value="${existing?.note||""}"></div>
-    <div class="field"><label>Amount (₹)</label><input type="number" inputmode="decimal" id="f_amount" value="${existing?.amount||""}"></div>
-    <div class="field"><label>Category</label><select id="f_cat"></select></div>
-    <div class="field"><label>Frequency</label>
+    <div class="field" style="margin-top:14px;"><label>${T('nameNote')}</label><input type="text" id="f_note" placeholder="${T('nameNotePh')}" value="${existing?.note||""}"></div>
+    <div class="field"><label>${T('amount')}</label><input type="number" inputmode="decimal" id="f_amount" value="${existing?.amount||""}"></div>
+    <div class="field"><label>${T('categoryLbl')}</label><select id="f_cat"></select></div>
+    <div class="field"><label>${T('frequency')}</label>
       <select id="f_freq">
         <option value="daily">Daily</option>
         <option value="every10">Har 10 din</option>
@@ -1526,7 +1777,7 @@ function sheetRecurring(existing){
       </select>
     </div>
     <div class="field" id="customFreqWrap" style="display:${existing?.frequency==='custom'?'block':'none'};">
-      <label>Custom repeat</label>
+      <label>${T('customRepeat')}</label>
       <div style="display:flex;gap:8px;">
         <input type="number" id="f_customVal" min="1" value="${existing?.customVal||1}" style="flex:1;">
         <select id="f_customUnit" style="flex:1;">
@@ -1536,15 +1787,22 @@ function sheetRecurring(existing){
         </select>
       </div>
     </div>
-    <div class="field"><label>Agli date (kab se cut hoga)</label><input type="date" id="f_next" value="${existing?.nextDate || new Date().toISOString().slice(0,10)}"></div>
-    <button class="btn" id="saveRec">${existing? "Save karo":"Recurring banao"}</button>
-    ${existing? `<button class="btn danger" id="delRec" style="margin-top:8px;">Delete karo</button>` : ``}
+    <div class="field"><label>${T('nextDate')}</label><input type="date" id="f_next" value="${existing?.nextDate || new Date().toISOString().slice(0,10)}"></div>
+    <button class="btn" id="saveRec">${existing? T('saveCat'):T('saveRecurring')}</button>
+    ${existing? `<button class="btn danger" id="delRec" style="margin-top:8px;">${T('deleteRecurring')}</button>` : ``}
   `);
   function refreshCatOptions(){
     const sel = $("#f_cat", overlay);
-    sel.innerHTML = DB.categories.filter(c=>c.type===type).map(c=>`<option value="${c.id}" ${existing?.categoryId===c.id?'selected':''}>${c.icon} ${c.name}</option>`).join("");
+    sel.innerHTML = catOptionsHTML(type, existing?.categoryId);
   }
   refreshCatOptions();
+  $("#f_cat", overlay).addEventListener("change", function(){
+    if(this.value === "__new__"){
+      const prevVal = existing?.categoryId || "";
+      sheetCategory(type, null, (newCat)=>{ refreshCatOptions(); $("#f_cat", overlay).value = newCat.id; });
+      this.value = prevVal;
+    }
+  });
   if(existing) $("#f_freq",overlay).value = existing.frequency;
   $("#f_freq", overlay).addEventListener("change", function(){
     $("#customFreqWrap", overlay).style.display = this.value==="custom" ? "block" : "none";
@@ -1564,7 +1822,7 @@ function sheetRecurring(existing){
     const nextDate = $("#f_next",overlay).value;
     const note = $("#f_note",overlay).value.trim();
     if(!amount||amount<=0){ toast("Sahi amount daalo"); return; }
-    if(!categoryId){ toast("Pehle category banao"); return; }
+    if(!categoryId || categoryId==="__new__"){ toast("Pehle category banao"); return; }
     if(existing){
       Object.assign(existing,{amount,categoryId,frequency,customVal,customUnit,nextDate,note,type});
       logActivity('edit', `🔁 recurring "${note||catById(categoryId).name}" update hua`);
@@ -1588,10 +1846,10 @@ function sheetRecurring(existing){
 function sheetNewGroup(){
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Naya group banao</div>
-    <div class="field"><label>Group ka naam</label><input type="text" id="g_name" placeholder="e.g. Flat 302 ya Goa Trip"></div>
-    <div class="field"><label>Members (comma se separate karo)</label><input type="text" id="g_members" placeholder="You, Raj, Priya, Aman"></div>
-    <button class="btn" id="saveGroup">Group banao</button>
+    <div class="sheet-title">${T('newGroupTitle')}</div>
+    <div class="field"><label>${T('groupName')}</label><input type="text" id="g_name" placeholder="${T('groupNamePh')}"></div>
+    <div class="field"><label>${T('membersLbl')}</label><input type="text" id="g_members" placeholder="${T('membersPh')}"></div>
+    <button class="btn" id="saveGroup">${T('saveGroup')}</button>
   `);
   $("#saveGroup", overlay).onclick = ()=>{
     const name = $("#g_name", overlay).value.trim();
@@ -1608,18 +1866,18 @@ function sheetAddGroupExpense(gid){
   if(!g) return;
   const overlay = openSheet(`
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Shared kharcha add karo</div>
-    <div class="field"><label>Kis cheez ka kharcha</label><input type="text" id="e_desc" placeholder="e.g. Groceries, Cab fare"></div>
-    <div class="field"><label>Amount (₹)</label><input type="number" inputmode="decimal" id="e_amount"></div>
-    <div class="field"><label>Kisne pay kiya</label><select id="e_paidby">${g.members.map(m=>`<option value="${m}">${m}</option>`).join("")}</select></div>
-    <div class="field"><label>Kis-kis mein split hoga</label>
+    <div class="sheet-title">${T('sharedExpTitle')}</div>
+    <div class="field"><label>${T('whatFor')}</label><input type="text" id="e_desc" placeholder="${T('whatForPh')}"></div>
+    <div class="field"><label>${T('amount')}</label><input type="number" inputmode="decimal" id="e_amount"></div>
+    <div class="field"><label>${T('whoPaid')}</label><select id="e_paidby">${g.members.map(m=>`<option value="${m}">${m}</option>`).join("")}</select></div>
+    <div class="field"><label>${T('splitBetween')}</label>
       ${g.members.map(m=>`
         <div style="display:flex;align-items:center;gap:8px;padding:6px 0;">
           <input type="checkbox" checked value="${m}" class="splitChk" id="sc_${m}" style="width:18px;height:18px;">
           <label for="sc_${m}" style="margin:0;font-size:13.5px;color:var(--ink);font-weight:500;">${m}</label>
         </div>`).join("")}
     </div>
-    <button class="btn" id="saveGroupExp">Kharcha add karo</button>
+    <button class="btn" id="saveGroupExp">${T('saveSharedExp')}</button>
   `);
   $("#saveGroupExp", overlay).onclick = ()=>{
     const desc = $("#e_desc",overlay).value.trim();
@@ -1644,6 +1902,8 @@ function bindGlobalEvents(){
   if(prevBtn) prevBtn.onclick = ()=>{ state.month = new Date(state.month.getFullYear(), state.month.getMonth()-1, 1); render(); };
   const nextBtn = $('[data-act="nextMonth"]');
   if(nextBtn) nextBtn.onclick = ()=>{ state.month = new Date(state.month.getFullYear(), state.month.getMonth()+1, 1); render(); };
+  const settingsBtn = $('[data-act="openSettings"]');
+  if(settingsBtn) settingsBtn.onclick = sheetSettings;
 
   $$('[data-edit-txn]').forEach(el=> el.onclick = ()=> sheetAddTransaction(DB.transactions.find(t=>t.id===el.dataset.editTxn)));
   $$('[data-del-txn]').forEach(el=> el.onclick = (e)=>{ e.stopPropagation(); deleteTxnWithUndo(el.dataset.delTxn); });
@@ -1681,7 +1941,8 @@ function bindGlobalEvents(){
   const expBtn = $('[data-act="exportData"]'); if(expBtn) expBtn.onclick = exportData;
   const resetBtn = $('[data-act="resetData"]'); if(resetBtn) resetBtn.onclick = ()=>{
     if(confirm("Pakka? Sara data (categories, entries, recurring, groups, logs) hamesha ke liye mit jayega.")){
-      DB = defaultData(); save(); render(); toast("Sab data reset ho gaya");
+      const lang = DB.meta?.language || "hinglish";
+      DB = defaultData(); DB.meta.language = lang; save(); render(); toast("Sab data reset ho gaya");
     }
   };
   const importFile = $('#importFile'); if(importFile) importFile.onchange = importData;
@@ -1712,6 +1973,9 @@ function importData(e){
       if(!parsed.activityLog) parsed.activityLog = [];
       if(!parsed.botChat) parsed.botChat = [];
       if(!parsed.reminders) parsed.reminders = [];
+      if(!parsed.meta) parsed.meta = {createdAt:Date.now(), language:"hinglish"};
+      if(!parsed.meta.language) parsed.meta.language = "hinglish";
+      parsed.categories.forEach(c=>{ if(c.parentId===undefined) c.parentId = null; });
       DB = parsed; save(); render();
       toast("Backup restore ho gaya ✅");
     }catch(err){ toast("Ye file valid backup nahi hai"); }
